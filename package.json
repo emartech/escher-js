@@ -2,9 +2,9 @@
   "name": "escher",
   "version": "0.0.1",
   "description": "Library for HTTP request signing (JavaScript implementation)",
-  "main": "index.js",
+  "main": "lib/escher.js",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
+    "test": "./node_modules/.bin/jasmine-node-karma spec/"
   },
   "repository": {
     "type": "git",
@@ -24,8 +24,7 @@
   },
   "homepage": "https://github.com/emartech/escher-js",
   "devDependencies": {
-    "karma": "^0.12.22",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4"
+    "jasmine-node-karma": "^1.6.1",
+    "underscore": "^1.7.0"
   }
 }
