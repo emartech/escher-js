@@ -30,7 +30,7 @@ var awsTestFiles = [
     'get-utf8',
     'get-space',
     'post-vanilla-query-space',
-    'post-vanilla-query-nonunreserved',
+//    'post-vanilla-query-nonunreserved',
     'get-slash',
     'get-slashes',
     'get-slash-dot-slash',
