@@ -1,7 +1,6 @@
 'use strict';
 
 var Canonicalizer = require('../lib/canonicalizer');
-var http = require('https');
 var fs = require('fs');
 var _ = require('underscore')._;
 
@@ -16,8 +15,8 @@ function getUri(requestLines) {
 }
 function getHeaders(requestLines) {
     return requestLines.slice(1, -2).reduce(function (acc, headerLine) {
-        var header = headerLine.split(':');
-        acc[header[0]] = header[1];
+        var header = headerLine.match(/([^:]*):(.*)/);
+        acc[header[1]] = header[2];
         return acc;
     }, {});
 }
@@ -31,10 +30,10 @@ function getHost(headers) {
 }
 
 describe('Canonizer', function () {
-    describe('canonizeRequest', function () {
-        it('should be an existing method', function () {
+    describe('canonicalizeRequest', function () {
+        it('should canonicalize the requests', function () {
 
-            var requestLines = readTestFile('get-vanilla', 'req').split("\n");
+            var requestLines = readTestFile('get-vanilla', 'req').split(/\r\n|\n|\r/);
             var body = getBody(requestLines);
 
             var options = {
@@ -44,9 +43,9 @@ describe('Canonizer', function () {
                 headers: getHeaders(requestLines)
             };
 
-            var request = http.request(options);
+            var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(options, body);
 
-            var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(request, body);
+            expect(canonicalizedRequest).toBe(readTestFile('get-vanilla', 'creq'));
         });
     });
 });
