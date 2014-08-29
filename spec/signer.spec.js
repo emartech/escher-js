@@ -41,16 +41,6 @@ var awsTestFiles = [
 ];
 
 describe('Signer', function () {
-    function signerOptions(date) {
-        return {
-            hashAlgo: "sha256",
-            date: date,
-            algoPrefix: 'AWS4',
-            credentialScope: 'us-east-1/host/aws4_request',
-            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
-        };
-    }
-
     describe('getStringToSign', function () {
         using('aws test files', awsTestFiles, function (testFile) {
             it('should return the proper string to sign', function () {
@@ -66,10 +56,9 @@ describe('Signer', function () {
                     headers: headers
                 };
 
-                var date = testFileParser.getDate(headers);
                 var signerOptions = {
                     hashAlgo: "sha256",
-                    date: date,
+                    date: testFileParser.getDate(headers),
                     algoPrefix: 'AWS4',
                     credentialScope: 'us-east-1/host/aws4_request',
                     apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
@@ -82,10 +71,9 @@ describe('Signer', function () {
     });
 
     describe('calculateSigningKey', function() {
-        var date = new Date(Date.parse('2011-09-09 23:36:00 UTC'));
         var signerOptions = {
             hashAlgo: "sha256",
-            date: date,
+            date: new Date(Date.parse('2011-09-09 23:36:00 UTC')),
             algoPrefix: 'AWS4',
             credentialScope: 'us-east-1/iam/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
