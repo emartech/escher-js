@@ -83,4 +83,21 @@ describe('Signer', function () {
 
         expect(bin2hex(signingKey)).toBe('98f1d889fec4f4421adc522bab0ce1f82e6929c262ed15e5a94c90efd1e3b0e7');
     });
+
+    describe('calculateSignature', function() {
+        var signerOptions = {
+            hashAlgo: "sha256",
+            date: new Date(Date.parse('Mon, 09 Sep 2011 23:36:00 GMT')),
+            algoPrefix: 'AWS4',
+            credentialScope: 'us-east-1/host/aws4_request',
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+        };
+
+        var signer = new Signer();
+        var stringToSign = "AWS4-HMAC-SHA256\n20110909T233600Z\n20110909/us-east-1/host/aws4_request\n366b91fb121d72a00f46bbe8d395f53a102b06dfb7e79636515208ed3fa606b1";
+        var signingKey = new Signer().calculateSigningKey(signerOptions);
+        var signature = signer.calculateSignature(stringToSign, signingKey, signerOptions);
+
+        expect(signature).toBe('b27ccfbfa7df52a200ff74193ca6e32d4b48b8856fab7ebf1c595d0670a7e470');
+    });
 });
