@@ -39,13 +39,20 @@ var AWSTestFileParser = function(testFileContent) {
             return key.toLowerCase() == 'host';
         })[0]];
     }
+    function getDate(headers) {
+        var dateHeader = headers[_.keys(headers).filter(function (key) {
+            return key.toLowerCase() == 'date';
+        })[0]];
+        return new Date(dateHeader);
+    }
 
     return {
         getMethod: getMethod,
         getUri: getUri,
         getHeaders: getHeaders,
         getBody: getBody,
-        getHost: getHost
+        getHost: getHost,
+        getDate: getDate
     };
 };
 
