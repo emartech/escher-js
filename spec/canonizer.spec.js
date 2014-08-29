@@ -1,51 +1,64 @@
 'use strict';
 
-var Canonicalizer = require('../lib/canonicalizer');
-var fs = require('fs');
-var _ = require('underscore')._;
+var Canonicalizer = require('../lib/canonicalizer'),
+    specHelper = require('./spec_helper'),
+    using = specHelper.using,
+    AWSTestFileParser = specHelper.AWSTestFileParser,
+    readTestFile = specHelper.readTestFile;
 
-function readTestFile(testCase, extension) {
-    return fs.readFileSync('spec/aws4_testsuite/' + testCase + '.' + extension, {encoding: 'utf-8'});
-}
-function getMethod(requestLines) {
-    return requestLines[0].split(' ')[0];
-}
-function getUri(requestLines) {
-    return requestLines[0].split(' ')[1];
-}
-function getHeaders(requestLines) {
-    return requestLines.slice(1, -2).reduce(function (acc, headerLine) {
-        var header = headerLine.match(/([^:]*):(.*)/);
-        acc[header[1]] = header[2];
-        return acc;
-    }, {});
-}
-function getBody(requestLines) {
-    return requestLines[requestLines.length - 1];
-}
-function getHost(headers) {
-    return headers[_.keys(headers).filter(function (key) {
-        return key.toLowerCase() == 'host';
-    })[0]];
-}
+var awsTestFiles = [
+    'get-vanilla',
+    'post-vanilla',
+    'get-vanilla-query',
+    'post-vanilla-query',
+    'get-vanilla-empty-query-key',
+    'post-vanilla-empty-query-value',
+    'get-vanilla-query-order-key',
+    'post-x-www-form-urlencoded',
+    'post-x-www-form-urlencoded-parameters',
+    'get-header-value-trim',
+//    'get-header-key-duplicate',
+    'post-header-key-case',
+    'post-header-key-sort',
+//    'get-header-value-order',
+    'post-header-value-case',
+    'get-vanilla-query-order-value',
+    'get-vanilla-query-order-key-case',
+    'get-unreserved',
+    'get-vanilla-query-unreserved',
+    'get-vanilla-ut8-query',
+    'get-utf8',
+    'get-space',
+    'post-vanilla-query-space',
+    'post-vanilla-query-nonunreserved',
+    'get-slash',
+    'get-slashes',
+    'get-slash-dot-slash',
+    'get-slash-pointless-dot',
+    'get-relative',
+    'get-relative-relative'
+];
 
 describe('Canonizer', function () {
     describe('canonicalizeRequest', function () {
-        it('should canonicalize the requests', function () {
+        using('aws test files', awsTestFiles, function (testFile) {
+            it('should canonicalize the requests', function () {
 
-            var requestLines = readTestFile('get-vanilla', 'req').split(/\r\n|\n|\r/);
-            var body = getBody(requestLines);
+                var testFileParser = new AWSTestFileParser(readTestFile(testFile, 'req'));
+                var body = testFileParser.getBody();
+                var headers = testFileParser.getHeaders();
 
-            var options = {
-                method: getMethod(requestLines),
-                host: getHost(getHeaders(requestLines)),
-                uri: getUri(requestLines),
-                headers: getHeaders(requestLines)
-            };
+                var options = {
+                    method: testFileParser.getMethod(),
+                    host: testFileParser.getHost(headers),
+                    uri: testFileParser.getUri(),
+                    headers: headers
+                };
 
-            var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(options, body);
+                var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(options, body);
 
-            expect(canonicalizedRequest).toBe(readTestFile('get-vanilla', 'creq'));
+                expect(canonicalizedRequest).toBe(readTestFile(testFile, 'creq'));
+            });
         });
     });
 });
