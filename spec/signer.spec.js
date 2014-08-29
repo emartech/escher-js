@@ -4,7 +4,8 @@ var Signer = require('../lib/signer'),
     specHelper = require('./spec_helper'),
     using = specHelper.using,
     AWSTestFileParser = specHelper.AWSTestFileParser,
-    readTestFile = specHelper.readTestFile;
+    readTestFile = specHelper.readTestFile,
+    bin2hex = specHelper.bin2hex;
 
 var awsTestFiles = [
     'get-vanilla',
@@ -40,6 +41,16 @@ var awsTestFiles = [
 ];
 
 describe('Signer', function () {
+    function signerOptions(date) {
+        return {
+            hashAlgo: "sha256",
+            date: date,
+            algoPrefix: 'AWS4',
+            credentialScope: 'us-east-1/host/aws4_request',
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+        };
+    }
+
     describe('getStringToSign', function () {
         using('aws test files', awsTestFiles, function (testFile) {
             it('should return the proper string to sign', function () {
@@ -55,15 +66,33 @@ describe('Signer', function () {
                     headers: headers
                 };
 
-                var stringToSign = new Signer().getStringToSign(options, body,{
+                var date = testFileParser.getDate(headers);
+                var signerOptions = {
                     hashAlgo: "sha256",
-                    date: testFileParser.getDate(headers),
+                    date: date,
                     algoPrefix: 'AWS4',
-                    credentialScope: 'us-east-1/host/aws4_request'
-                });
+                    credentialScope: 'us-east-1/host/aws4_request',
+                    apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+                };
+                var stringToSign = new Signer().getStringToSign(options, body, signerOptions);
 
                 expect(stringToSign).toBe(readTestFile(testFile, 'sts'));
             });
         });
+    });
+
+    describe('calculateSigningKey', function() {
+        var date = new Date(Date.parse('2011-09-09 23:36:00 UTC'));
+        var signerOptions = {
+            hashAlgo: "sha256",
+            date: date,
+            algoPrefix: 'AWS4',
+            credentialScope: 'us-east-1/iam/aws4_request',
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+        };
+
+        var signingKey = new Signer().calculateSigningKey(signerOptions);
+
+        expect(bin2hex(signingKey)).toBe('98f1d889fec4f4421adc522bab0ce1f82e6929c262ed15e5a94c90efd1e3b0e7');
     });
 });
