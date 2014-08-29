@@ -55,7 +55,12 @@ describe('Signer', function () {
                     headers: headers
                 };
 
-                var stringToSign = new Signer().getStringToSign(options, body, {date: testFileParser.getDate(headers)});
+                var stringToSign = new Signer().getStringToSign(options, body,{
+                    hashAlgo: "sha256",
+                    date: testFileParser.getDate(headers),
+                    algoPrefix: 'AWS4',
+                    credentialScope: 'us-east-1/host/aws4_request'
+                });
 
                 expect(stringToSign).toBe(readTestFile(testFile, 'sts'));
             });
