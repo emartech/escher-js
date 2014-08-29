@@ -1,6 +1,6 @@
 'use strict';
 
-var Canonizer = require('../lib/canonizer');
+var Canonicalizer = require('../lib/canonicalizer');
 var http = require('https');
 var fs = require('fs');
 var _ = require('underscore')._;
@@ -46,7 +46,7 @@ describe('Canonizer', function () {
 
             var request = http.request(options);
 
-            var canonizedRequest = new Canonizer().canonizeRequest(request, body);
+            var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(request, body);
         });
     });
 });
