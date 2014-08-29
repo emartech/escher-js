@@ -1,5 +1,5 @@
-Escher - Library for HTTP request signing (JavaScript implementation)
-=====================================================================
+EscherJS - HTTP request signing lib [![Build Status](https://travis-ci.org/emartech/escher-js.svg?branch=master)](https://travis-ci.org/masayuki0812/c3)
+===================================
 
 Escher helps you creating secure HTTP requests (for APIs) by signing HTTP(s) requests. It's both a server side and client side implementation. The status is work in progress.
 
