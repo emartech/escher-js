@@ -7,7 +7,7 @@ var Canonicalizer = require('../lib/canonicalizer'),
     TestFileParser = specHelper.TestFileParser,
     readTestFile = specHelper.readTestFile;
 
-describe('Canonizer', function () {
+describe('Canonicalizer', function () {
     describe('canonicalizeRequest', function () {
         using('aws test files', testConfig.testFiles, function (testFile) {
             it('should canonicalize the requests', function () {
