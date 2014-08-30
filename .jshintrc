@@ -1,7 +1,4 @@
 {
-    // JSHint Default Configuration File (as on JSHint website)
-    // See http://jshint.com/docs/ for more details
-
     "maxerr"        : 50,       // {int} Maximum error before stopping
 
     // Enforcing
@@ -66,7 +63,7 @@
     "dojo"          : false,    // Dojo Toolkit
     "jquery"        : false,    // jQuery
     "mootools"      : false,    // MooTools
-    "node"          : false,    // Node.js
+    "node"          : true,     // Node.js
     "nonstandard"   : false,    // Widely adopted globals (escape, unescape, etc)
     "prototypejs"   : false,    // Prototype and Scriptaculous
     "rhino"         : false,    // Rhino

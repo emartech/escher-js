@@ -1,7 +1,9 @@
-var _ = require('underscore')._,
-    fs = require('fs');
+"use strict";
+
+var fs = require('fs');
 
 function using(name, values, func){
+    /* jshint -W040 */
     for (var i = 0, count = values.length; i < count; i++) {
         if (Object.prototype.toString.call(values[i]) !== '[object Array]') {
             values[i] = [values[i]];
@@ -58,7 +60,7 @@ var AWSTestFileParser = function(testFileContent) {
 
     function lookupHeader(headers, headerKey) {
         for(var i=0; i<headers.length; i++) {
-            if (headers[i][0].toLowerCase() == headerKey) {
+            if (headers[i][0].toLowerCase() === headerKey) {
                 return headers[i][1];
             }
         }
