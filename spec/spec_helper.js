@@ -12,9 +12,6 @@ function using(name, values, func){
         jasmine.currentEnv_.currentSpec.description += ' (with "' + name + '" using ' + values[i].join(', ') + ')';
     }
 }
-function readTestFile(testCase, extension) {
-    return fs.readFileSync('spec/aws4_testsuite/' + testCase + '.' + extension, {encoding: 'utf-8'});
-}
 
 function bin2hex(s) {
     var i, l, o = '', n;
@@ -26,7 +23,12 @@ function bin2hex(s) {
     return o;
 }
 
-var AWSTestFileParser = function(testFileContent) {
+function readTestFile(testCase, extension) {
+    var tc = testCase.split(':');
+    return fs.readFileSync('spec/' + tc[0] + '_testsuite/' + tc[1] + '.' + extension, {encoding: 'utf-8'});
+}
+
+var TestFileParser = function(testFileContent) {
 
     var requestLines = testFileContent.split(/\r\n|\n|\r/);
 
@@ -79,6 +81,6 @@ var AWSTestFileParser = function(testFileContent) {
 module.exports = {
     using: using,
     readTestFile: readTestFile,
-    AWSTestFileParser: AWSTestFileParser,
+    TestFileParser: TestFileParser,
     bin2hex: bin2hex
 };
