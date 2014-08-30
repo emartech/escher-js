@@ -9,7 +9,7 @@ var Canonicalizer = require('../lib/canonicalizer'),
 
 describe('Canonicalizer', function () {
     describe('canonicalizeRequest', function () {
-        using('aws test files', testConfig.testFiles, function (testFile) {
+        using('test files', testConfig.testFiles, function (testFile) {
             it('should canonicalize the requests', function () {
 
                 var testFileParser = new TestFileParser(readTestFile(testFile, 'req'));
