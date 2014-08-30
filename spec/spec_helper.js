@@ -14,16 +14,6 @@ function readTestFile(testCase, extension) {
     return fs.readFileSync('spec/aws4_testsuite/' + testCase + '.' + extension, {encoding: 'utf-8'});
 }
 
-function bin2hex(s) {
-    var i, l, o = '', n;
-    s += '';
-    for (i = 0, l = s.length; i < l; i++) {
-        n = s.charCodeAt(i).toString(16);
-        o += n.length < 2 ? '0' + n : n;
-    }
-    return o;
-}
-
 var AWSTestFileParser = function(testFileContent) {
 
     var requestLines = testFileContent.split(/\r\n|\n|\r/);
@@ -53,11 +43,12 @@ var AWSTestFileParser = function(testFileContent) {
     }
 
     function lookupHeader(headers, headerKey) {
-        return headers[_.keys(headers).filter(function (key) {
-            return key.toLowerCase() == headerKey;
-        })[0]];
+        for(var i=0; i<headers.length; i++) {
+            if (headers[i][0].toLowerCase() == headerKey) {
+                return headers[i][1];
+            }
+        }
     }
-
 
     return {
         getMethod: getMethod,
@@ -72,6 +63,5 @@ var AWSTestFileParser = function(testFileContent) {
 module.exports = {
     using: using,
     readTestFile: readTestFile,
-    AWSTestFileParser: AWSTestFileParser,
-    bin2hex: bin2hex
+    AWSTestFileParser: AWSTestFileParser
 };
