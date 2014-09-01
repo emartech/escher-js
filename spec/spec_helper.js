@@ -23,9 +23,9 @@ function bin2hex(s) {
     return o;
 }
 
-function readTestFile(testCase, extension) {
-    var tc = testCase.split(':');
-    return fs.readFileSync('spec/' + tc[0] + '_testsuite/' + tc[1] + '.' + extension, {encoding: 'utf-8'});
+function readTestFile(testSuite, testCase, extension) {
+    var fileName = 'spec/' + testSuite + '_testsuite/' + testCase + '.' + extension;
+    return fs.readFileSync(fileName, {encoding: 'utf-8'});
 }
 
 var TestFileParser = function(testFileContent) {

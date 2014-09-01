@@ -9,23 +9,25 @@ var Canonicalizer = require('../lib/canonicalizer'),
 
 describe('Canonicalizer', function () {
     describe('canonicalizeRequest', function () {
-        using('test files', testConfig.testFiles, function (testFile) {
-            it('should canonicalize the requests', function () {
+        Object.keys(testConfig).forEach(function (testSuite) {
+            using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
+                it('should canonicalize the requests', function () {
 
-                var testFileParser = new TestFileParser(readTestFile(testFile, 'req'));
-                var body = testFileParser.getBody();
-                var headers = testFileParser.getHeaders();
+                    var testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
+                    var body = testFileParser.getBody();
+                    var headers = testFileParser.getHeaders();
 
-                var options = {
-                    method: testFileParser.getMethod(),
-                    host: testFileParser.getHost(headers),
-                    uri: testFileParser.getUri(),
-                    headers: headers
-                };
+                    var options = {
+                        method: testFileParser.getMethod(),
+                        host: testFileParser.getHost(headers),
+                        uri: testFileParser.getUri(),
+                        headers: headers
+                    };
 
-                var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(options, body);
+                    var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(options, body);
 
-                expect(canonicalizedRequest).toBe(readTestFile(testFile, 'creq'));
+                    expect(canonicalizedRequest).toBe(readTestFile(testSuite, testFile, 'creq'));
+                });
             });
         });
     });

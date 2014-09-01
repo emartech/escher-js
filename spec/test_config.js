@@ -1,39 +1,56 @@
-
-var testFiles = [
-    'aws4:get-vanilla',
-    'aws4:post-vanilla',
-    'aws4:get-vanilla-query',
-    'aws4:post-vanilla-query',
-    'aws4:get-vanilla-empty-query-key',
-    'aws4:post-vanilla-empty-query-value',
-    'aws4:get-vanilla-query-order-key',
-    'aws4:post-x-www-form-urlencoded',
-    'aws4:post-x-www-form-urlencoded-parameters',
-    'aws4:get-header-value-trim',
-    // 'aws4:get-header-key-duplicate',
-    'aws4:post-header-key-case',
-    'aws4:post-header-key-sort',
-    // 'aws4:get-header-value-order',
-    'aws4:post-header-value-case',
-    'aws4:get-vanilla-query-order-value',
-    'aws4:get-vanilla-query-order-key-case',
-    'aws4:get-unreserved',
-    'aws4:get-vanilla-query-unreserved',
-    'aws4:get-vanilla-ut8-query',
-    'aws4:get-utf8',
-    'aws4:get-space',
-    'aws4:post-vanilla-query-space',
-    'aws4:post-vanilla-query-nonunreserved',
-    'aws4:get-slash',
-    'aws4:get-slashes',
-    'aws4:get-slash-dot-slash',
-    'aws4:get-slash-pointless-dot',
-    'aws4:get-relative',
-    'aws4:get-relative-relative',
-    'emarsys:get-header-key-duplicate',
-    'emarsys:get-header-value-order'
-];
-
-module.exports = {
-    testFiles: testFiles
+var config = {
+    aws4: {
+        files: [
+            'get-vanilla',
+            'post-vanilla',
+            'get-vanilla-query',
+            'post-vanilla-query',
+            'get-vanilla-empty-query-key',
+            'post-vanilla-empty-query-value',
+            'get-vanilla-query-order-key',
+            'post-x-www-form-urlencoded',
+            'post-x-www-form-urlencoded-parameters',
+            'get-header-value-trim',
+            // 'get-header-key-duplicate',
+            'post-header-key-case',
+            'post-header-key-sort',
+            // 'get-header-value-order',
+            'post-header-value-case',
+            'get-vanilla-query-order-value',
+            'get-vanilla-query-order-key-case',
+            'get-unreserved',
+            'get-vanilla-query-unreserved',
+            'get-vanilla-ut8-query',
+            'get-utf8',
+            'get-space',
+            'post-vanilla-query-space',
+            'post-vanilla-query-nonunreserved',
+            'get-slash',
+            'get-slashes',
+            'get-slash-dot-slash',
+            'get-slash-pointless-dot',
+            'get-relative',
+            'get-relative-relative'
+        ],
+        signerConfig: {
+            hashAlgo: "sha256",
+            algoPrefix: 'AWS4',
+            credentialScope: 'us-east-1/host/aws4_request',
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+        }
+    },
+    emarsys: {
+        files: [
+            'get-header-key-duplicate',
+            'get-header-value-order'
+        ],
+        signerConfig: {
+            hashAlgo: "sha256",
+            algoPrefix: 'AWS4',
+            credentialScope: 'us-east-1/host/aws4_request',
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+        }
+    }
 };
+
+module.exports = config;

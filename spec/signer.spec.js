@@ -10,34 +10,32 @@ var Signer = require('../lib/signer'),
 
 describe('Signer', function () {
     describe('getStringToSign', function () {
-        using('test files', testConfig.testFiles, function (testFile) {
-            it('should return the proper string to sign', function () {
+        Object.keys(testConfig).forEach(function (testSuite) {
+            using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
+                it('should return the proper string to sign', function () {
 
-                var testFileParser = new TestFileParser(readTestFile(testFile, 'req'));
-                var body = testFileParser.getBody();
-                var headers = testFileParser.getHeaders();
+                    var testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
+                    var body = testFileParser.getBody();
+                    var headers = testFileParser.getHeaders();
 
-                var requestOptions = {
-                    method: testFileParser.getMethod(),
-                    host: testFileParser.getHost(headers),
-                    uri: testFileParser.getUri(),
-                    headers: headers
-                };
+                    var requestOptions = {
+                        method: testFileParser.getMethod(),
+                        host: testFileParser.getHost(headers),
+                        uri: testFileParser.getUri(),
+                        headers: headers
+                    };
+                    var signerConfig = testConfig[testSuite].signerConfig;
+                    signerConfig.date = testFileParser.getDate(headers);
+                    var signer = new Signer(signerConfig);
 
-                var signer = new Signer({
-                    hashAlgo: "sha256",
-                    date: testFileParser.getDate(headers),
-                    algoPrefix: 'AWS4',
-                    credentialScope: 'us-east-1/host/aws4_request',
-                    apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+                    var stringToSign = signer.getStringToSign(requestOptions, body);
+                    expect(stringToSign).toBe(readTestFile(testSuite, testFile, 'sts'));
                 });
-                var stringToSign = signer.getStringToSign(requestOptions, body);
-                expect(stringToSign).toBe(readTestFile(testFile, 'sts'));
             });
         });
     });
 
-    describe('calculateSigningKey', function() {
+    describe('calculateSigningKey', function () {
         var signer = new Signer({
             hashAlgo: "sha256",
             date: new Date("2011-09-09 23:36:00 UTC"),
@@ -49,7 +47,7 @@ describe('Signer', function () {
         expect(bin2hex(signingKey)).toBe('98f1d889fec4f4421adc522bab0ce1f82e6929c262ed15e5a94c90efd1e3b0e7');
     });
 
-    describe('calculateSignature', function() {
+    describe('calculateSignature', function () {
         var signer = new Signer({
             hashAlgo: "sha256",
             date: new Date("2011-09-09 23:36:00 UTC"),
