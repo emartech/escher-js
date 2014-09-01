@@ -78,9 +78,18 @@ var TestFileParser = function(testFileContent) {
     };
 };
 
+function createKeyDb(forAccessKeyId, apiSecret) {
+    return function (accessKeyId) {
+        var keys = {};
+        keys[forAccessKeyId] = apiSecret;
+        return keys[accessKeyId];
+    };
+}
+
 module.exports = {
     using: using,
     readTestFile: readTestFile,
     TestFileParser: TestFileParser,
-    bin2hex: bin2hex
+    bin2hex: bin2hex,
+    createKeyDb: createKeyDb
 };

@@ -24,14 +24,19 @@ describe('Escher', function () {
                         uri: testFileParser.getUri(),
                         headers: headers
                     };
-
                     var options = testConfig[testSuite].signerConfig;
                     options.date = testFileParser.getDate(headers);
+                    var keyDb = specHelper.createKeyDb(options.accessKeyId, options.apiSecret);
 
-                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body);
+                    var apiSecret = options.apiSecret;
+                    options.apiSecret = null;
+
+                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body, keyDb);
 
                     testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'sreq'));
                     expect(JSON.stringify(normalizeHeaders(signedRequestOptions.headers))).toBe(JSON.stringify(normalizeHeaders(testFileParser.getHeaders())));
+
+                    options.apiSecret = apiSecret;
                 });
             });
         });
