@@ -8,6 +8,32 @@ var Escher = require('../lib/escher'),
     TestFileParser = specHelper.TestFileParser,
     readTestFile = specHelper.readTestFile;
 
+var goodDate = 'Mon, 09 Sep 2011 23:36:00 GMT';
+var goodAuthHeader =
+    'AWS4-HMAC-SHA256 ' +
+        'Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, ' +
+        'SignedHeaders=date;host, ' +
+        'Signature=b27ccfbfa7df52a200ff74193ca6e32d4b48b8856fab7ebf1c595d0670a7e470';
+
+function configWithDate(date) {
+    return {
+        authHeaderName: 'Authorization',
+        dateHeaderName: 'Date',
+        algoPrefix: 'AWS4',
+        credentialScope: 'us-east-1/host/aws4_request',
+        date: new Date(date)
+    };
+}
+
+function requestOptionsWithHeaders(headers) {
+    return {
+        method: 'GET',
+        host: 'host.foo.com',
+        uri: '/',
+        headers: headers
+    };
+}
+
 describe('Escher', function () {
     describe('signRequest', function () {
         Object.keys(testConfig).forEach(function (testSuite) {
@@ -40,35 +66,31 @@ describe('Escher', function () {
                 });
             });
         });
+
+        it('should automagically add the host and date header to the headers to sign', function() {
+            var options = {
+                authHeaderName: 'Authorization',
+                dateHeaderName: 'Date',
+                hashAlgo: "sha256",
+                date: 'Mon, 09 Sep 2011 23:36:00 GMT',
+                algoPrefix: 'AWS4',
+                credentialScope: 'us-east-1/host/aws4_request',
+                accessKeyId: 'AKIDEXAMPLE'
+            };
+            var actualHeaders = [];
+            var requestOptions = requestOptionsWithHeaders(actualHeaders);
+            var signedRequestOptions = new Escher(options).signRequest(requestOptions, '', specHelper.createKeyDb('AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'));
+
+            var expectedHeaders = [
+                ['date', 'Mon, 09 Sep 2011 23:36:00 GMT'],
+                ['host', 'host.foo.com'],
+                ['authorization', goodAuthHeader]
+            ];
+            expect(JSON.stringify(normalizeHeaders(signedRequestOptions.headers))).toBe(JSON.stringify(normalizeHeaders(expectedHeaders)));
+        });
     });
 
     describe('validateRequest', function () {
-        var goodDate = 'Mon, 09 Sep 2011 23:36:00 GMT';
-        var goodAuthHeader =
-            'AWS4-HMAC-SHA256 ' +
-                'Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, ' +
-                'SignedHeaders=date;host, ' +
-                'Signature=b27ccfbfa7df52a200ff74193ca6e32d4b48b8856fab7ebf1c595d0670a7e470';
-
-        function configWithDate(date) {
-            return {
-                authHeaderName: 'Authorization',
-                dateHeaderName: 'Date',
-                algoPrefix: 'AWS4',
-                credentialScope: 'us-east-1/host/aws4_request',
-                date: new Date(date)
-            };
-        }
-
-        function requestOptionsWithHeaders(headers) {
-            return {
-                method: 'GET',
-                host: 'host.foo.com',
-                uri: '/',
-                headers: headers
-            };
-        }
-
         it('should validate request using auth header', function () {
             var headers = [
                 ['Date', goodDate],
@@ -77,10 +99,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            var keyDB = function (accessKey) {
-                var keys = {'AKIDEXAMPLE': 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'};
-                return keys[accessKey];
-            };
+            var keyDB = specHelper.createKeyDb('AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY');
 
             expect(new Escher(escherConfig).validateRequest(requestOptions, '', keyDB)).toBeTruthy();
         });
