@@ -36,7 +36,8 @@ var config = {
             hashAlgo: "sha256",
             algoPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
-            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
+            accessKeyId: 'AKIDEXAMPLE'
         }
     },
     emarsys: {
@@ -48,7 +49,8 @@ var config = {
             hashAlgo: "sha256",
             algoPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
-            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
+            accessKeyId: 'AKIDEXAMPLE'
         }
     }
 };

@@ -1,13 +1,39 @@
 "use strict";
 
-var Escher = require('../lib/escher');
+var Escher = require('../lib/escher'),
+    testConfig = require('./test_config'),
+    specHelper = require('./spec_helper'),
+    normalizeHeaders = require('../lib/escherutil').normalizeHeaders,
+    using = specHelper.using,
+    TestFileParser = specHelper.TestFileParser,
+    readTestFile = specHelper.readTestFile;
 
 describe('Escher', function () {
     describe('signRequest', function () {
-        it('should be an existing method', function () {
+        Object.keys(testConfig).forEach(function (testSuite) {
+            using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
+                it('should add signature to headers', function () {
 
-            expect(new Escher().signRequest).toBeTruthy();
+                    var testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
+                    var body = testFileParser.getBody();
+                    var headers = testFileParser.getHeaders();
 
+                    var requestOptions = {
+                        method: testFileParser.getMethod(),
+                        host: testFileParser.getHost(headers),
+                        uri: testFileParser.getUri(),
+                        headers: headers
+                    };
+
+                    var options = testConfig[testSuite].signerConfig;
+                    options.date = testFileParser.getDate(headers);
+
+                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body);
+
+                    testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'sreq'));
+                    expect(JSON.stringify(normalizeHeaders(signedRequestOptions.headers))).toBe(JSON.stringify(normalizeHeaders(testFileParser.getHeaders())));
+                });
+            });
         });
     });
 
