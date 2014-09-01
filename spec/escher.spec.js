@@ -91,6 +91,8 @@ describe('Escher', function () {
     });
 
     describe('validateRequest', function () {
+        var keyDB = specHelper.createKeyDb('AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY');
+
         it('should validate request using auth header', function () {
             var headers = [
                 ['Date', goodDate],
@@ -99,9 +101,8 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            var keyDB = specHelper.createKeyDb('AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY');
 
-            expect(new Escher(escherConfig).validateRequest(requestOptions, '', keyDB)).toBeTruthy();
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).not.toThrow();
         });
 
         it('should not depend on the order of headers', function () {
@@ -112,12 +113,24 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            var keyDB = function (accessKey) {
-                var keys = {'AKIDEXAMPLE': 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'};
-                return keys[accessKey];
-            };
 
-            expect(new Escher(escherConfig).validateRequest(requestOptions, '', keyDB)).toBeTruthy();
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).not.toThrow();
+        });
+
+        it('should check the signature', function () {
+            var authHeader =     'AWS4-HMAC-SHA256 ' +
+                'Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, ' +
+                'SignedHeaders=date;host, ' +
+                'Signature=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('The signatures do not match!');
         });
     });
 });
