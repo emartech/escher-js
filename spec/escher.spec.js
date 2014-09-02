@@ -20,7 +20,8 @@ describe('Escher', function () {
             date: goodDate,
             algoPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
-            accessKeyId: 'AKIDEXAMPLE'
+            accessKeyId: 'AKIDEXAMPLE',
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
         };
     }
 
@@ -60,18 +61,12 @@ describe('Escher', function () {
                     };
                     var options = testConfig[testSuite].signerConfig;
                     options.date = testFileParser.getDate(headers);
-                    var keyDb = specHelper.createKeyDb(options.accessKeyId, options.apiSecret);
 
-                    var apiSecret = options.apiSecret;
-                    options.apiSecret = null;
-
-                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body, keyDb);
+                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body);
 
                     testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'sreq'));
                     expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
                         .toBe(JSON.stringify(escherUtil.normalizeHeaders(testFileParser.getHeaders())));
-
-                    options.apiSecret = apiSecret;
                 });
             });
         });
@@ -79,7 +74,7 @@ describe('Escher', function () {
         it('should automagically add the host and date header to the headers to sign', function() {
             var actualHeaders = [];
             var requestOptions = requestOptionsWithHeaders(actualHeaders);
-            var signedRequestOptions = new Escher(defaultSignerConfig()).signRequest(requestOptions, '', specHelper.createKeyDb('AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'));
+            var signedRequestOptions = new Escher(defaultSignerConfig()).signRequest(requestOptions, '');
 
             var expectedHeaders = [
                 ['date', 'Mon, 09 Sep 2011 23:36:00 GMT'],
