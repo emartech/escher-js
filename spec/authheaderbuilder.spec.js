@@ -45,7 +45,8 @@ describe('AuthHeaderBuilder', function () {
             var signerConfig = {
                 hashAlgo: 'sha512',
                 algoPrefix: 'XYZ',
-                date: 'Mon, 08 Sep 2011 23:36:00 GMT'
+                date: 'Mon, 08 Sep 2011 23:36:00 GMT',
+                credentialScope: 'us-east-1/host/aws4_request'
             };
 
             var authHeader = new AuthHeaderBuilder(signerConfig).generateHeader(requestOptions, 'body');
