@@ -165,7 +165,8 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('Invalid request date!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); })
+                .toThrow('The credential date does not match with the request date!');
         });
     });
 });
