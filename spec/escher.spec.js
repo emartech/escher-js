@@ -243,5 +243,24 @@ describe('Escher', function () {
             var requestOptions = requestOptionsWithHeaders(headers);
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The date header is not signed!');
         });
+
+        it('should check whether the host header has been signed', function () {
+            var signerConfig = defaultSignerConfig();
+            var authHeader = new AuthHeaderBuilder(signerConfig).buildHeader({
+                shortDate: escherUtil.toShortDate(goodDate),
+                signerConfig: signerConfig,
+                signedHeaders: ['date'],
+                signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            });
+
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The host header is not signed!');
+        });
     });
 });
