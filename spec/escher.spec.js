@@ -1,6 +1,7 @@
 "use strict";
 
 var Escher = require('../lib/escher'),
+    AuthHeaderBuilder = require('../lib/authheaderbuilder'),
     testConfig = require('./test_config'),
     specHelper = require('./spec_helper'),
     normalizeHeaders = require('../lib/escherutil').normalizeHeaders,
@@ -21,7 +22,7 @@ function configWithDate(date) {
         dateHeaderName: 'Date',
         algoPrefix: 'AWS4',
         credentialScope: 'us-east-1/host/aws4_request',
-        date: new Date(date)
+        date: date
     };
 }
 
@@ -118,7 +119,8 @@ describe('Escher', function () {
         });
 
         it('should check the signature', function () {
-            var authHeader =     'AWS4-HMAC-SHA256 ' +
+            var authHeader =
+                'AWS4-HMAC-SHA256 ' +
                 'Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, ' +
                 'SignedHeaders=date;host, ' +
                 'Signature=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
