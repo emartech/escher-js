@@ -148,7 +148,6 @@ describe('Escher', function () {
         });
 
         it('should fail if it cannot parse the header', function () {
-            var signerConfig = defaultSignerConfig();
             var authHeader = "UNPARSABLE";
 
             var headers = [
@@ -159,6 +158,19 @@ describe('Escher', function () {
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('Could not parse auth header!');
+        });
+
+        it('should detect if dates are not on the same day', function () {
+            var twoDaysBeforeGoodDate = 'Sat, 07 Sep 2011 23:36:00 GMT';
+            var authHeader = goodAuthHeader();
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', twoDaysBeforeGoodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('Invalid request date!');
         });
     });
 });
