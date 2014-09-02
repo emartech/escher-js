@@ -145,7 +145,8 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The signatures do not match!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The signatures do not match!');
         });
 
         it('should fail if it cannot parse the header', function () {
@@ -158,7 +159,8 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('Could not parse auth header!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('Could not parse auth header!');
         });
 
         it('should detect if dates are not on the same day', function () {
@@ -241,7 +243,8 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The date header is not signed!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The date header is not signed!');
         });
 
         it('should check whether the host header has been signed', function () {
@@ -260,7 +263,28 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The host header is not signed!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The host header is not signed!');
+        });
+
+        it('should check the hash algorithm', function () {
+            var signerConfig = escherUtil.mergeOptions(defaultSignerConfig(), {hashAlgo: 'sha999'});
+            var authHeader = new AuthHeaderBuilder(signerConfig).buildHeader({
+                shortDate: escherUtil.toShortDate(goodDate),
+                signerConfig: signerConfig,
+                signedHeaders: ['host', 'date'],
+                signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            });
+
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('Only SHA256 and SHA512 hash algorithms are allowed!');
         });
     });
 });
