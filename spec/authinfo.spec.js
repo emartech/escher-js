@@ -1,13 +1,13 @@
 "use strict";
 
-var AuthHeaderBuilder = require('../lib/authheaderbuilder'),
+var AuthInfo = require('../lib/authinfo'),
     specHelper = require('./spec_helper'),
     testConfig = require('./test_config'),
     using = specHelper.using,
     readTestFile = specHelper.readTestFile,
     TestFileParser = specHelper.TestFileParser;
 
-describe('AuthHeaderBuilder', function () {
+describe('AuthInfo', function () {
     describe('build', function () {
         Object.keys(testConfig).forEach(function (testSuite) {
             using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
@@ -26,9 +26,9 @@ describe('AuthHeaderBuilder', function () {
                     var signerConfig = testConfig[testSuite].signerConfig;
                     signerConfig.date = testFileParser.getDate(headers);
 
-                    var builder = new AuthHeaderBuilder();
+                    var builder = new AuthInfo();
 
-                    var authHeader = builder.build(requestOptions, body, signerConfig);
+                    var authHeader = builder.buildHeader(requestOptions, body, signerConfig);
                     expect(authHeader).toBe(readTestFile(testSuite, testFile, 'authz'));
                 });
             });
@@ -48,7 +48,7 @@ describe('AuthHeaderBuilder', function () {
                 date: 'Mon, 08 Sep 2011 23:36:00 GMT'
             };
 
-            var authHeader = new AuthHeaderBuilder().build(requestOptions, 'body', signerConfig);
+            var authHeader = new AuthInfo().buildHeader(requestOptions, 'body', signerConfig);
 
             expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
         });
