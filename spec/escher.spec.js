@@ -25,15 +25,6 @@ describe('Escher', function () {
         };
     }
 
-    function requestOptionsWithHeaders(headers) {
-        return {
-            method: 'GET',
-            host: 'host.foo.com',
-            uri: '/',
-            headers: headers
-        };
-    }
-
     function goodAuthHeader() {
         var signerConfig = defaultSignerConfig();
         return new AuthHeaderBuilder(signerConfig).buildHeader({
@@ -72,8 +63,12 @@ describe('Escher', function () {
         });
 
         it('should automagically add the host and date header to the headers to sign', function() {
-            var actualHeaders = [];
-            var requestOptions = requestOptionsWithHeaders(actualHeaders);
+            var requestOptions = {
+                method: 'GET',
+                uri: '/',
+                headers: [],
+                host: 'host.foo.com'
+            };
             var signedRequestOptions = new Escher(defaultSignerConfig()).signRequest(requestOptions, '');
 
             var expectedHeaders = [
@@ -89,6 +84,14 @@ describe('Escher', function () {
     describe('validateRequest', function () {
         var nearToGoodDate = 'Mon, 09 Sep 2011 23:38:00 GMT';
         var currentDate = new Date(nearToGoodDate);
+
+        function requestOptionsWithHeaders(headers) {
+            return {
+                method: 'GET',
+                uri: '/',
+                headers: headers
+            };
+        }
 
         function configWithDate(date) {
             return {
@@ -207,6 +210,19 @@ describe('Escher', function () {
             var requestOptions = requestOptionsWithHeaders(headers);
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
                 .toThrow('The authorization header is missing!');
+        });
+
+        // Can we expect all the actual headers, or the host separated from them?
+        it('should detect missing host header', function () {
+            var authHeader = goodAuthHeader();
+            var headers = [
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The host header is missing!');
         });
     });
 });
