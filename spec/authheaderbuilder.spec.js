@@ -33,5 +33,24 @@ describe('AuthHeaderBuilder', function () {
                 });
             });
         });
+
+        it ('should use the provided signer config', function () {
+            var requestOptions = {
+                method: 'GET',
+                host: 'www.example.com',
+                uri: '/a_path',
+                headers: []
+            };
+
+            var signerConfig = {
+                hashAlgo: 'sha512',
+                algoPrefix: 'XYZ',
+                date: 'Mon, 08 Sep 2011 23:36:00 GMT'
+            };
+
+            var authHeader = new AuthHeaderBuilder().build(requestOptions, 'body', signerConfig);
+
+            expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
+        });
     });
 });
