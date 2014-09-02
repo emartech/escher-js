@@ -87,6 +87,9 @@ describe('Escher', function () {
     });
 
     describe('validateRequest', function () {
+        var nearToGoodDate = 'Mon, 09 Sep 2011 23:38:00 GMT';
+        var currentDate = new Date(nearToGoodDate);
+
         function configWithDate(date) {
             return {
                 authHeaderName: 'Authorization',
@@ -108,7 +111,7 @@ describe('Escher', function () {
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
 
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).not.toThrow();
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).not.toThrow();
         });
 
         it('should not depend on the order of headers', function () {
@@ -120,7 +123,7 @@ describe('Escher', function () {
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
 
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).not.toThrow();
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).not.toThrow();
         });
 
         it('should check the signature', function () {
@@ -139,7 +142,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('The signatures do not match!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The signatures do not match!');
         });
 
         it('should fail if it cannot parse the header', function () {
@@ -152,7 +155,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('Could not parse auth header!');
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('Could not parse auth header!');
         });
 
         it('should detect if dates are not on the same day', function () {
@@ -165,8 +168,22 @@ describe('Escher', function () {
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); })
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
                 .toThrow('The credential date does not match with the request date!');
+        });
+
+        it('should detect if date is not within the 15 minutes range', function () {
+            var twoHoursBeforeGoodDate = 'Mon, 09 Sep 2011 21:36:00 GMT';
+            var authHeader = goodAuthHeader();
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', twoHoursBeforeGoodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The request date is not within the accepted time range!');
         });
     });
 });
