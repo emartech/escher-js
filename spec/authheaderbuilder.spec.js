@@ -28,7 +28,7 @@ describe('AuthHeaderBuilder', function () {
 
                     var builder = new AuthHeaderBuilder(signerConfig);
 
-                    var authHeader = builder.build(requestOptions, body);
+                    var authHeader = builder.buildHeader(requestOptions, body);
                     expect(authHeader).toBe(readTestFile(testSuite, testFile, 'authz'));
                 });
             });
@@ -48,7 +48,7 @@ describe('AuthHeaderBuilder', function () {
                 date: 'Mon, 08 Sep 2011 23:36:00 GMT'
             };
 
-            var authHeader = new AuthHeaderBuilder(signerConfig).build(requestOptions, 'body');
+            var authHeader = new AuthHeaderBuilder(signerConfig).buildHeader(requestOptions, 'body');
 
             expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
         });
