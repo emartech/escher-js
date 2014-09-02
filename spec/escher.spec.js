@@ -204,7 +204,7 @@ describe('Escher', function () {
         it('should detect missing auth header', function () {
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate]
             ];
             var escherConfig = configWithDate(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
