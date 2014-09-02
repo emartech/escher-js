@@ -185,5 +185,28 @@ describe('Escher', function () {
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
                 .toThrow('The request date is not within the accepted time range!');
         });
+
+        it('should detect missing date header', function () {
+            var authHeader = goodAuthHeader();
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The date header is missing!');
+        });
+
+        it('should detect missing auth header', function () {
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The authorization header is missing!');
+        });
     });
 });
