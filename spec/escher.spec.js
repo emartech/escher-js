@@ -30,7 +30,7 @@ describe('Escher', function () {
         return new AuthHeaderBuilder(signerConfig).buildHeader({
             shortDate: escherUtil.toShortDate(goodDate),
             signerConfig: signerConfig,
-            signedHeaders: 'date;host',
+            signedHeaders: ['date', 'host'],
             signature: 'b27ccfbfa7df52a200ff74193ca6e32d4b48b8856fab7ebf1c595d0670a7e470'
         });
     }
@@ -134,7 +134,7 @@ describe('Escher', function () {
             var authHeader = new AuthHeaderBuilder(signerConfig).buildHeader({
                 shortDate: escherUtil.toShortDate(goodDate),
                 signerConfig: signerConfig,
-                signedHeaders: 'date;host',
+                signedHeaders: ['date', 'host'],
                 signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             });
 
@@ -223,6 +223,25 @@ describe('Escher', function () {
             var requestOptions = requestOptionsWithHeaders(headers);
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
                 .toThrow('The host header is missing!');
+        });
+
+        it('should check whether the date header has been signed', function () {
+            var signerConfig = defaultSignerConfig();
+            var authHeader = new AuthHeaderBuilder(signerConfig).buildHeader({
+                shortDate: escherUtil.toShortDate(goodDate),
+                signerConfig: signerConfig,
+                signedHeaders: ['host'],
+                signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            });
+
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); }).toThrow('The date header is not signed!');
         });
     });
 });
