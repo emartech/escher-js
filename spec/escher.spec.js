@@ -286,5 +286,25 @@ describe('Escher', function () {
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
                 .toThrow('Only SHA256 and SHA512 hash algorithms are allowed!');
         });
+
+        it('should check the credential scope', function () {
+            var signerConfig = escherUtil.mergeOptions(defaultSignerConfig(), {credentialScope: 'INVALID'});
+            var authHeader = new AuthHeaderBuilder(signerConfig).buildHeader({
+                shortDate: escherUtil.toShortDate(goodDate),
+                signerConfig: signerConfig,
+                signedHeaders: ['host', 'date'],
+                signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            });
+
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB, currentDate); })
+                .toThrow('The credential scope is invalid!');
+        });
     });
 });
