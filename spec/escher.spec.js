@@ -146,5 +146,19 @@ describe('Escher', function () {
             var requestOptions = requestOptionsWithHeaders(headers);
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('The signatures do not match!');
         });
+
+        it('should fail if it cannot parse the header', function () {
+            var signerConfig = defaultSignerConfig();
+            var authHeader = "UNPARSABLE";
+
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['Date', goodDate],
+                ['Authorization', authHeader]
+            ];
+            var escherConfig = configWithDate(goodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, '', keyDB); }).toThrow('Could not parse auth header!');
+        });
     });
 });
