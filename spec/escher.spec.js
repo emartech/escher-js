@@ -81,6 +81,38 @@ describe('Escher', function () {
         });
     });
 
+    describe('preSignUrl', function () {
+
+        function defaultUrlSignerConfig() {
+            return {
+                date: new Date('2011-05-11T12:00:00Z'),
+                hashAlgo: "sha256",
+                algoPrefix: 'EMS',
+                vendorKey: 'EMS',
+                credentialScope: 'us-east-1/host/aws4_request',
+                accessKeyId: 'th3K3y',
+                apiSecret: 'very_secure'
+            };
+        }
+
+        it('should generate signed url', function () {
+            var url = 'https://example.com/something?foo=bar&baz=barbaz';
+
+            var signedUrl = new Escher(defaultUrlSignerConfig()).preSignUrl(url, 123456);
+
+            var expectedAuthQueryParams = [
+                'X-EMS-Algorithm=EMS-HMAC-SHA256',
+                'X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request',
+                'X-EMS-Date=20110511T120000Z',
+                'X-EMS-Expires=123456',
+                'X-EMS-SignedHeaders=host',
+                'X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67'
+            ];
+
+            expect(signedUrl).toBe(url + '&' + expectedAuthQueryParams.join('&'));
+        });
+    });
+
     describe('validateRequest', function () {
         var nearToGoodDate = 'Mon, 09 Sep 2011 23:38:00 GMT';
         var currentDate = new Date(nearToGoodDate);
