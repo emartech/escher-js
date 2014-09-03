@@ -28,7 +28,7 @@ describe('AuthHeaderBuilder', function () {
 
                     var builder = new AuthHeaderBuilder(signerConfig);
 
-                    var authHeader = builder.generateHeader(requestOptions, body);
+                    var authHeader = builder.generateHeader(requestOptions, body, testFileParser.getHeadersToSign());
                     expect(authHeader).toBe(readTestFile(testSuite, testFile, 'authz'));
                 });
             });
@@ -49,7 +49,7 @@ describe('AuthHeaderBuilder', function () {
                 credentialScope: 'us-east-1/host/aws4_request'
             };
 
-            var authHeader = new AuthHeaderBuilder(signerConfig).generateHeader(requestOptions, 'body');
+            var authHeader = new AuthHeaderBuilder(signerConfig).generateHeader(requestOptions, 'body', []);
 
             expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
         });

@@ -28,7 +28,7 @@ describe('Signer', function () {
                     signerConfig.date = testFileParser.getDate(headers);
                     var signer = new Signer(signerConfig);
 
-                    var stringToSign = signer.getStringToSign(requestOptions, body);
+                    var stringToSign = signer.getStringToSign(requestOptions, body, testFileParser.getHeadersToSign());
                     expect(stringToSign).toBe(readTestFile(testSuite, testFile, 'sts'));
                 });
             });

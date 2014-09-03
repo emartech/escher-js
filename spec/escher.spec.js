@@ -53,7 +53,7 @@ describe('Escher', function () {
                     var options = testConfig[testSuite].signerConfig;
                     options.date = testFileParser.getDate(headers);
 
-                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body);
+                    var signedRequestOptions = new Escher(options).signRequest(requestOptions, body, testFileParser.getHeadersToSign());
 
                     testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'sreq'));
                     expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
@@ -119,11 +119,45 @@ describe('Escher', function () {
                 accessKeyId: 'AKIDEXAMPLE',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
             };
-            var signedRequestOptions = new Escher(signerConfig).signRequest(requestOptions, 'Action=ListUsers&Version=2010-05-08');
+            var signedRequestOptions = new Escher(signerConfig).signRequest(requestOptions, 'Action=ListUsers&Version=2010-05-08', ['content-type']);
 
             var expectedHeaders = [
                 ['content-type', 'application/x-www-form-urlencoded; charset=utf-8'],
                 ['host', 'iam.amazonaws.com'],
+                ['x-ems-date', '20110909T233600Z'],
+                ['x-ems-auth', 'EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=content-type;host;x-ems-date, Signature=f36c21c6e16a71a6e8dc56673ad6354aeef49c577a22fd58a190b5fcf8891dbd']
+            ];
+            expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
+                .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
+        });
+
+        it('should only sign the specified headers', function() {
+            var requestOptions = {
+                method: 'POST',
+                uri: '/',
+                headers: [
+                    ['Content-Type', 'application/x-www-form-urlencoded; charset=utf-8'],
+                    ['x-a-header', 'that/should/not/be/signed']
+                ],
+                host: 'iam.amazonaws.com'
+            };
+            var signerConfig = {
+                authHeaderName: 'X-Ems-Auth',
+                dateHeaderName: 'X-Ems-Date',
+                hashAlgo: "sha256",
+                date: 'Mon, 09 Sep 2011 23:36:00 GMT',
+                algoPrefix: 'EMS',
+                credentialScope: 'us-east-1/iam/aws4_request',
+                accessKeyId: 'AKIDEXAMPLE',
+                apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+            };
+            var headersToSign = ['content-type', 'host', 'x-ems-date'];
+            var signedRequestOptions = new Escher(signerConfig).signRequest(requestOptions, 'Action=ListUsers&Version=2010-05-08', headersToSign);
+
+            var expectedHeaders = [
+                ['content-type', 'application/x-www-form-urlencoded; charset=utf-8'],
+                ['host', 'iam.amazonaws.com'],
+                ['x-a-header', 'that/should/not/be/signed'],
                 ['x-ems-date', '20110909T233600Z'],
                 ['x-ems-auth', 'EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=content-type;host;x-ems-date, Signature=f36c21c6e16a71a6e8dc56673ad6354aeef49c577a22fd58a190b5fcf8891dbd']
             ];

@@ -48,6 +48,12 @@ var TestFileParser = function(testFileContent) {
         }, []);
     }
 
+    function getHeadersToSign() {
+        return getHeaders().map(function (header) {
+            return header[0];
+        });
+    }
+
     function getBody() {
         return requestLines[requestLines.length - 1];
     }
@@ -72,6 +78,7 @@ var TestFileParser = function(testFileContent) {
         getMethod: getMethod,
         getUri: getUri,
         getHeaders: getHeaders,
+        getHeadersToSign: getHeadersToSign,
         getBody: getBody,
         getHost: getHost,
         getDate: getDate
