@@ -44,7 +44,6 @@ var config = {
         files: [
             'get-header-key-duplicate',
             'get-header-value-order',
-            'post-header-key-order',
             'post-header-value-spaces'
         ],
         signerConfig: {
