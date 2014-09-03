@@ -79,6 +79,26 @@ describe('Escher', function () {
             expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
                 .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
         });
+
+        it('should use the specified auth header name', function() {
+            var requestOptions = {
+                method: 'GET',
+                uri: '/',
+                headers: [],
+                host: 'host.foo.com'
+            };
+            var signerConfig = defaultSignerConfig();
+            signerConfig.authHeaderName = 'X-Ems-Auth';
+            var signedRequestOptions = new Escher(signerConfig).signRequest(requestOptions, '');
+
+            var expectedHeaders = [
+                ['date', 'Mon, 09 Sep 2011 23:36:00 GMT'],
+                ['host', 'host.foo.com'],
+                ['x-ems-auth', goodAuthHeader()]
+            ];
+            expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
+                .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
+        });
     });
 
     describe('preSignUrl', function () {
