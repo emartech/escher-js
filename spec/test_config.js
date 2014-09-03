@@ -43,7 +43,8 @@ var config = {
     emarsys: {
         files: [
             'get-header-key-duplicate',
-            'get-header-value-order'
+            'get-header-value-order',
+            'post-header-key-order'
         ],
         signerConfig: {
             hashAlgo: "sha256",
