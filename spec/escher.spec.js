@@ -203,10 +203,12 @@ describe('Escher', function () {
         var currentDate = new Date(nearToGoodDate);
 
         function requestOptionsWithHeaders(headers) {
+            var hostKey = 'Host';
             return {
                 method: 'GET',
                 uri: '/',
-                headers: headers
+                headers: headers,
+                host: headers[hostKey]
             };
         }
 
