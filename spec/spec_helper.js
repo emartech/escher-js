@@ -85,11 +85,9 @@ var TestFileParser = function(testFileContent) {
     };
 };
 
-function createKeyDb(forAccessKeyId, apiSecret) {
+function createKeyDb(keyDBHash) {
     return function (accessKeyId) {
-        var keys = {};
-        keys[forAccessKeyId] = apiSecret;
-        return keys[accessKeyId];
+        return keyDBHash[accessKeyId];
     };
 }
 
