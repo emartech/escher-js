@@ -32,9 +32,9 @@ var config = {
             'get-relative',
             'get-relative-relative'
         ],
-        signerConfig: {
-            hashAlgo: "sha256",
-            algoPrefix: 'AWS4',
+        config: {
+            hashAlgo: 'sha256',
+            vendorPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
             accessKeyId: 'AKIDEXAMPLE'
@@ -44,13 +44,13 @@ var config = {
         files: [
             'get-header-key-duplicate',
             'get-header-value-order',
-           'post-header-key-order',
-             'post-header-value-spaces',
+            'post-header-key-order',
+            'post-header-value-spaces',
             'post-header-value-spaces-within-quotes'
         ],
-        signerConfig: {
-            hashAlgo: "sha256",
-            algoPrefix: 'AWS4',
+        config: {
+            hashAlgo: 'sha256',
+            vendorPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
             accessKeyId: 'AKIDEXAMPLE'

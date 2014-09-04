@@ -23,10 +23,10 @@ describe('AuthHeaderBuilder', function () {
                         uri: testFileParser.getUri(),
                         headers: headers
                     };
-                    var signerConfig = testConfig[testSuite].signerConfig;
-                    signerConfig.date = testFileParser.getDate(headers);
+                    var config = testConfig[testSuite].config;
+                    config.date = testFileParser.getDate(headers);
 
-                    var builder = new AuthHeaderBuilder(signerConfig);
+                    var builder = new AuthHeaderBuilder(config);
 
                     var authHeader = builder.generateHeader(requestOptions, body, testFileParser.getHeadersToSign());
                     expect(authHeader).toBe(readTestFile(testSuite, testFile, 'authz'));
@@ -42,14 +42,14 @@ describe('AuthHeaderBuilder', function () {
                 headers: []
             };
 
-            var signerConfig = {
+            var config = {
                 hashAlgo: 'sha512',
-                algoPrefix: 'XYZ',
+                vendorPrefix: 'XYZ',
                 date: 'Mon, 08 Sep 2011 23:36:00 GMT',
                 credentialScope: 'us-east-1/host/aws4_request'
             };
 
-            var authHeader = new AuthHeaderBuilder(signerConfig).generateHeader(requestOptions, 'body', []);
+            var authHeader = new AuthHeaderBuilder(config).generateHeader(requestOptions, 'body', []);
 
             expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
         });

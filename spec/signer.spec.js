@@ -24,9 +24,9 @@ describe('Signer', function () {
                         uri: testFileParser.getUri(),
                         headers: headers
                     };
-                    var signerConfig = testConfig[testSuite].signerConfig;
-                    signerConfig.date = testFileParser.getDate(headers);
-                    var signer = new Signer(signerConfig);
+                    var config = testConfig[testSuite].config;
+                    config.date = testFileParser.getDate(headers);
+                    var signer = new Signer(config);
 
                     var stringToSign = signer.getStringToSign(requestOptions, body, testFileParser.getHeadersToSign());
                     expect(stringToSign).toBe(readTestFile(testSuite, testFile, 'sts'));
@@ -40,7 +40,7 @@ describe('Signer', function () {
             var signer = new Signer({
                 hashAlgo: "sha256",
                 date: new Date("2011-09-09 23:36:00 UTC"),
-                algoPrefix: 'AWS4',
+                vendorPrefix: 'AWS4',
                 credentialScope: 'us-east-1/iam/aws4_request',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
             });
@@ -54,7 +54,7 @@ describe('Signer', function () {
             var signer = new Signer({
                 hashAlgo: "sha256",
                 date: new Date("2011-09-09 23:36:00 UTC"),
-                algoPrefix: 'AWS4',
+                vendorPrefix: 'AWS4',
                 credentialScope: 'us-east-1/host/aws4_request',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
             });
