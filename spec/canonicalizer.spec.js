@@ -24,7 +24,7 @@ describe('Canonicalizer', function () {
                         headers: headers
                     };
 
-                    var canonicalizedRequest = new Canonicalizer().canonicalizeRequest(options, body, testFileParser.getHeadersToSign());
+                    var canonicalizedRequest = new Canonicalizer('sha256').canonicalizeRequest(options, body, testFileParser.getHeadersToSign());
 
                     expect(canonicalizedRequest).toBe(readTestFile(testSuite, testFile, 'creq'));
                 });
