@@ -39,5 +39,8 @@
     ],
     "devDependencies": {
         "jasmine-node-karma": "^1.6.1"
+    },
+    "dependencies": {
+        "dateformat": "^1.0.8-1.2.3"
     }
 }

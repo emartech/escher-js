@@ -63,7 +63,7 @@ var TestFileParser = function(testFileContent) {
     }
 
     function getDate(headers) {
-        return lookupHeader(headers, 'date');
+        return new Date(lookupHeader(headers, 'date'));
     }
 
     function lookupHeader(headers, headerKey) {

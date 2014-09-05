@@ -10,7 +10,7 @@ var Escher = require('../lib/escher'),
     readTestFile = specHelper.readTestFile;
 
 describe('Escher', function () {
-    var goodDate = 'Mon, 09 Sep 2011 23:36:00 GMT';
+    var goodDate = 'Fri, 09 Sep 2011 23:36:00 GMT';
 
     function defaultConfig() {
         return {
@@ -30,7 +30,7 @@ describe('Escher', function () {
         return new AuthHelper(config).buildHeader({
             shortDate: escherUtil.toShortDate(goodDate),
             signedHeaders: ['date', 'host'],
-            signature: 'b27ccfbfa7df52a200ff74193ca6e32d4b48b8856fab7ebf1c595d0670a7e470'
+            signature: '0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be'
         });
     }
 
@@ -68,10 +68,11 @@ describe('Escher', function () {
                 headers: [],
                 host: 'host.foo.com'
             };
+
             var signedRequestOptions = new Escher(defaultConfig()).signRequest(requestOptions, '');
 
             var expectedHeaders = [
-                ['date', 'Mon, 09 Sep 2011 23:36:00 GMT'],
+                ['date', 'Fri, 09 Sep 2011 23:36:00 GMT'],
                 ['host', 'host.foo.com'],
                 ['authorization', goodAuthHeader()]
             ];
@@ -91,7 +92,7 @@ describe('Escher', function () {
             var signedRequestOptions = new Escher(config).signRequest(requestOptions, '');
 
             var expectedHeaders = [
-                ['date', 'Mon, 09 Sep 2011 23:36:00 GMT'],
+                ['date', 'Fri, 09 Sep 2011 23:36:00 GMT'],
                 ['host', 'host.foo.com'],
                 ['x-ems-auth', goodAuthHeader()]
             ];
@@ -112,7 +113,7 @@ describe('Escher', function () {
                 authHeaderName: 'X-Ems-Auth',
                 dateHeaderName: 'X-Ems-Date',
                 hashAlgo: "sha256",
-                date: 'Mon, 09 Sep 2011 23:36:00 GMT',
+                date: new Date('Fri, 09 Sep 2011 23:36:00 GMT'),
                 vendorPrefix: 'EMS',
                 credentialScope: 'us-east-1/iam/aws4_request',
                 accessKeyId: 'AKIDEXAMPLE',
@@ -144,7 +145,7 @@ describe('Escher', function () {
                 authHeaderName: 'X-Ems-Auth',
                 dateHeaderName: 'X-Ems-Date',
                 hashAlgo: "sha256",
-                date: 'Mon, 09 Sep 2011 23:36:00 GMT',
+                date: new Date('Fri, 09 Sep 2011 23:36:00 GMT'),
                 vendorPrefix: 'EMS',
                 credentialScope: 'us-east-1/iam/aws4_request',
                 accessKeyId: 'AKIDEXAMPLE',
@@ -196,7 +197,7 @@ describe('Escher', function () {
     });
 
     describe('validateRequest', function () {
-        var nearToGoodDate = 'Mon, 09 Sep 2011 23:38:00 GMT';
+        var nearToGoodDate = 'Fri, 09 Sep 2011 23:38:00 GMT';
         var currentDate = new Date(nearToGoodDate);
 
         function requestOptionsWithHeaders(headers) {
@@ -324,7 +325,7 @@ describe('Escher', function () {
         });
 
         it('should detect if date is not within the 15 minutes range', function () {
-            var twoHoursBeforeGoodDate = 'Mon, 09 Sep 2011 21:36:00 GMT';
+            var twoHoursBeforeGoodDate = 'Fri, 09 Sep 2011 21:36:00 GMT';
             var authHeader = goodAuthHeader();
             var headers = [
                 ['Host', 'host.foo.com'],
