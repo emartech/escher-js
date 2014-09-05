@@ -1,13 +1,13 @@
 "use strict";
 
-var AuthHeaderBuilder = require('../lib/authheaderbuilder'),
+var AuthHelper = require('../lib/authhelper'),
     specHelper = require('./spec_helper'),
     testConfig = require('./test_config'),
     using = specHelper.using,
     readTestFile = specHelper.readTestFile,
     TestFileParser = specHelper.TestFileParser;
 
-describe('AuthHeaderBuilder', function () {
+describe('AuthHelper', function () {
     describe('build', function () {
         Object.keys(testConfig).forEach(function (testSuite) {
             using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
@@ -26,7 +26,7 @@ describe('AuthHeaderBuilder', function () {
                     var config = testConfig[testSuite].config;
                     config.date = testFileParser.getDate(headers);
 
-                    var builder = new AuthHeaderBuilder(config);
+                    var builder = new AuthHelper(config);
 
                     var authHeader = builder.generateHeader(requestOptions, body, testFileParser.getHeadersToSign());
                     expect(authHeader).toBe(readTestFile(testSuite, testFile, 'authz'));
@@ -49,7 +49,7 @@ describe('AuthHeaderBuilder', function () {
                 credentialScope: 'us-east-1/host/aws4_request'
             };
 
-            var authHeader = new AuthHeaderBuilder(config).generateHeader(requestOptions, 'body', []);
+            var authHeader = new AuthHelper(config).generateHeader(requestOptions, 'body', []);
 
             expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
         });
