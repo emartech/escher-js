@@ -21,7 +21,7 @@ describe('Signer', function () {
                     var requestOptions = {
                         method: testFileParser.getMethod(),
                         host: testFileParser.getHost(headers),
-                        uri: testFileParser.getUri(),
+                        url: testFileParser.getUri(),
                         headers: headers
                     };
                     var config = testConfig[testSuite].config;

@@ -20,7 +20,7 @@ describe('AuthHelper', function () {
                     var requestOptions = {
                         method: testFileParser.getMethod(),
                         host: testFileParser.getHost(headers),
-                        uri: testFileParser.getUri(),
+                        url: testFileParser.getUri(),
                         headers: headers
                     };
                     var config = testConfig[testSuite].config;
@@ -38,7 +38,7 @@ describe('AuthHelper', function () {
             var requestOptions = {
                 method: 'GET',
                 host: 'www.example.com',
-                uri: '/a_path',
+                url: '/a_path',
                 headers: []
             };
 

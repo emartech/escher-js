@@ -20,7 +20,7 @@ describe('Canonicalizer', function () {
                     var options = {
                         method: testFileParser.getMethod(),
                         host: testFileParser.getHost(headers),
-                        uri: testFileParser.getUri(),
+                        url: testFileParser.getUri(),
                         headers: headers
                     };
 
