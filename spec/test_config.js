@@ -37,7 +37,10 @@ var config = {
             vendorPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
-            accessKeyId: 'AKIDEXAMPLE'
+            accessKeyId: 'AKIDEXAMPLE',
+            authHeaderName: 'Authorization',
+            dateHeaderName: 'Date'
+
         }
     },
     emarsys: {
@@ -53,7 +56,9 @@ var config = {
             vendorPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
-            accessKeyId: 'AKIDEXAMPLE'
+            accessKeyId: 'AKIDEXAMPLE',
+            authHeaderName: 'Authorization',
+            dateHeaderName: 'Date'
         }
     }
 };
