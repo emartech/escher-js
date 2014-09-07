@@ -10,7 +10,7 @@ var Escher = require('../lib/escher'),
     readTestFile = specHelper.readTestFile;
 
 describe('Escher', function () {
-    var goodDate = 'Fri, 09 Sep 2011 23:36:00 GMT';
+    var goodDate = new Date('Fri, 09 Sep 2011 23:36:00 GMT');
 
     function defaultConfig() {
         return {
@@ -242,7 +242,7 @@ describe('Escher', function () {
             return {
                 vendorKey: 'EMS',
                 algoPrefix: 'EMS',
-                date: '2011/05/11 12:00:00',
+                date: new Date('2011/05/11 12:00:00'),
                 credentialScope: 'us-east-1/host/aws4_request'
             };
         }
@@ -261,7 +261,7 @@ describe('Escher', function () {
 
         it('should validate request using auth header', function () {
             var headers = [
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Host', 'host.foo.com'],
                 ['Authorization', goodAuthHeader()]
             ];
@@ -274,7 +274,7 @@ describe('Escher', function () {
         it('should not depend on the order of headers', function () {
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', goodAuthHeader()]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -293,7 +293,7 @@ describe('Escher', function () {
 
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -307,7 +307,7 @@ describe('Escher', function () {
 
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -317,7 +317,7 @@ describe('Escher', function () {
         });
 
         it('should detect if dates are not on the same day', function () {
-            var twoDaysBeforeGoodDate = 'Sat, 07 Sep 2011 23:36:00 GMT';
+            var twoDaysBeforeGoodDate = new Date('Sat, 07 Sep 2011 23:36:00 GMT');
             var authHeader = goodAuthHeader();
             var headers = [
                 ['Host', 'host.foo.com'],
@@ -331,7 +331,7 @@ describe('Escher', function () {
         });
 
         it('should detect if date is not within the 15 minutes range', function () {
-            var twoHoursBeforeGoodDate = 'Fri, 09 Sep 2011 21:36:00 GMT';
+            var twoHoursBeforeGoodDate = new Date('Fri, 09 Sep 2011 21:36:00 GMT');
             var authHeader = goodAuthHeader();
             var headers = [
                 ['Host', 'host.foo.com'],
@@ -359,7 +359,7 @@ describe('Escher', function () {
         it('should detect missing auth header', function () {
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate]
+                ['Date', goodDate.toUTCString()]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
@@ -371,7 +371,7 @@ describe('Escher', function () {
         it('should detect missing host header', function () {
             var authHeader = goodAuthHeader();
             var headers = [
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -390,7 +390,7 @@ describe('Escher', function () {
 
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -409,7 +409,7 @@ describe('Escher', function () {
 
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -428,7 +428,7 @@ describe('Escher', function () {
 
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
@@ -447,7 +447,7 @@ describe('Escher', function () {
 
             var headers = [
                 ['Host', 'host.foo.com'],
-                ['Date', goodDate],
+                ['Date', goodDate.toUTCString()],
                 ['Authorization', authHeader]
             ];
             var escherConfig = configForHeaderValidationWith(goodDate);
