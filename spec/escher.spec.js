@@ -14,11 +14,12 @@ describe('Escher', function () {
 
     function defaultConfig() {
         return {
+            vendorKey: 'AWS4',
+            algoPrefix: 'AWS4',
             authHeaderName: 'Authorization',
             dateHeaderName: 'Date',
-            hashAlgo: "sha256",
+            hashAlgo: "SHA256",
             date: goodDate,
-            vendorPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
             accessKeyId: 'AKIDEXAMPLE',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
@@ -110,11 +111,12 @@ describe('Escher', function () {
                 host: 'iam.amazonaws.com'
             };
             var config = {
+                vendorKey: 'EMS',
+                algoPrefix: 'EMS',
                 authHeaderName: 'X-Ems-Auth',
                 dateHeaderName: 'X-Ems-Date',
-                hashAlgo: "sha256",
+                hashAlgo: "SHA256",
                 date: new Date('Fri, 09 Sep 2011 23:36:00 GMT'),
-                vendorPrefix: 'EMS',
                 credentialScope: 'us-east-1/iam/aws4_request',
                 accessKeyId: 'AKIDEXAMPLE',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
@@ -142,11 +144,12 @@ describe('Escher', function () {
                 host: 'iam.amazonaws.com'
             };
             var config = {
+                vendorKey: 'EMS',
+                algoPrefix: 'EMS',
                 authHeaderName: 'X-Ems-Auth',
                 dateHeaderName: 'X-Ems-Date',
-                hashAlgo: "sha256",
+                hashAlgo: "SHA256",
                 date: new Date('Fri, 09 Sep 2011 23:36:00 GMT'),
-                vendorPrefix: 'EMS',
                 credentialScope: 'us-east-1/iam/aws4_request',
                 accessKeyId: 'AKIDEXAMPLE',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
@@ -169,10 +172,10 @@ describe('Escher', function () {
     describe('preSignUrl', function () {
 
         var config = {
-            date: new Date('2011-05-11T12:00:00Z'),
-            hashAlgo: "sha256",
-            vendorPrefix: 'EMS',
             vendorKey: 'EMS',
+            algoPrefix: 'EMS',
+            date: new Date('2011-05-11T12:00:00Z'),
+            hashAlgo: "SHA256",
             credentialScope: 'us-east-1/host/aws4_request',
             accessKeyId: 'th3K3y',
             apiSecret: 'very_secure'
@@ -213,9 +216,10 @@ describe('Escher', function () {
 
         function configForHeaderValidationWith(date) {
             return {
+                vendorKey: 'AWS4',
+                algoPrefix: 'AWS4',
                 authHeaderName: 'Authorization',
                 dateHeaderName: 'Date',
-                vendorPrefix: 'AWS4',
                 credentialScope: 'us-east-1/host/aws4_request',
                 date: date
             };
@@ -236,8 +240,8 @@ describe('Escher', function () {
 
         function configForQueryStringValidation() {
             return {
-                vendorPrefix: 'EMS',
                 vendorKey: 'EMS',
+                algoPrefix: 'EMS',
                 date: '2011/05/11 12:00:00',
                 credentialScope: 'us-east-1/host/aws4_request'
             };

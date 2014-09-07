@@ -38,9 +38,10 @@ describe('Signer', function () {
     describe('calculateSigningKey', function () {
         it('should calculate the signing key', function () {
             var signer = new Signer({
-                hashAlgo: "sha256",
+                vendorKey: 'AWS4',
+                algoPrefix: 'AWS4',
+                hashAlgo: "SHA256",
                 date: new Date("2011-09-09 23:36:00 UTC"),
-                vendorPrefix: 'AWS4',
                 credentialScope: 'us-east-1/iam/aws4_request',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
             });
@@ -52,9 +53,10 @@ describe('Signer', function () {
     describe('calculateSignature', function () {
         it('should calculate the signature', function () {
             var signer = new Signer({
-                hashAlgo: "sha256",
+                vendorKey: 'AWS4',
+                algoPrefix: 'AWS4',
+                hashAlgo: "SHA256",
                 date: new Date("2011-09-09 23:36:00 UTC"),
-                vendorPrefix: 'AWS4',
                 credentialScope: 'us-east-1/host/aws4_request',
                 apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
             });

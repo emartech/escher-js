@@ -33,8 +33,9 @@ var config = {
             'get-relative-relative'
         ],
         config: {
-            hashAlgo: 'sha256',
-            vendorPrefix: 'AWS4',
+            vendorKey: 'AWS4',
+            algoPrefix: 'AWS4',
+            hashAlgo: 'SHA256',
             credentialScope: 'us-east-1/host/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
             accessKeyId: 'AKIDEXAMPLE',
@@ -52,8 +53,9 @@ var config = {
             'post-header-value-spaces-within-quotes'
         ],
         config: {
-            hashAlgo: 'sha256',
-            vendorPrefix: 'AWS4',
+            hashAlgo: 'SHA256',
+            vendorKey: 'AWS4',
+            algoPrefix: 'AWS4',
             credentialScope: 'us-east-1/host/aws4_request',
             apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
             accessKeyId: 'AKIDEXAMPLE',

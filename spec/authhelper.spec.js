@@ -43,8 +43,9 @@ describe('AuthHelper', function () {
             };
 
             var config = {
-                hashAlgo: 'sha512',
-                vendorPrefix: 'XYZ',
+                hashAlgo: 'SHA512',
+                vendorKey: 'XYZ',
+                algoPrefix: 'XYZ',
                 date: new Date('Mon, 08 Sep 2011 23:36:00 GMT'),
                 credentialScope: 'us-east-1/host/aws4_request'
             };
