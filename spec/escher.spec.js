@@ -29,7 +29,6 @@ describe('Escher', function () {
     function goodAuthHeader() {
         var config = defaultConfig();
         return new AuthHelper(config).buildHeader({
-            shortDate: escherUtil.toShortDate(goodDate),
             signedHeaders: ['date', 'host'],
             signature: '0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be'
         });
@@ -286,7 +285,6 @@ describe('Escher', function () {
         it('should check the signature', function () {
             var config = defaultConfig();
             var authHeader = new AuthHelper(config).buildHeader({
-                shortDate: escherUtil.toShortDate(goodDate),
                 signedHeaders: ['date', 'host'],
                 signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             });
@@ -383,7 +381,6 @@ describe('Escher', function () {
         it('should check whether the date header has been signed', function () {
             var config = defaultConfig();
             var authHeader = new AuthHelper(config).buildHeader({
-                shortDate: escherUtil.toShortDate(goodDate),
                 signedHeaders: ['host'],
                 signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             });
@@ -402,7 +399,6 @@ describe('Escher', function () {
         it('should check whether the host header has been signed', function () {
             var config = defaultConfig();
             var authHeader = new AuthHelper(config).buildHeader({
-                shortDate: escherUtil.toShortDate(goodDate),
                 signedHeaders: ['date'],
                 signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             });
@@ -421,7 +417,6 @@ describe('Escher', function () {
         it('should check the hash algorithm', function () {
             var config = escherUtil.mergeOptions(defaultConfig(), {hashAlgo: 'sha999'});
             var authHeader = new AuthHelper(config).buildHeader({
-                shortDate: escherUtil.toShortDate(goodDate),
                 signedHeaders: ['host', 'date'],
                 signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             });
@@ -440,7 +435,6 @@ describe('Escher', function () {
         it('should check the credential scope', function () {
             var config = escherUtil.mergeOptions(defaultConfig(), {credentialScope: 'INVALID'});
             var authHeader = new AuthHelper(config).buildHeader({
-                shortDate: escherUtil.toShortDate(goodDate),
                 signedHeaders: ['host', 'date'],
                 signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             });
