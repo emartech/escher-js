@@ -463,5 +463,13 @@ describe('Escher', function () {
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
                 .toThrow('The credential scope is invalid');
         });
+
+        it('should return an instance of Escher after new keyword', function() {
+            var escherConfig = configForHeaderValidationWith(nearToGoodDate);
+
+            var escher = new Escher(escherConfig);
+
+            expect(escher instanceof Escher).toEqual(true);
+        });
     });
 });

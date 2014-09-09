@@ -22,7 +22,7 @@
         "node": ">= 0.10.0"
     },
     "scripts": {
-        "test": "./node_modules/.bin/jasmine-node-karma spec/"
+        "test": "jasmine-node spec/"
     },
     "keywords": [
         "escher",
@@ -38,7 +38,7 @@
         "api"
     ],
     "devDependencies": {
-        "jasmine-node-karma": "^1.6.1"
+        "jasmine-node": "^1.14.5"
     },
     "dependencies": {
         "dateformat": "^1.0.8-1.2.3"
