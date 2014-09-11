@@ -11,10 +11,11 @@ var Escher = require('../lib/escher'),
 
 describe('Escher', function () {
     var goodDate = new Date('Fri, 09 Sep 2011 23:36:00 GMT');
-    var nearToGoodDate = new Date('Fri, 09 Sep 2011 23:38:00 GMT');
+    var nearToGoodDate = new Date('Fri, 09 Sep 2011 23:35:55 GMT');
     var twoHoursBeforeGoodDate = new Date('Fri, 09 Sep 2011 21:36:00 GMT');
     var twoDaysBeforeGoodDate = new Date('Sat, 07 Sep 2011 23:36:00 GMT');
     var dateForPresign = new Date('2011-05-11T12:00:00Z');
+    var afterPresignedUrlExpired = new Date('2011-05-30T12:00:00Z');
 
     function defaultConfig() {
         return {
@@ -26,7 +27,8 @@ describe('Escher', function () {
             date: goodDate,
             credentialScope: 'us-east-1/host/aws4_request',
             accessKeyId: 'AKIDEXAMPLE',
-            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+            apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
+            clockSkew: 10
         };
     }
 
@@ -122,7 +124,8 @@ describe('Escher', function () {
                 date: goodDate,
                 credentialScope: 'us-east-1/iam/aws4_request',
                 accessKeyId: 'AKIDEXAMPLE',
-                apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+                apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
+                clockSkew: 10
             };
             var signedRequestOptions = new Escher(config).signRequest(requestOptions, 'Action=ListUsers&Version=2010-05-08', ['content-type']);
 
@@ -155,7 +158,8 @@ describe('Escher', function () {
                 date: goodDate,
                 credentialScope: 'us-east-1/iam/aws4_request',
                 accessKeyId: 'AKIDEXAMPLE',
-                apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'
+                apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
+                clockSkew: 10
             };
             var headersToSign = ['content-type', 'host', 'x-ems-date'];
             var signedRequestOptions = new Escher(config).signRequest(requestOptions, 'Action=ListUsers&Version=2010-05-08', headersToSign);
@@ -181,7 +185,8 @@ describe('Escher', function () {
             hashAlgo: "SHA256",
             credentialScope: 'us-east-1/host/aws4_request',
             accessKeyId: 'th3K3y',
-            apiSecret: 'very_secure'
+            apiSecret: 'very_secure',
+            clockSkew: 10
         };
 
         it('should generate signed url', function () {
@@ -222,7 +227,8 @@ describe('Escher', function () {
                 authHeaderName: 'Authorization',
                 dateHeaderName: 'Date',
                 credentialScope: 'us-east-1/host/aws4_request',
-                date: date
+                date: date,
+                clockSkew: 10
             };
         }
 
@@ -239,11 +245,11 @@ describe('Escher', function () {
             };
         }
 
-        function configForQueryStringValidation() {
+        function configForQueryStringValidation(date) {
             return {
                 vendorKey: 'EMS',
                 algoPrefix: 'EMS',
-                date: dateForPresign,
+                date: date,
                 credentialScope: 'us-east-1/host/aws4_request'
             };
         }
@@ -254,10 +260,18 @@ describe('Escher', function () {
         });
 
         it('should validate request using query string', function () {
-            var escherConfig = configForQueryStringValidation();
+            var escherConfig = configForQueryStringValidation(dateForPresign);
             var requestOptions = requestOptionsWithQueryString('?foo=bar&baz=barbaz&X-EMS-Algorithm=EMS-HMAC-SHA256&X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request&X-EMS-Date=20110511T120000Z&X-EMS-Expires=123456&X-EMS-SignedHeaders=host&X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67');
 
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); }).not.toThrow();
+        });
+
+        it('should fail if request has expired', function () {
+            var escherConfig = configForQueryStringValidation(afterPresignedUrlExpired);
+            var requestOptions = requestOptionsWithQueryString('?foo=bar&baz=barbaz&X-EMS-Algorithm=EMS-HMAC-SHA256&X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request&X-EMS-Date=20110511T120000Z&X-EMS-Expires=123456&X-EMS-SignedHeaders=host&X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67');
+
+            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+                .toThrow('The request date is not within the accepted time range');
         });
 
         it('should validate request using auth header', function () {
@@ -448,6 +462,14 @@ describe('Escher', function () {
             var requestOptions = requestOptionsWithHeaders(headers);
             expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
                 .toThrow('The credential scope is invalid');
+        });
+
+        it('should return an instance of Escher after new keyword', function() {
+            var escherConfig = configForHeaderValidationWith(nearToGoodDate);
+
+            var escher = new Escher(escherConfig);
+
+            expect(escher instanceof Escher).toEqual(true);
         });
     });
 });
