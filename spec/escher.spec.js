@@ -207,7 +207,7 @@ describe('Escher', function () {
         });
     });
 
-    describe('validateRequest', function () {
+    describe('authenticate', function () {
 
         function requestOptionsWithHeaders(headers) {
             var hostKey = 'Host';
@@ -263,14 +263,14 @@ describe('Escher', function () {
             var escherConfig = configForQueryStringValidation(dateForPresign);
             var requestOptions = requestOptionsWithQueryString('?foo=bar&baz=barbaz&X-EMS-Algorithm=EMS-HMAC-SHA256&X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request&X-EMS-Date=20110511T120000Z&X-EMS-Expires=123456&X-EMS-SignedHeaders=host&X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67');
 
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); }).not.toThrow();
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); }).not.toThrow();
         });
 
         it('should fail if request has expired', function () {
             var escherConfig = configForQueryStringValidation(afterPresignedUrlExpired);
             var requestOptions = requestOptionsWithQueryString('?foo=bar&baz=barbaz&X-EMS-Algorithm=EMS-HMAC-SHA256&X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request&X-EMS-Date=20110511T120000Z&X-EMS-Expires=123456&X-EMS-SignedHeaders=host&X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67');
 
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The request date is not within the accepted time range');
         });
 
@@ -283,7 +283,19 @@ describe('Escher', function () {
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
 
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); }).not.toThrow();
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); }).not.toThrow();
+        });
+
+        it('should authenticate', function () {
+            var headers = [
+                ['Date', goodDate.toUTCString()],
+                ['Host', 'host.foo.com'],
+                ['Authorization', goodAuthHeader()]
+            ];
+            var escherConfig = configForHeaderValidationWith(nearToGoodDate);
+            var requestOptions = requestOptionsWithHeaders(headers);
+
+            expect(new Escher(escherConfig).authenticate(requestOptions, keyDB)).toEqual('AKIDEXAMPLE');
         });
 
         it('should not depend on the order of headers', function () {
@@ -295,7 +307,7 @@ describe('Escher', function () {
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
 
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); }).not.toThrow();
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); }).not.toThrow();
         });
 
         it('should check the signature', function () {
@@ -312,7 +324,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The signatures do not match');
         });
 
@@ -326,7 +338,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('Could not parse auth header');
         });
 
@@ -339,7 +351,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The credential date does not match with the request date');
         });
 
@@ -352,7 +364,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The request date is not within the accepted time range');
         });
 
@@ -364,7 +376,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The date header is missing');
         });
 
@@ -375,7 +387,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The authorization header is missing');
         });
 
@@ -388,7 +400,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The host header is missing');
         });
 
@@ -406,7 +418,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The date header is not signed');
         });
 
@@ -424,7 +436,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The host header is not signed');
         });
 
@@ -442,7 +454,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('Only SHA256 and SHA512 hash algorithms are allowed');
         });
 
@@ -460,7 +472,7 @@ describe('Escher', function () {
             ];
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var requestOptions = requestOptionsWithHeaders(headers);
-            expect(function () { new Escher(escherConfig).validateRequest(requestOptions, keyDB); })
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); })
                 .toThrow('The credential scope is invalid');
         });
 
