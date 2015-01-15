@@ -33,7 +33,8 @@ describe('Escher', function () {
     }
 
     function goodAuthHeader(config, signature) {
-        return new AuthHelper(escherUtil.mergeOptions(defaultConfig(), config || {})).buildHeader({
+        config = escherUtil.mergeOptions(defaultConfig(), config || {});
+        return new AuthHelper(config).buildHeader({
             signedHeaders: [config.dateHeaderName.toLowerCase(), 'host'],
             signature: signature || '0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be'
         });
