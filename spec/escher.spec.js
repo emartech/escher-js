@@ -32,11 +32,10 @@ describe('Escher', function () {
         };
     }
 
-    function goodAuthHeader() {
-        var config = defaultConfig();
-        return new AuthHelper(config).buildHeader({
-            signedHeaders: ['date', 'host'],
-            signature: '0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be'
+    function goodAuthHeader(config, signature) {
+        return new AuthHelper(escherUtil.mergeOptions(defaultConfig(), config || {})).buildHeader({
+            signedHeaders: [config.dateHeaderName.toLowerCase(), 'host'],
+            signature: signature || '0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be'
         });
     }
 
@@ -205,6 +204,7 @@ describe('Escher', function () {
 
             expect(signedUrl).toBe(url + '&' + expectedAuthQueryParams.join('&'));
         });
+
     });
 
     describe('authenticate', function () {
@@ -275,12 +275,26 @@ describe('Escher', function () {
         });
 
         it('should validate request using auth header', function () {
+            var escherConfig = configForHeaderValidationWith(nearToGoodDate);
             var headers = [
                 ['Date', goodDate.toUTCString()],
                 ['Host', 'host.foo.com'],
                 ['Authorization', goodAuthHeader()]
             ];
+            var requestOptions = requestOptionsWithHeaders(headers);
+
+            expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); }).not.toThrow();
+        });
+
+        it('should validate request with customized header names', function () {
             var escherConfig = configForHeaderValidationWith(nearToGoodDate);
+            escherConfig.dateHeaderName = 'X-EMS-Date';
+            escherConfig.authHeaderName = 'X-EMS-Auth';
+            var headers = [
+                ['Host', 'host.foo.com'],
+                ['X-EMS-Date', goodDate.toISOString().replace(/-/g, '').replace(/:/g, '').replace(/\..*Z/, 'Z')],
+                ['X-EMS-Auth', goodAuthHeader(escherConfig, '3a2b15801d517d0010be640f0685fa60b5d793396be38e0566ede3d334554479')]
+            ];
             var requestOptions = requestOptionsWithHeaders(headers);
 
             expect(function () { new Escher(escherConfig).authenticate(requestOptions, keyDB); }).not.toThrow();
