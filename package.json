@@ -41,6 +41,6 @@
         "jasmine-node": "^1.14.5"
     },
     "dependencies": {
-        "dateformat": "^1.0.8-1.2.3"
+        "dateformat": "1.0.8-1.2.3"
     }
 }
