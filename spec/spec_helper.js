@@ -4,19 +4,17 @@ var fs = require('fs'),
     testConfig = require('./test_config');
 
 function runTestFiles(func) {
-    Object.keys(testConfig).forEach(function (testSuite) {
+    testConfig.getTestSuites().forEach(function (testSuite) {
         using(testSuite, func);
     });
 }
 
 function using(testSuite, func){
     /* jshint -W040 */
-    var testFiles = testConfig[testSuite].files;
-    if (testFiles) {
-        for (var i = 0, count = testFiles.length; i < count; i++) {
-            func.call(this, getTest(testSuite, testFiles[i]));
-            jasmine.currentEnv_.currentSpec.description += ' (with "' + testSuite + '" using ' + testFiles[i] + ')';
-        }
+    var testFiles = testConfig.getTestFilesForSuite(testSuite);
+    for (var i = 0, count = testFiles.length; i < count; i++) {
+        func.call(this, getTest(testSuite, testFiles[i]));
+        jasmine.currentEnv_.currentSpec.description += ' (with "' + testSuite + '" using ' + testFiles[i] + ')';
     }
 }
 
@@ -32,7 +30,7 @@ function bin2hex(s) {
 
 function getTest(testSuite, testFile) {
     var test = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
-    test.config = config[testSuite].config;
+    test.config = testConfig.getConfigForSuite(testSuite);
     test.config.date = test.date;
     test.expected = {
         "request": new TestFileParser(readTestFile(testSuite, testFile, 'sreq')).request,

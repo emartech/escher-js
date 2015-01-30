@@ -1,4 +1,4 @@
-var testFiles = {
+var config = {
     aws4: {
         files: [
             'get-vanilla',
@@ -65,10 +65,20 @@ var testFiles = {
     }
 };
 
-function getTestFiles() {
-    return testFiles;
+function getTestSuites() {
+    return Object.keys(config);
+}
+
+function getTestFilesForSuite(testSuite) {
+    return config[testSuite].files;
+}
+
+function getConfigForSuite(testSuite) {
+    return config[testSuite].config;
 };
 
 module.exports = {
-    getTestFiles: testFiles
+    getTestSuites: getTestSuites,
+    getTestFilesForSuite: getTestFilesForSuite,
+    getConfigForSuite: getConfigForSuite
 };
