@@ -1,39 +1,18 @@
 "use strict";
 
-var AuthHelper = require('../lib/authhelper'),
-    specHelper = require('./spec_helper'),
-    testConfig = require('./test_config'),
-    using = specHelper.using,
-    readTestFile = specHelper.readTestFile,
-    TestFileParser = specHelper.TestFileParser;
+var AuthHelper = require('../lib/authhelper');
 
 describe('AuthHelper', function () {
     describe('build', function () {
-        Object.keys(testConfig).forEach(function (testSuite) {
-            using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
-                it('should return the proper auth header', function () {
 
-                    var testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
-                    var body = testFileParser.getBody();
-                    var headers = testFileParser.getHeaders();
-
-                    var requestOptions = {
-                        method: testFileParser.getMethod(),
-                        host: testFileParser.getHost(headers),
-                        url: testFileParser.getUri(),
-                        headers: headers
-                    };
-                    var config = testConfig[testSuite].config;
-                    config.date = testFileParser.getDate(headers);
-
-                    var builder = new AuthHelper(config);
-
-                    var authHeader = builder.generateHeader(requestOptions, body, testFileParser.getHeadersToSign());
-                    expect(authHeader).toBe(readTestFile(testSuite, testFile, 'authz'));
-                });
+        runTestFiles(function(test){
+            it('should return the proper auth header', function () {
+                var authHeader = new AuthHelper(test.config).generateHeader(test.request, test.request.body, test.headersToSign);
+                expect(authHeader).toBe(test.expected.authHeader);
             });
         });
 
+        // TODO: this should be moved to a testfile
         it ('should use the provided signer config', function () {
             var requestOptions = {
                 method: 'GET',

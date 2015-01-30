@@ -2,12 +2,7 @@
 
 var Escher = require('../lib/escher'),
     AuthHelper = require('../lib/authhelper'),
-    testConfig = require('./test_config'),
-    specHelper = require('./spec_helper'),
-    escherUtil = require('../lib/escherutil'),
-    using = specHelper.using,
-    TestFileParser = specHelper.TestFileParser,
-    readTestFile = specHelper.readTestFile;
+    escherUtil = require('../lib/escherutil');
 
 describe('Escher', function () {
     var goodDate = new Date('Fri, 09 Sep 2011 23:36:00 GMT');
@@ -41,29 +36,12 @@ describe('Escher', function () {
     }
 
     describe('signRequest', function () {
-        Object.keys(testConfig).forEach(function (testSuite) {
-            using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
-                it('should add signature to headers', function () {
 
-                    var testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
-                    var body = testFileParser.getBody();
-                    var headers = testFileParser.getHeaders();
-
-                    var requestOptions = {
-                        method: testFileParser.getMethod(),
-                        host: testFileParser.getHost(headers),
-                        url: testFileParser.getUri(),
-                        headers: headers
-                    };
-                    var config = testConfig[testSuite].config;
-                    config.date = testFileParser.getDate(headers);
-
-                    var signedRequestOptions = new Escher(config).signRequest(requestOptions, body, testFileParser.getHeadersToSign());
-
-                    testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'sreq'));
-                    expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
-                        .toBe(JSON.stringify(escherUtil.normalizeHeaders(testFileParser.getHeaders())));
-                });
+        runTestFiles(function(test){
+            it('should add signature to headers', function () {
+                var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
+                expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequest.headers)))
+                    .toBe(JSON.stringify(escherUtil.normalizeHeaders(test.expected.request.headers)));
             });
         });
 
@@ -255,7 +233,7 @@ describe('Escher', function () {
             };
         }
 
-        var keyDB = specHelper.createKeyDb({
+        var keyDB = createKeyDb({
             'AKIDEXAMPLE': 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
             'th3K3y': 'very_secure'
         });

@@ -1,4 +1,4 @@
-var config = {
+var testFiles = {
     aws4: {
         files: [
             'get-vanilla',
@@ -65,4 +65,10 @@ var config = {
     }
 };
 
-module.exports = config;
+function getTestFiles() {
+    return testFiles;
+};
+
+module.exports = {
+    getTestFiles: testFiles
+};

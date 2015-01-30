@@ -1,36 +1,14 @@
 'use strict';
 
-var Signer = require('../lib/signer'),
-    testConfig = require('./test_config'),
-    specHelper = require('./spec_helper'),
-    using = specHelper.using,
-    TestFileParser = specHelper.TestFileParser,
-    readTestFile = specHelper.readTestFile,
-    bin2hex = specHelper.bin2hex;
+var Signer = require('../lib/signer');
 
 describe('Signer', function () {
+
     describe('getStringToSign', function () {
-        Object.keys(testConfig).forEach(function (testSuite) {
-            using(testSuite + ' test files', testConfig[testSuite].files, function (testFile) {
-                it('should return the proper string to sign', function () {
-
-                    var testFileParser = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
-                    var body = testFileParser.getBody();
-                    var headers = testFileParser.getHeaders();
-
-                    var requestOptions = {
-                        method: testFileParser.getMethod(),
-                        host: testFileParser.getHost(headers),
-                        url: testFileParser.getUri(),
-                        headers: headers
-                    };
-                    var config = testConfig[testSuite].config;
-                    config.date = testFileParser.getDate(headers);
-                    var signer = new Signer(config);
-
-                    var stringToSign = signer.getStringToSign(requestOptions, body, testFileParser.getHeadersToSign());
-                    expect(stringToSign).toBe(readTestFile(testSuite, testFile, 'sts'));
-                });
+        runTestFiles(function(test){
+            it('should return the proper string to sign', function () {
+                var stringToSign = new Signer(test.config).getStringToSign(test.request, test.request.body, test.headersToSign);
+                expect(stringToSign).toBe(test.expected.stringToSign);
             });
         });
     });

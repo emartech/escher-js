@@ -1,15 +1,22 @@
 "use strict";
 
-var fs = require('fs');
+var fs = require('fs'),
+    testConfig = require('./test_config');
 
-function using(name, values, func){
+function runTestFiles(func) {
+    Object.keys(testConfig).forEach(function (testSuite) {
+        using(testSuite, func);
+    });
+}
+
+function using(testSuite, func){
     /* jshint -W040 */
-    for (var i = 0, count = values.length; i < count; i++) {
-        if (Object.prototype.toString.call(values[i]) !== '[object Array]') {
-            values[i] = [values[i]];
+    var testFiles = testConfig[testSuite].files;
+    if (testFiles) {
+        for (var i = 0, count = testFiles.length; i < count; i++) {
+            func.call(this, getTest(testSuite, testFiles[i]));
+            jasmine.currentEnv_.currentSpec.description += ' (with "' + testSuite + '" using ' + testFiles[i] + ')';
         }
-        func.apply(this, values[i]);
-        jasmine.currentEnv_.currentSpec.description += ' (with "' + name + '" using ' + values[i].join(', ') + ')';
     }
 }
 
@@ -23,65 +30,46 @@ function bin2hex(s) {
     return o;
 }
 
+function getTest(testSuite, testFile) {
+    var test = new TestFileParser(readTestFile(testSuite, testFile, 'req'));
+    test.config = config[testSuite].config;
+    test.config.date = test.date;
+    test.expected = {
+        "request": new TestFileParser(readTestFile(testSuite, testFile, 'sreq')).request,
+        "canonicalizedRequest": readTestFile(testSuite, testFile, 'creq'),
+        "stringToSign": readTestFile(testSuite, testFile, 'sts'),
+        "authHeader": readTestFile(testSuite, testFile, 'authz')
+    };
+    return test;
+}
+
 function readTestFile(testSuite, testCase, extension) {
     var fileName = 'spec/' + testSuite + '_testsuite/' + testCase + '.' + extension;
     return fs.readFileSync(fileName, {encoding: 'utf-8'});
 }
 
 var TestFileParser = function(testFileContent) {
+    var requestLines = testFileContent.split(/\r\n|\r|\n/);
 
-    var requestLines = testFileContent.split(/\r\n|\n|\r/);
+    var headersArray = [],
+        headersMap = {},
+        headersToSign = [];
 
-    function getMethod() {
-        return requestLines[0].split(' ')[0];
-    }
+    requestLines.slice(2, -2).forEach(function (headerLine) {
+        var header = headerLine.match(/([^:]*):(.*)/);
+        headersArray.push([header[1], header[2]]);
+        headersMap[header[1].toLowerCase()] = header[2];
+        headersToSign.push(header[1]);
+    });
 
-    function getUri() {
-        return requestLines[0].split(' ')[1];
-    }
-
-    function getHeaders() {
-        return requestLines.slice(1, -2).reduce(function (acc, headerLine) {
-            var header = headerLine.match(/([^:]*):(.*)/);
-            acc.push([header[1], header[2]]);
-            return acc;
-        }, []);
-    }
-
-    function getHeadersToSign() {
-        return getHeaders().map(function (header) {
-            return header[0];
-        });
-    }
-
-    function getBody() {
-        return requestLines[requestLines.length - 1];
-    }
-
-    function getHost(headers) {
-        return lookupHeader(headers, 'host');
-    }
-
-    function getDate(headers) {
-        return new Date(lookupHeader(headers, 'date'));
-    }
-
-    function lookupHeader(headers, headerKey) {
-        for(var i=0; i<headers.length; i++) {
-            if (headers[i][0].toLowerCase() === headerKey) {
-                return headers[i][1];
-            }
-        }
-    }
-
-    return {
-        getMethod: getMethod,
-        getUri: getUri,
-        getHeaders: getHeaders,
-        getHeadersToSign: getHeadersToSign,
-        getBody: getBody,
-        getHost: getHost,
-        getDate: getDate
+    this.date = new Date(headersMap['date']);
+    this.headersToSign = headersToSign;
+    this.request = {
+        "host": headersMap['host'],  // TODO: Do we really need it? It's available in headers
+        "method": requestLines[0],
+        "url": requestLines[1],
+        "headers": headersArray,
+        "body": requestLines[requestLines.length - 1]
     };
 };
 
@@ -92,9 +80,7 @@ function createKeyDb(keyDBHash) {
 }
 
 module.exports = {
-    using: using,
-    readTestFile: readTestFile,
-    TestFileParser: TestFileParser,
+    runTestFiles: runTestFiles,
     bin2hex: bin2hex,
     createKeyDb: createKeyDb
 };
