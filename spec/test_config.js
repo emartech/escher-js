@@ -50,7 +50,8 @@ var config = {
             'get-header-value-order',
             'post-header-key-order',
             'post-header-value-spaces',
-            'post-header-value-spaces-within-quotes'
+            'post-header-value-spaces-within-quotes',
+            'post-payload-utf8'
         ],
         config: {
             hashAlgo: 'SHA256',
