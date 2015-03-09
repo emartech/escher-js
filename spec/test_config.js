@@ -11,10 +11,8 @@ var config = {
             'post-x-www-form-urlencoded',
             'post-x-www-form-urlencoded-parameters',
             'get-header-value-trim',
-            // 'get-header-key-duplicate',
             'post-header-key-case',
             'post-header-key-sort',
-            // 'get-header-value-order',
             'post-header-value-case',
             'get-vanilla-query-order-value',
             'get-vanilla-query-order-key-case',
@@ -41,7 +39,6 @@ var config = {
             accessKeyId: 'AKIDEXAMPLE',
             authHeaderName: 'Authorization',
             dateHeaderName: 'Date'
-
         }
     },
     emarsys: {

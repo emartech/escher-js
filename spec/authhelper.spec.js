@@ -14,7 +14,7 @@ describe('AuthHelper', function () {
 
         // TODO: this should be moved to a testfile
         it ('should use the provided signer config', function () {
-            var requestOptions = {
+            var request = {
                 method: 'GET',
                 host: 'www.example.com',
                 url: '/a_path',
@@ -23,13 +23,13 @@ describe('AuthHelper', function () {
 
             var config = {
                 hashAlgo: 'SHA512',
-                vendorKey: 'XYZ',
+                vendorKey: 'ABC',
                 algoPrefix: 'XYZ',
-                date: new Date('Mon, 08 Sep 2011 23:36:00 GMT'),
+                date: new Date(),
                 credentialScope: 'us-east-1/host/aws4_request'
             };
 
-            var authHeader = new AuthHelper(config).generateHeader(requestOptions, 'body', []);
+            var authHeader = new AuthHelper(config).generateHeader(request, 'body', []);
 
             expect(authHeader).toMatch(/^XYZ\-HMAC\-SHA512/);
         });

@@ -45,12 +45,13 @@ describe('Escher', function () {
             });
         });
 
-        it('should automagically add the host and date header to the headers to sign', function() {
+        it('should automagically add the date header to the headers to sign', function() {
             var requestOptions = {
                 method: 'GET',
                 url: '/',
-                headers: [],
-                host: 'host.foo.com'
+                headers: [
+                    ['Host', 'host.foo.com'],
+                ]
             };
 
             var signedRequestOptions = new Escher(defaultConfig()).signRequest(requestOptions, '');
@@ -68,8 +69,9 @@ describe('Escher', function () {
             var requestOptions = {
                 method: 'GET',
                 url: '/',
-                headers: [],
-                host: 'host.foo.com'
+                headers: [
+                    ['Host', 'host.foo.com'],
+                ]
             };
             var config = defaultConfig();
             config.authHeaderName = 'X-Ems-Auth';
@@ -89,9 +91,9 @@ describe('Escher', function () {
                 method: 'POST',
                 url: '/',
                 headers: [
+                    ['Host', 'iam.amazonaws.com'],
                     ['Content-Type', 'application/x-www-form-urlencoded; charset=utf-8']
                 ],
-                host: 'iam.amazonaws.com'
             };
             var config = {
                 vendorKey: 'EMS',
@@ -122,10 +124,10 @@ describe('Escher', function () {
                 method: 'POST',
                 url: '/',
                 headers: [
+                    ['Host', 'iam.amazonaws.com'],
                     ['Content-Type', 'application/x-www-form-urlencoded; charset=utf-8'],
                     ['x-a-header', 'that/should/not/be/signed']
-                ],
-                host: 'iam.amazonaws.com'
+                ]
             };
             var config = {
                 vendorKey: 'EMS',
