@@ -1,0 +1,65 @@
+{
+    "headersToSign": [
+        "content-type",
+        "date",
+        "host"
+    ],
+    "request": {
+        "method": "POST",
+        "url": "/",
+        "headers": [
+            [
+                "Content-Type",
+                "application/x-www-form-urlencoded"
+            ],
+            [
+                "Date",
+                "Mon, 09 Sep 2011 23:36:00 GMT"
+            ],
+            [
+                "Host",
+                "host.foo.com"
+            ]
+        ],
+        "body": "foo=bar"
+    },
+    "config": {
+        "vendorKey": "AWS4",
+        "algoPrefix": "AWS4",
+        "hashAlgo": "SHA256",
+        "credentialScope": "us-east-1/host/aws4_request",
+        "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+        "accessKeyId": "AKIDEXAMPLE",
+        "authHeaderName": "Authorization",
+        "dateHeaderName": "Date",
+        "date": "2011-09-09T23:36:00.000Z"
+    },
+    "expected": {
+        "request": {
+            "method": "POST",
+            "url": "/",
+            "headers": [
+                [
+                    "Content-Type",
+                    "application/x-www-form-urlencoded"
+                ],
+                [
+                    "Date",
+                    "Mon, 09 Sep 2011 23:36:00 GMT"
+                ],
+                [
+                    "Host",
+                    "host.foo.com"
+                ],
+                [
+                    "Authorization",
+                    "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=content-type;date;host, Signature=5a15b22cf462f047318703b92e6f4f38884e4a7ab7b1d6426ca46a8bd1c26cbc"
+                ]
+            ],
+            "body": "foo=bar"
+        },
+        "canonicalizedRequest": "POST\n/\n\ncontent-type:application/x-www-form-urlencoded\ndate:Mon, 09 Sep 2011 23:36:00 GMT\nhost:host.foo.com\n\ncontent-type;date;host\n3ba8907e7a252327488df390ed517c45b96dead033600219bdca7107d1d3f88a",
+        "stringToSign": "AWS4-HMAC-SHA256\n20110909T233600Z\n20110909/us-east-1/host/aws4_request\n4c5c6e4b52fb5fb947a8733982a8a5a61b14f04345cbfe6e739236c76dd48f74",
+        "authHeader": "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=content-type;date;host, Signature=5a15b22cf462f047318703b92e6f4f38884e4a7ab7b1d6426ca46a8bd1c26cbc"
+    }
+}

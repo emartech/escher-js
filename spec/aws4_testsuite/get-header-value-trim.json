@@ -1,0 +1,65 @@
+{
+    "headersToSign": [
+        "date",
+        "host",
+        "p"
+    ],
+    "request": {
+        "method": "POST",
+        "url": "/",
+        "headers": [
+            [
+                "DATE",
+                "Mon, 09 Sep 2011 23:36:00 GMT"
+            ],
+            [
+                "host",
+                "host.foo.com"
+            ],
+            [
+                "p",
+                "phfft"
+            ]
+        ],
+        "body": ""
+    },
+    "config": {
+        "vendorKey": "AWS4",
+        "algoPrefix": "AWS4",
+        "hashAlgo": "SHA256",
+        "credentialScope": "us-east-1/host/aws4_request",
+        "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+        "accessKeyId": "AKIDEXAMPLE",
+        "authHeaderName": "Authorization",
+        "dateHeaderName": "Date",
+        "date": "2011-09-09T23:36:00.000Z"
+    },
+    "expected": {
+        "request": {
+            "method": "POST",
+            "url": "/",
+            "headers": [
+                [
+                    "DATE",
+                    "Mon, 09 Sep 2011 23:36:00 GMT"
+                ],
+                [
+                    "host",
+                    "host.foo.com"
+                ],
+                [
+                    "p",
+                    "phfft"
+                ],
+                [
+                    "Authorization",
+                    "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host;p, Signature=debf546796015d6f6ded8626f5ce98597c33b47b9164cf6b17b4642036fcb592"
+                ]
+            ],
+            "body": ""
+        },
+        "canonicalizedRequest": "POST\n/\n\ndate:Mon, 09 Sep 2011 23:36:00 GMT\nhost:host.foo.com\np:phfft\n\ndate;host;p\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stringToSign": "AWS4-HMAC-SHA256\n20110909T233600Z\n20110909/us-east-1/host/aws4_request\ndddd1902add08da1ac94782b05f9278c08dc7468db178a84f8950d93b30b1f35",
+        "authHeader": "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host;p, Signature=debf546796015d6f6ded8626f5ce98597c33b47b9164cf6b17b4642036fcb592"
+    }
+}
