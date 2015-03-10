@@ -71,12 +71,7 @@ function getTestFilesForSuite(testSuite) {
     return config[testSuite].files;
 }
 
-function getConfigForSuite(testSuite) {
-    return config[testSuite].config;
-};
-
 module.exports = {
     getTestSuites: getTestSuites,
-    getTestFilesForSuite: getTestFilesForSuite,
-    getConfigForSuite: getConfigForSuite
+    getTestFilesForSuite: getTestFilesForSuite
 };

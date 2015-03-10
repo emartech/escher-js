@@ -4,15 +4,6 @@ var Signer = require('../lib/signer');
 
 describe('Signer', function () {
 
-    describe('getStringToSign', function () {
-        runTestFiles(function(test){
-            it('should return the proper string to sign', function () {
-                var stringToSign = new Signer(test.config).getStringToSign(test.request, test.request.body, test.headersToSign);
-                expect(stringToSign).toBe(test.expected.stringToSign);
-            });
-        });
-    });
-
     describe('calculateSigningKey', function () {
         it('should calculate the signing key', function () {
             var signer = new Signer({

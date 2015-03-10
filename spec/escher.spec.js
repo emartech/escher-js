@@ -37,14 +37,6 @@ describe('Escher', function () {
 
     describe('signRequest', function () {
 
-        runTestFiles(function(test){
-            it('should add signature to headers', function () {
-                var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
-                expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequest.headers)))
-                    .toBe(JSON.stringify(escherUtil.normalizeHeaders(test.expected.request.headers)));
-            });
-        });
-
         it('should automagically add the date header to the headers to sign', function() {
             var requestOptions = {
                 method: 'GET',
