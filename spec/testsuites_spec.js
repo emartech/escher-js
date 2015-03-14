@@ -1,10 +1,10 @@
 "use strict";
 
-var AuthHelper = require('../lib/authhelper');
-var Canonicalizer = require('../lib/canonicalizer');
-var Escher = require('../lib/escher');
-var Signer = require('../lib/signer');
-var escherUtil = require('../lib/escherutil');
+var Escher = require('../lib/escher'),
+    AuthHelper = require('../lib/authhelper'),
+    Canonicalizer = require('../lib/canonicalizer'),
+    Signer = require('../lib/signer'),
+    escherUtil = require('../lib/escherutil');
 
 describe('AuthHelper', function () {
     describe('build', function () {
