@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-var fs = require('fs'),
-  testConfig = require('./test_config');
+var fs = require('fs');
+var testConfig = require('./test_config');
 
 function runTestFiles(func) {
   testConfig.getTestSuites().forEach(function(testSuite) {
@@ -26,6 +26,7 @@ function getTest(testSuite, testFile) {
   if (test.config.date) {
     test.config.date = new Date(test.config.date);
   }
+
   return test;
 }
 
