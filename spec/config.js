@@ -1,6 +1,6 @@
 var config = {
   aws4: {
-    files: [
+    signature: [
       'get-vanilla',
       'post-vanilla',
       'get-vanilla-query',
@@ -29,16 +29,21 @@ var config = {
       'get-slash-pointless-dot',
       'get-relative',
       'get-relative-relative'
-    ]
+    ],
+    authenticate: []
   },
   emarsys: {
-    files: [
+    signature: [
       'get-header-key-duplicate',
       'get-header-value-order',
       'post-header-key-order',
       'post-header-value-spaces',
       'post-header-value-spaces-within-quotes',
       'post-payload-utf8'
+    ],
+    authenticate: [
+      'valid-authentication-datein-expiretime',
+      'valid-get-vanilla-empty-query'
     ]
   }
 };
@@ -47,8 +52,8 @@ function getTestSuites() {
   return Object.keys(config);
 }
 
-function getTestFilesForSuite(testSuite) {
-  return config[testSuite].files;
+function getTestFilesForSuite(testSuite, topic) {
+  return config[testSuite][topic];
 }
 
 module.exports = {

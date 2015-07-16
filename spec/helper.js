@@ -1,17 +1,17 @@
 'use strict';
 
 var fs = require('fs');
-var testConfig = require('./test_config');
+var testConfig = require('./config');
 
-function runTestFiles(func) {
+function runTestFiles(topic, func) {
   testConfig.getTestSuites().forEach(function(testSuite) {
-    using(testSuite, func);
+    using(testSuite, topic, func);
   });
 }
 
-function using(testSuite, func) {
+function using(testSuite, topic, func) {
   /* jshint -W040 */
-  var testFiles = testConfig.getTestFilesForSuite(testSuite);
+  var testFiles = testConfig.getTestFilesForSuite(testSuite, topic);
   for (var i = 0, count = testFiles.length; i < count; i++) {
     func.call(this, getTest(testSuite, testFiles[i]));
     jasmine.currentEnv_.currentSpec.description += ' (with "' + testSuite + '" using ' + testFiles[i] + ')';
