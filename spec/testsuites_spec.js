@@ -4,7 +4,7 @@ var Escher = require('../lib/escher');
 var AuthHelper = require('../lib/authhelper');
 var Canonicalizer = require('../lib/canonicalizer');
 var Signer = require('../lib/signer');
-var escherUtil = require('../lib/escherutil');
+var utils = require('../lib/utils');
 
 describe('AuthHelper', function() {
   describe('build', function() {
@@ -35,8 +35,8 @@ describe('Escher', function() {
     runTestFiles('signature', function(test) {
       it('should add signature to headers', function() {
         var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
-        expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequest.headers)))
-          .toBe(JSON.stringify(escherUtil.normalizeHeaders(test.expected.request.headers)));
+        expect(JSON.stringify(utils.normalizeHeaders(signedRequest.headers)))
+          .toBe(JSON.stringify(utils.normalizeHeaders(test.expected.request.headers)));
       });
     });
   });

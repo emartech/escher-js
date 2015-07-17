@@ -2,7 +2,7 @@
 
 var Escher = require('../lib/escher');
 var AuthHelper = require('../lib/authhelper');
-var escherUtil = require('../lib/escherutil');
+var utils = require('../lib/utils');
 
 describe('Escher', function() {
   var goodDate = new Date('Fri, 09 Sep 2011 23:36:00 GMT');
@@ -28,7 +28,7 @@ describe('Escher', function() {
   }
 
   function goodAuthHeader(config, signature) {
-    config = escherUtil.mergeOptions(defaultConfig(), config || {});
+    config = utils.mergeOptions(defaultConfig(), config || {});
     return new AuthHelper(config).buildHeader({
       signedHeaders: [config.dateHeaderName.toLowerCase(), 'host'],
       signature: signature || '0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be'
@@ -53,8 +53,8 @@ describe('Escher', function() {
         ['host', 'host.foo.com'],
         ['authorization', goodAuthHeader()]
       ];
-      expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
-        .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
+      expect(JSON.stringify(utils.normalizeHeaders(signedRequestOptions.headers)))
+        .toBe(JSON.stringify(utils.normalizeHeaders(expectedHeaders)));
     });
 
     it('should use the specified auth header name', function() {
@@ -74,8 +74,8 @@ describe('Escher', function() {
         ['host', 'host.foo.com'],
         ['x-ems-auth', goodAuthHeader()]
       ];
-      expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
-        .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
+      expect(JSON.stringify(utils.normalizeHeaders(signedRequestOptions.headers)))
+        .toBe(JSON.stringify(utils.normalizeHeaders(expectedHeaders)));
     });
 
     it('should use the specified date header name and format its value', function() {
@@ -110,8 +110,8 @@ describe('Escher', function() {
           'EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=content-type;host;x-ems-date, Signature=f36c21c6e16a71a6e8dc56673ad6354aeef49c577a22fd58a190b5fcf8891dbd'
         ]
       ];
-      expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
-        .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
+      expect(JSON.stringify(utils.normalizeHeaders(signedRequestOptions.headers)))
+        .toBe(JSON.stringify(utils.normalizeHeaders(expectedHeaders)));
     });
 
     it('should only sign the specified headers', function() {
@@ -149,8 +149,8 @@ describe('Escher', function() {
           'EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=content-type;host;x-ems-date, Signature=f36c21c6e16a71a6e8dc56673ad6354aeef49c577a22fd58a190b5fcf8891dbd'
         ]
       ];
-      expect(JSON.stringify(escherUtil.normalizeHeaders(signedRequestOptions.headers)))
-        .toBe(JSON.stringify(escherUtil.normalizeHeaders(expectedHeaders)));
+      expect(JSON.stringify(utils.normalizeHeaders(signedRequestOptions.headers)))
+        .toBe(JSON.stringify(utils.normalizeHeaders(expectedHeaders)));
     });
   });
 
@@ -467,7 +467,7 @@ describe('Escher', function() {
     });
 
     it('should check the hash algorithm', function() {
-      var config = escherUtil.mergeOptions(defaultConfig(), {
+      var config = utils.mergeOptions(defaultConfig(), {
         hashAlgo: 'sha999'
       });
       var authHeader = new AuthHelper(config).buildHeader({
@@ -489,7 +489,7 @@ describe('Escher', function() {
     });
 
     it('should check the credential scope', function() {
-      var config = escherUtil.mergeOptions(defaultConfig(), {
+      var config = utils.mergeOptions(defaultConfig(), {
         credentialScope: 'INVALID'
       });
       var authHeader = new AuthHelper(config).buildHeader({
