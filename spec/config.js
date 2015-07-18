@@ -49,6 +49,7 @@ var config = {
     authenticate: [
       'authenticate-valid-authentication-datein-expiretime',
       'authenticate-valid-get-vanilla-empty-query',
+      'authenticate-valid-get-vanilla-empty-query-with-custom-headernames',
       'authenticate-error-host-header-not-signed',
       'authenticate-error-date-header-not-signed',
       'authenticate-error-invalid-auth-header',

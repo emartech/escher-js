@@ -1,0 +1,45 @@
+{
+  "title": "should authenticate request with customized header names",
+  "description": "Authorization and Date header names are customizable.",
+  "headersToSign": [
+    "x-ems-date",
+    "host"
+  ],
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": [
+      [
+        "X-EMS-Date",
+        "20110909T233600Z"
+      ],
+      [
+        "Host",
+        "host.foo.com"
+      ],
+      [
+        "X-EMS-Auth",
+        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=x-ems-date;host, Signature=3a2b15801d517d0010be640f0685fa60b5d793396be38e0566ede3d334554479"
+      ]
+    ],
+    "body": ""
+  },
+  "config": {
+    "vendorKey": "AWS4",
+    "algoPrefix": "AWS4",
+    "hashAlgo": "SHA256",
+    "credentialScope": "us-east-1/host/aws4_request",
+    "authHeaderName": "X-EMS-Auth",
+    "dateHeaderName": "X-EMS-Date",
+    "date": "2011-09-09T23:36:00.000Z"
+  },
+  "keyDb": [
+    [
+      "AKIDEXAMPLE",
+      "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
+    ]
+  ],
+  "expected": {
+    "apiKey": "AKIDEXAMPLE"
+  }
+}

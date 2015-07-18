@@ -243,35 +243,6 @@ describe('Escher', function() {
       }).not.toThrow();
     });
 
-    it('should validate request with customized header names', function() {
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      escherConfig.dateHeaderName = 'X-EMS-Date';
-      escherConfig.authHeaderName = 'X-EMS-Auth';
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['X-EMS-Date', goodDate.toISOString().replace(/-/g, '').replace(/:/g, '').replace(/\..*Z/, 'Z')],
-        ['X-EMS-Auth', goodAuthHeader(escherConfig,
-          '3a2b15801d517d0010be640f0685fa60b5d793396be38e0566ede3d334554479')]
-      ];
-      var requestOptions = requestOptionsWithHeaders(headers);
-
-      expect(function() {
-        new Escher(escherConfig).authenticate(requestOptions, keyDB);
-      }).not.toThrow();
-    });
-
-    it('should authenticate', function() {
-      var headers = [
-        ['Date', goodDate.toUTCString()],
-        ['Host', 'host.foo.com'],
-        ['Authorization', goodAuthHeader()]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-
-      expect(new Escher(escherConfig).authenticate(requestOptions, keyDB)).toEqual('AKIDEXAMPLE');
-    });
-
     it('should not depend on the order of headers', function() {
       var headers = [
         ['Host', 'host.foo.com'],
