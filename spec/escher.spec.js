@@ -37,26 +37,6 @@ describe('Escher', function() {
 
   describe('signRequest', function() {
 
-    it('should automagically add the date header to the headers to sign', function() {
-      var requestOptions = {
-        method: 'GET',
-        url: '/',
-        headers: [
-          ['Host', 'host.foo.com']
-        ]
-      };
-
-      var signedRequestOptions = new Escher(defaultConfig()).signRequest(requestOptions, '');
-
-      var expectedHeaders = [
-        ['date', 'Fri, 09 Sep 2011 23:36:00 GMT'],
-        ['host', 'host.foo.com'],
-        ['authorization', goodAuthHeader()]
-      ];
-      expect(JSON.stringify(utils.normalizeHeaders(signedRequestOptions.headers)))
-        .toBe(JSON.stringify(utils.normalizeHeaders(expectedHeaders)));
-    });
-
     it('should use the specified auth header name', function() {
       var requestOptions = {
         method: 'GET',
