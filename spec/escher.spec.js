@@ -229,20 +229,6 @@ describe('Escher', function() {
         .toThrow('The request date is not within the accepted time range');
     });
 
-    it('should validate request using auth header', function() {
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var headers = [
-        ['Date', goodDate.toUTCString()],
-        ['Host', 'host.foo.com'],
-        ['Authorization', goodAuthHeader()]
-      ];
-      var requestOptions = requestOptionsWithHeaders(headers);
-
-      expect(function() {
-        new Escher(escherConfig).authenticate(requestOptions, keyDB);
-      }).not.toThrow();
-    });
-
     it('should not depend on the order of headers', function() {
       var headers = [
         ['Host', 'host.foo.com'],
