@@ -286,26 +286,6 @@ describe('Escher', function() {
       }).not.toThrow();
     });
 
-    it('should check the signature', function() {
-      var config = defaultConfig();
-      var authHeader = new AuthHelper(config).buildHeader({
-        signedHeaders: ['date', 'host'],
-        signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      });
-
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The signatures do not match');
-    });
-
     it('should return an instance of Escher after new keyword', function() {
       var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);

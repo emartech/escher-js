@@ -1,0 +1,45 @@
+{
+  "title": "should check the signature",
+  "description": "An invalid signature should be catched.",
+  "headersToSign": [
+    "date",
+    "host"
+  ],
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": [
+      [
+        "Date",
+        "Fri, 09 Sep 2011 23:36:00 GMT"
+      ],
+      [
+        "Host",
+        "host.foo.com"
+      ],
+      [
+        "Authorization",
+        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ]
+    ],
+    "body": ""
+  },
+  "config": {
+    "vendorKey": "AWS4",
+    "algoPrefix": "AWS4",
+    "hashAlgo": "SHA256",
+    "credentialScope": "us-east-1/host/aws4_request",
+    "authHeaderName": "Authorization",
+    "dateHeaderName": "Date",
+    "date": "2011-09-09T23:36:00.000Z"
+  },
+  "keyDb": [
+    [
+      "AKIDEXAMPLE",
+      "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
+    ]
+  ],
+  "expected": {
+    "error": "The signatures do not match"
+  }
+}

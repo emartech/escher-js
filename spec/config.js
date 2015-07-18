@@ -59,7 +59,8 @@ var config = {
       'authenticate-error-missing-host-header',
       'authenticate-error-missing-date-header',
       'authenticate-error-date-header-auth-header-date-not-equal',
-      'authenticate-error-request-date-invalid'
+      'authenticate-error-request-date-invalid',
+      'authenticate-error-wrong-signature'
     ]
   }
 };
