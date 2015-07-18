@@ -395,10 +395,7 @@ describe('Escher', function() {
     });
 
     it('should return an instance of Escher after new keyword', function() {
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-
-      var escher = new Escher(escherConfig);
-
+      var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);
     });
   });
