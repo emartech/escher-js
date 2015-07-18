@@ -51,6 +51,7 @@ var config = {
       'authenticate-valid-get-vanilla-empty-query',
       'authenticate-error-host-header-not-signed',
       'authenticate-error-date-header-not-signed',
+      'authenticate-error-invalid-auth-header',
       'authenticate-error-invalid-escher-key',
       'authenticate-error-invalid-credential-scope',
       'authenticate-error-invalid-hash-algorithm',

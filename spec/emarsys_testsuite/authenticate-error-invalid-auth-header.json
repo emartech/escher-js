@@ -1,0 +1,44 @@
+{
+  "title": "should detect invalid authentication header",
+  "description": "The authentication header must have the right format.",
+  "headersToSign": [
+    "date"
+  ],
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": [
+      [
+        "Date",
+        "Fri, 09 Sep 2011 23:36:00 GMT"
+      ],
+      [
+        "Authorization",
+        "INVALID AUTH HEADER"
+      ],
+      [
+        "Host",
+        "host.foo.com"
+      ]
+    ],
+    "body": ""
+  },
+  "config": {
+    "vendorKey": "AWS4",
+    "algoPrefix": "AWS4",
+    "hashAlgo": "SHA256",
+    "credentialScope": "us-east-1/host/aws4_request",
+    "authHeaderName": "Authorization",
+    "dateHeaderName": "Date",
+    "date": "2011-09-09T23:36:00.000Z"
+  },
+  "keyDb": [
+    [
+      "AKIDEXAMPLE",
+      "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
+    ]
+  ],
+  "expected": {
+    "error": "Could not parse auth header"
+  }
+}

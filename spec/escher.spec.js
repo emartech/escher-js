@@ -306,22 +306,6 @@ describe('Escher', function() {
         .toThrow('The signatures do not match');
     });
 
-    it('should fail if it cannot parse the header', function() {
-      var authHeader = 'UNPARSABLE';
-
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('Could not parse auth header');
-    });
-
     it('should return an instance of Escher after new keyword', function() {
       var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);
