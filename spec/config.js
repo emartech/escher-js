@@ -55,6 +55,7 @@ var config = {
       'authenticate-error-invalid-credential-scope',
       'authenticate-error-invalid-hash-algorithm',
       'authenticate-error-missing-auth-header',
+      'authenticate-error-missing-host-header',
       'authenticate-error-date-header-auth-header-date-not-equal',
       'authenticate-error-request-date-invalid'
     ]

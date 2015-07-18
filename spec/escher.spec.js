@@ -379,21 +379,6 @@ describe('Escher', function() {
         .toThrow('The authorization header is missing');
     });
 
-    // Can we expect all the actual headers, or the host separated from them?
-    it('should detect missing host header', function() {
-      var authHeader = goodAuthHeader();
-      var headers = [
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The host header is missing');
-    });
-
     it('should return an instance of Escher after new keyword', function() {
       var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);
