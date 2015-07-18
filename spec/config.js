@@ -56,6 +56,7 @@ var config = {
       'authenticate-error-invalid-hash-algorithm',
       'authenticate-error-missing-auth-header',
       'authenticate-error-missing-host-header',
+      'authenticate-error-missing-date-header',
       'authenticate-error-date-header-auth-header-date-not-equal',
       'authenticate-error-request-date-invalid'
     ]

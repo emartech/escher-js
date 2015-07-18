@@ -1,0 +1,40 @@
+{
+  "title": "should detect missing date header",
+  "description": "The date header must exists in the request.",
+  "headersToSign": [
+    "host"
+  ],
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": [
+      [
+        "Authorization",
+        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be"
+      ],
+      [
+        "Host",
+        "host.foo.com"
+      ]
+    ],
+    "body": ""
+  },
+  "config": {
+    "vendorKey": "AWS4",
+    "algoPrefix": "AWS4",
+    "hashAlgo": "SHA256",
+    "credentialScope": "us-east-1/host/aws4_request",
+    "authHeaderName": "Authorization",
+    "dateHeaderName": "Date",
+    "date": "2011-09-09T23:36:00.000Z"
+  },
+  "keyDb": [
+    [
+      "AKIDEXAMPLE",
+      "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
+    ]
+  ],
+  "expected": {
+    "error": "The date header is missing"
+  }
+}

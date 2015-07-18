@@ -352,33 +352,6 @@ describe('Escher', function() {
         .toThrow('The request date is not within the accepted time range');
     });
 
-    it('should detect missing date header', function() {
-      var authHeader = goodAuthHeader();
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The date header is missing');
-    });
-
-    it('should detect missing auth header', function() {
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The authorization header is missing');
-    });
-
     it('should return an instance of Escher after new keyword', function() {
       var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);
