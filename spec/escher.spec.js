@@ -322,36 +322,6 @@ describe('Escher', function() {
         .toThrow('Could not parse auth header');
     });
 
-    it('should detect if dates are not on the same day', function() {
-      var authHeader = goodAuthHeader();
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', twoDaysBeforeGoodDate],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The credential date does not match with the request date');
-    });
-
-    it('should detect if date is not within the 15 minutes range', function() {
-      var authHeader = goodAuthHeader();
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', twoHoursBeforeGoodDate],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The request date is not within the accepted time range');
-    });
-
     it('should return an instance of Escher after new keyword', function() {
       var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);

@@ -1,6 +1,6 @@
 {
-  "title": "should detect if the date in authorization header and the date header are not equal",
-  "description": "The \"short\" date in the Credential part of the authorization header should equals with the date in the header.",
+  "title": "should detect if the date in authorization header and the date header are not the same day",
+  "description": "The day specified by the date in the Credential part of the authorization header should equals with the day of the date header.",
   "headersToSign": [
     "date",
     "host"
