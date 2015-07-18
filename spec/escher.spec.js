@@ -154,38 +154,6 @@ describe('Escher', function() {
     });
   });
 
-  describe('preSignUrl', function() {
-
-    var config = {
-      vendorKey: 'EMS',
-      algoPrefix: 'EMS',
-      date: dateForPresign,
-      hashAlgo: 'SHA256',
-      credentialScope: 'us-east-1/host/aws4_request',
-      accessKeyId: 'th3K3y',
-      apiSecret: 'very_secure',
-      clockSkew: 10
-    };
-
-    it('should generate signed url', function() {
-      var url = 'https://example.com/something?foo=bar&baz=barbaz';
-
-      var signedUrl = new Escher(config).preSignUrl(url, 123456);
-
-      var expectedAuthQueryParams = [
-        'X-EMS-Algorithm=EMS-HMAC-SHA256',
-        'X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request',
-        'X-EMS-Date=20110511T120000Z',
-        'X-EMS-Expires=123456',
-        'X-EMS-SignedHeaders=host',
-        'X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67'
-      ];
-
-      expect(signedUrl).toBe(url + '&' + expectedAuthQueryParams.join('&'));
-    });
-
-  });
-
   describe('authenticate', function() {
 
     function requestOptionsWithHeaders(headers) {
@@ -233,10 +201,10 @@ describe('Escher', function() {
       };
     }
 
-    var keyDB = createKeyDb({
-      AKIDEXAMPLE: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
-      th3K3y: 'very_secure'
-    });
+    var keyDB = createKeyDb([
+      ['AKIDEXAMPLE', 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY'],
+      ['th3K3y', 'very_secure']
+    ]);
 
     it('should validate request using query string', function() {
       var escherConfig = configForQueryStringValidation(dateForPresign);
@@ -424,90 +392,6 @@ describe('Escher', function() {
           new Escher(escherConfig).authenticate(requestOptions, keyDB);
         })
         .toThrow('The host header is missing');
-    });
-
-    it('should check whether the date header has been signed', function() {
-      var config = defaultConfig();
-      var authHeader = new AuthHelper(config).buildHeader({
-        signedHeaders: ['host'],
-        signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      });
-
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The date header is not signed');
-    });
-
-    it('should check whether the host header has been signed', function() {
-      var config = defaultConfig();
-      var authHeader = new AuthHelper(config).buildHeader({
-        signedHeaders: ['date'],
-        signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      });
-
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The host header is not signed');
-    });
-
-    it('should check the hash algorithm', function() {
-      var config = utils.mergeOptions(defaultConfig(), {
-        hashAlgo: 'sha999'
-      });
-      var authHeader = new AuthHelper(config).buildHeader({
-        signedHeaders: ['host', 'date'],
-        signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      });
-
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('Only SHA256 and SHA512 hash algorithms are allowed');
-    });
-
-    it('should check the credential scope', function() {
-      var config = utils.mergeOptions(defaultConfig(), {
-        credentialScope: 'INVALID'
-      });
-      var authHeader = new AuthHelper(config).buildHeader({
-        signedHeaders: ['host', 'date'],
-        signature: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      });
-
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', authHeader]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-      expect(function() {
-          new Escher(escherConfig).authenticate(requestOptions, keyDB);
-        })
-        .toThrow('The credential scope is invalid');
     });
 
     it('should return an instance of Escher after new keyword', function() {

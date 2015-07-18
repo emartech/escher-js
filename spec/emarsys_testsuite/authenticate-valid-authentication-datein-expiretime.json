@@ -1,4 +1,6 @@
 {
+  "title": "should check if the date is in the allowed range",
+  "description": "The request date and the current date should close enough to each other.",
   "headersToSign": [
     "date",
     "host"
@@ -9,7 +11,7 @@
     "headers": [
       [
         "Date",
-        "Fri, 09 Oct 2011 23:36:00 GMT"
+        "Fri, 09 Sep 2011 23:35:00 GMT"
       ],
       [
         "Host",
@@ -17,7 +19,7 @@
       ],
       [
         "Authorization",
-        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be"
+        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=06fc6d7f2ff5587b8a7dd9411481b4901aba6cf28387efc1bc8cc3c13d543a30"
       ]
     ],
     "body": ""
@@ -38,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "The credential date does not match with the request date"
+    "apiKey": "AKIDEXAMPLE"
   }
 }

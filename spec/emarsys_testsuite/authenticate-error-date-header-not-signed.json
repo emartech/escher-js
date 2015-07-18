@@ -1,4 +1,6 @@
 {
+  "title": "should check whether the date header has been signed",
+  "description": "The date header must be signed.",
   "headersToSign": [
     "date",
     "host"
@@ -38,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "Date header is not signed"
+    "error": "The date header is not signed"
   }
 }

@@ -1,4 +1,6 @@
 {
+  "title": "should check whether the host header has been signed",
+  "description": "The host header must be signed.",
   "headersToSign": [
     "date",
     "host"
@@ -17,7 +19,7 @@
       ],
       [
         "Authorization",
-        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be"
+        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date, Signature=0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be"
       ]
     ],
     "body": ""
@@ -38,6 +40,6 @@
     ]
   ],
   "expected": {
-    "apiKey": "AKIDEXAMPLE"
+    "error": "The host header is not signed"
   }
 }

@@ -1,4 +1,6 @@
 {
+  "title": "should detect if the date in authorization header and the date header are not equal",
+  "description": "The \"short\" date in the Credential part of the authorization header should equals with the date in the header.",
   "headersToSign": [
     "date",
     "host"
@@ -9,11 +11,15 @@
     "headers": [
       [
         "Date",
-        "Fri, 09 Sep 2011 23:36:00 GMT"
+        "Fri, 09 Oct 2011 23:36:00 GMT"
       ],
       [
         "Host",
         "host.foo.com"
+      ],
+      [
+        "Authorization",
+        "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=0a71dc54017d377751d56ae400f22f34f5802df5f2162a7261375a34686501be"
       ]
     ],
     "body": ""
@@ -34,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "Missisng header: Authorization"
+    "error": "The credential date does not match with the request date"
   }
 }

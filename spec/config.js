@@ -1,6 +1,6 @@
 var config = {
   aws4: {
-    signature: [
+    signRequest: [
       'get-vanilla',
       'post-vanilla',
       'get-vanilla-query',
@@ -30,20 +30,33 @@ var config = {
       'get-relative',
       'get-relative-relative'
     ],
+    presignUrl: [],
     authenticate: []
   },
   emarsys: {
-    signature: [
-      'get-header-key-duplicate',
-      'get-header-value-order',
-      'post-header-key-order',
-      'post-header-value-spaces',
-      'post-header-value-spaces-within-quotes',
-      'post-payload-utf8'
+    signRequest: [
+      'signrequest-get-header-key-duplicate',
+      'signrequest-get-header-value-order',
+      'signrequest-post-header-key-order',
+      'signrequest-post-header-value-spaces',
+      'signrequest-post-header-value-spaces-within-quotes',
+      'signrequest-post-payload-utf8',
+      'signrequest-date-header-should-be-signed-headers'
+    ],
+    presignUrl: [
+      'presignurl-valid-with-path-query'
     ],
     authenticate: [
-      'valid-authentication-datein-expiretime',
-      'valid-get-vanilla-empty-query'
+      'authenticate-valid-authentication-datein-expiretime',
+      'authenticate-valid-get-vanilla-empty-query',
+      'authenticate-error-host-header-not-signed',
+      'authenticate-error-date-header-not-signed',
+      'authenticate-error-invalid-escher-key',
+      'authenticate-error-invalid-credential-scope',
+      'authenticate-error-invalid-hash-algorithm',
+      'authenticate-error-missing-auth-header',
+      'authenticate-error-date-header-auth-header-date-not-equal',
+      'authenticate-error-request-date-invalid'
     ]
   }
 };

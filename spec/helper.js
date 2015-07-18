@@ -30,10 +30,14 @@ function getTest(testSuite, testFile) {
   return test;
 }
 
-function createKeyDb(keyDBHash) {
-  return function(accessKeyId) {
-    return keyDBHash[accessKeyId];
-  };
+function createKeyDb(keyDb) {
+  return function(key) {
+    for (var i = 0; i < keyDb.length; i++) {
+      if (keyDb[i][0] == key) {
+        return keyDb[i][1];
+      }
+    }
+  }
 }
 
 module.exports = {
