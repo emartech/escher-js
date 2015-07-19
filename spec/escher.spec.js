@@ -99,20 +99,6 @@ describe('Escher', function() {
         .toThrow('The request date is not within the accepted time range');
     });
 
-    it('should not depend on the order of headers', function() {
-      var headers = [
-        ['Host', 'host.foo.com'],
-        ['Date', goodDate.toUTCString()],
-        ['Authorization', goodAuthHeader()]
-      ];
-      var escherConfig = configForHeaderValidationWith(nearToGoodDate);
-      var requestOptions = requestOptionsWithHeaders(headers);
-
-      expect(function() {
-        new Escher(escherConfig).authenticate(requestOptions, keyDB);
-      }).not.toThrow();
-    });
-
     it('should return an instance of Escher after new keyword', function() {
       var escher = new Escher();
       expect(escher instanceof Escher).toEqual(true);

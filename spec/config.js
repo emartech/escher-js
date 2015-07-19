@@ -53,6 +53,7 @@ var config = {
       'authenticate-valid-get-vanilla-empty-query',
       'authenticate-valid-get-vanilla-empty-query-with-custom-headernames',
       'authenticate-valid-presigned-url-with-query',
+      'authenticate-valid-ignore-headers-order',
       'authenticate-error-host-header-not-signed',
       'authenticate-error-date-header-not-signed',
       'authenticate-error-invalid-auth-header',
