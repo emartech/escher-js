@@ -87,17 +87,6 @@ describe('Escher', function() {
       ['th3K3y', 'very_secure']
     ]);
 
-    it('should validate request using query string', function() {
-      var escherConfig = configForQueryStringValidation(dateForPresign);
-      var requestOptions = requestOptionsWithQueryString(
-        '?foo=bar&baz=barbaz&X-EMS-Algorithm=EMS-HMAC-SHA256&X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request&X-EMS-Date=20110511T120000Z&X-EMS-Expires=123456&X-EMS-SignedHeaders=host&X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67'
-      );
-
-      expect(function() {
-        new Escher(escherConfig).authenticate(requestOptions, keyDB);
-      }).not.toThrow();
-    });
-
     it('should fail if request has expired', function() {
       var escherConfig = configForQueryStringValidation(afterPresignedUrlExpired);
       var requestOptions = requestOptionsWithQueryString(
