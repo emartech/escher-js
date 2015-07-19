@@ -35,48 +35,6 @@ describe('Escher', function() {
     });
   }
 
-  describe('signRequest', function() {
-
-    it('should only sign the specified headers', function() {
-      var requestOptions = {
-        method: 'POST',
-        url: '/',
-        headers: [
-          ['Host', 'iam.amazonaws.com'],
-          ['Content-Type', 'application/x-www-form-urlencoded; charset=utf-8'],
-          ['x-a-header', 'that/should/not/be/signed']
-        ]
-      };
-      var config = {
-        vendorKey: 'EMS',
-        algoPrefix: 'EMS',
-        authHeaderName: 'X-Ems-Auth',
-        dateHeaderName: 'X-Ems-Date',
-        hashAlgo: 'SHA256',
-        date: goodDate,
-        credentialScope: 'us-east-1/iam/aws4_request',
-        accessKeyId: 'AKIDEXAMPLE',
-        apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
-        clockSkew: 10
-      };
-      var headersToSign = ['content-type', 'host', 'x-ems-date'];
-      var signedRequestOptions = new Escher(config).signRequest(requestOptions,
-        'Action=ListUsers&Version=2010-05-08', headersToSign);
-
-      var expectedHeaders = [
-        ['content-type', 'application/x-www-form-urlencoded; charset=utf-8'],
-        ['host', 'iam.amazonaws.com'],
-        ['x-a-header', 'that/should/not/be/signed'],
-        ['x-ems-date', '20110909T233600Z'],
-        ['x-ems-auth',
-          'EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=content-type;host;x-ems-date, Signature=f36c21c6e16a71a6e8dc56673ad6354aeef49c577a22fd58a190b5fcf8891dbd'
-        ]
-      ];
-      expect(JSON.stringify(utils.normalizeHeaders(signedRequestOptions.headers)))
-        .toBe(JSON.stringify(utils.normalizeHeaders(expectedHeaders)));
-    });
-  });
-
   describe('authenticate', function() {
 
     function requestOptionsWithHeaders(headers) {
