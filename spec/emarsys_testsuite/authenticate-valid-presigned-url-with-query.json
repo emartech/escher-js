@@ -1,0 +1,32 @@
+{
+  "title": "should check if a presigned URL with query string authenticated properly",
+  "description": "",
+  "headersToSign": [],
+  "request": {
+    "method": "GET",
+    "url": "/something?foo=bar&baz=barbaz&X-EMS-Algorithm=EMS-HMAC-SHA256&X-EMS-Credentials=th3K3y%2F20110511%2Fus-east-1%2Fhost%2Faws4_request&X-EMS-Date=20110511T120000Z&X-EMS-Expires=123456&X-EMS-SignedHeaders=host&X-EMS-Signature=fbc9dbb91670e84d04ad2ae7505f4f52ab3ff9e192b8233feeae57e9022c2b67",
+    "headers": [
+      [
+        "Host",
+        "example.com"
+      ]
+    ],
+    "body": ""
+  },
+  "config": {
+    "vendorKey": "EMS",
+    "algoPrefix": "EMS",
+    "hashAlgo": "SHA256",
+    "credentialScope": "us-east-1/host/aws4_request",
+    "date": "2011-05-11T12:00:00.000Z"
+  },
+  "keyDb": [
+    [
+      "th3K3y",
+      "very_secure"
+    ]
+  ],
+  "expected": {
+    "apiKey": "th3K3y"
+  }
+}
