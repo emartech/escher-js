@@ -42,7 +42,7 @@ var config = {
       'signrequest-post-header-value-spaces-within-quotes',
       'signrequest-post-payload-utf8',
       'signrequest-date-header-should-be-signed-headers',
-      'signrequest-post-with-custom-config'
+      'signrequest-support-custom-config'
     ],
     presignUrl: [
       'presignurl-valid-with-path-query'
