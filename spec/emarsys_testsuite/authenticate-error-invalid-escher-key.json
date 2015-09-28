@@ -40,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "Invalid API key"
+    "error": "Invalid Escher key"
   }
 }

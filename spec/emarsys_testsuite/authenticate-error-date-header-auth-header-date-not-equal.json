@@ -40,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "The credential date does not match with the request date"
+    "error": "The Authorization header's shortDate does not match with the request date"
   }
 }
