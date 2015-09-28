@@ -66,7 +66,8 @@ var config = {
       'authenticate-error-date-header-auth-header-date-not-equal',
       'authenticate-error-request-date-invalid',
       'authenticate-error-wrong-signature',
-      'authenticate-error-presigned-url-expired'
+      'authenticate-error-presigned-url-expired',
+      'authenticate-valid-credential-has-whitespace'
     ]
   }
 };
