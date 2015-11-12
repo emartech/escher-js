@@ -40,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "The Authorization header's shortDate does not match with the request date"
+    "error": "Invalid date in authorization header, it should equal with date header"
   }
 }

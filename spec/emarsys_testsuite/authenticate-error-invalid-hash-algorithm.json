@@ -40,6 +40,6 @@
     ]
   ],
   "expected": {
-    "error": "Only SHA256 and SHA512 hash algorithms are allowed"
+    "error": "Invalid hash algorithm, only SHA256 and SHA512 are allowed"
   }
 }

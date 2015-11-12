@@ -39,6 +39,6 @@
     ]
   ],
   "expected": {
-    "error": "Could not parse auth header"
+    "error": "Invalid auth header format"
   }
 }
