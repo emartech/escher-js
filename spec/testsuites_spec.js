@@ -9,13 +9,23 @@ var utils = require('../lib/utils');
 describe('Escher', function() {
 
   describe('signRequest', function() {
-    runTestFiles('signRequest', function(test) {
-      it(test.title || 'should sign the request properly', function() {
-        var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
-        expect(JSON.stringify(utils.normalizeHeaders(signedRequest.headers)))
-          .toBe(JSON.stringify(utils.normalizeHeaders(test.expected.request.headers)));
+      runTestFiles('signRequest', function (test) {
+        if (!test.expected.error) {
+          it(test.title || 'should sign the request properly', function () {
+            var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
+            expect(JSON.stringify(utils.normalizeHeaders(signedRequest.headers)))
+                .toBe(JSON.stringify(utils.normalizeHeaders(test.expected.request.headers)));
+          });
+        }
+
+        if (test.expected.error) {
+          it(test.title || 'should throws error', function () {
+            expect(function() {
+              new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
+            }).toThrow(test.expected.error);
+          });
+        }
       });
-    });
   });
 
   describe('presignUrl', function() {
@@ -47,16 +57,17 @@ describe('Escher', function() {
 
     // let's reverse the signRequest tests, and reuse them for checking authenticate
     runTestFiles('signRequest', function(test) {
-      it('should authenticate a properly signed request as valid', function() {
-        var key = new Escher(test.config).authenticate(test.expected.request, createKeyDb([
-          [test.config.accessKeyId, test.config.apiSecret],
-          ['some_other_apikey', 'some_other_secret']
-        ]));
-        expect(key).toBe(test.config.accessKeyId);
-      });
+      if (!test.expected.error) {
+        it('should authenticate a properly signed request as valid', function () {
+          var key = new Escher(test.config).authenticate(test.expected.request, createKeyDb([
+            [test.config.accessKeyId, test.config.apiSecret],
+            ['some_other_apikey', 'some_other_secret']
+          ]));
+          expect(key).toBe(test.config.accessKeyId);
+        });
+      }
     });
   });
-
 });
 
 describe('AuthHelper', function() {

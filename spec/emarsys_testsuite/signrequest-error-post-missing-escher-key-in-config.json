@@ -1,0 +1,34 @@
+{
+    "headersToSign": [
+        "date",
+        "host"
+    ],
+    "request": {
+        "method": "POST",
+        "url": "/",
+        "headers": [
+            [
+                "Date",
+                "Mon, 09 Sep 2011 23:36:00 GMT"
+            ],
+            [
+                "Host",
+                "host.foo.com"
+            ]
+        ],
+        "body": "foo=bar"
+    },
+    "config": {
+        "hashAlgo": "SHA256",
+        "vendorKey": "AWS4",
+        "algoPrefix": "AWS4",
+        "credentialScope": "us-east-1/host/aws4_request",
+        "accessKeyId": "AKIDEXAMPLE",
+        "authHeaderName": "Authorization",
+        "dateHeaderName": "Date",
+        "date": "2011-09-09T23:36:00.000Z"
+    },
+    "expected": {
+        "error": "Invalid Escher key"
+    }
+}

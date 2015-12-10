@@ -43,7 +43,11 @@ var config = {
       'signrequest-post-payload-utf8',
       'signrequest-date-header-should-be-signed-headers',
       'signrequest-support-custom-config',
-      'signrequest-only-sign-specified-headers'
+      'signrequest-only-sign-specified-headers',
+      'signrequest-error-invalid-request-method',
+      'signrequest-post-error-body-is-empty',
+      'signrequest-error-invalid-request-url',
+      'signrequest-error-post-missing-escher-key-in-config'
     ],
     presignUrl: [
       'presignurl-valid-with-path-query'
@@ -67,7 +71,11 @@ var config = {
       'authenticate-error-request-date-invalid',
       'authenticate-error-wrong-signature',
       'authenticate-error-presigned-url-expired',
-      'authenticate-valid-credential-has-whitespace'
+      'authenticate-valid-credential-has-whitespace',
+      'authenticate-error-invalid-request-method',
+      'authenticate-error-post-body-is-null',
+      'authenticate-error-invalid-request-url',
+      'authenticate-error-presigned-url-invalid-escher-key'
     ]
   }
 };
