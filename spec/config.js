@@ -75,7 +75,10 @@ var config = {
       'authenticate-error-invalid-request-method',
       'authenticate-error-post-body-is-null',
       'authenticate-error-invalid-request-url',
-      'authenticate-error-presigned-url-invalid-escher-key'
+      'authenticate-error-presigned-url-invalid-escher-key',
+      'authenticate-error-mandatoryheaders-not-array',
+      'authenticate-error-mandatoryheaders-not-array-of-strings',
+      'authenticate-error-notsigned-header'
     ]
   }
 };
