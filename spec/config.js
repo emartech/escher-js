@@ -73,7 +73,7 @@ var config = {
       'authenticate-error-presigned-url-expired',
       'authenticate-valid-credential-has-whitespace',
       'authenticate-error-invalid-request-method',
-      'authenticate-error-post-body-is-null',
+      'authenticate-error-post-body-null',
       'authenticate-error-invalid-request-url',
       'authenticate-error-presigned-url-invalid-escher-key',
       'authenticate-error-mandatoryheaders-not-array',
