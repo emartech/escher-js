@@ -47,7 +47,8 @@ var config = {
       'signrequest-error-invalid-request-method',
       'signrequest-post-error-body-is-empty',
       'signrequest-error-invalid-request-url',
-      'signrequest-error-post-missing-escher-key-in-config'
+      'signrequest-error-post-missing-escher-key-in-config',
+      'signrequest-signedheaders-downcase'
     ],
     presignUrl: [
       'presignurl-valid-with-path-query'
