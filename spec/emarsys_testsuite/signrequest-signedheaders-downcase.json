@@ -1,6 +1,6 @@
 {
-  "title": "should use header names downcased for signedHeaders of auth header",
-  "description": "TEST header will add to signedHeaders as test",
+  "title": "should use header names lowercased for signedHeaders of auth header",
+  "description": "TEST header will be added to signedHeaders lowercased",
   "headersToSign": [
     "TEST"
   ],
