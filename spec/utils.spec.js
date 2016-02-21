@@ -9,3 +9,13 @@ describe('toHeaderDateFormat', function() {
     expect(formattedDateString).toBe(originalDateString);
   });
 });
+
+describe('normalizeHeaders', function() {
+  it('should accept headers with integer value', function() {
+    var headers = [['x-customer-id', 15]];
+
+    var normalizedHeaders = utils.normalizeHeaders(headers);
+
+    expect(normalizedHeaders).toEqual({ 'x-customer-id': '15' });
+  });
+});
