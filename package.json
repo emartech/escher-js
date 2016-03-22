@@ -1,7 +1,7 @@
 {
   "name": "escher-auth",
   "description": "Library for HTTP request signing (JavaScript implementation)",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "homepage": "https://github.com/emartech/escher-js",
   "author": {
     "name": "Emarsys Technologies"
