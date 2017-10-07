@@ -22,7 +22,7 @@
     "node": ">= 0.10.0"
   },
   "scripts": {
-    "test": "jasmine-node spec/"
+    "test": "jasmine spec/*.spec.js"
   },
   "keywords": [
     "escher",
@@ -38,7 +38,7 @@
     "api"
   ],
   "devDependencies": {
-    "jasmine-node": "1.14.5"
+    "jasmine": "2.8.0"
   },
   "dependencies": {
     "cryptiles": "3.0.0",

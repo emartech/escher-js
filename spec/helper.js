@@ -14,7 +14,6 @@ function using(testSuite, topic, func) {
   var testFiles = testConfig.getTestFilesForSuite(testSuite, topic);
   for (var i = 0, count = testFiles.length; i < count; i++) {
     func.call(this, getTest(testSuite, testFiles[i]));
-    jasmine.currentEnv_.currentSpec.description += ' (with "' + testSuite + '" using ' + testFiles[i] + ')';
   }
 }
 
