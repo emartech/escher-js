@@ -25,10 +25,10 @@
         "credentialScope": "us-east-1/host/aws4_request",
         "accessKeyId": "AKIDEXAMPLE",
         "authHeaderName": "Authorization",
-        "dateHeaderName": "Date",
-        "date": "2011-09-09T23:36:00.000Z"
+        "dateHeaderName": "Date"
     },
     "expected": {
         "error": "Invalid Escher key"
-    }
+    },
+    "currentDate": "2011-09-09T23:36:00.000Z"
 }

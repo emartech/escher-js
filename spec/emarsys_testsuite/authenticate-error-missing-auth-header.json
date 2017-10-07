@@ -1,41 +1,41 @@
 {
-  "title": "should detect missing auth header",
-  "description": "The authorization header must exists in the request.",
-  "headersToSign": [
-    "date",
-    "host"
-  ],
-  "request": {
-    "method": "GET",
-    "url": "/",
-    "headers": [
-      [
-        "Date",
-        "Fri, 09 Sep 2011 23:36:00 GMT"
-      ],
-      [
-        "Host",
-        "host.foo.com"
-      ]
+    "title": "should detect missing auth header",
+    "description": "The authorization header must exists in the request.",
+    "headersToSign": [
+        "date",
+        "host"
     ],
-    "body": ""
-  },
-  "config": {
-    "vendorKey": "AWS4",
-    "algoPrefix": "AWS4",
-    "hashAlgo": "SHA256",
-    "credentialScope": "us-east-1/host/aws4_request",
-    "authHeaderName": "Authorization",
-    "dateHeaderName": "Date",
-    "date": "2011-09-09T23:36:00.000Z"
-  },
-  "keyDb": [
-    [
-      "AKIDEXAMPLE",
-      "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
-    ]
-  ],
-  "expected": {
-    "error": "The authorization header is missing"
-  }
+    "request": {
+        "method": "GET",
+        "url": "/",
+        "headers": [
+            [
+                "Date",
+                "Fri, 09 Sep 2011 23:36:00 GMT"
+            ],
+            [
+                "Host",
+                "host.foo.com"
+            ]
+        ],
+        "body": ""
+    },
+    "config": {
+        "vendorKey": "AWS4",
+        "algoPrefix": "AWS4",
+        "hashAlgo": "SHA256",
+        "credentialScope": "us-east-1/host/aws4_request",
+        "authHeaderName": "Authorization",
+        "dateHeaderName": "Date"
+    },
+    "keyDb": [
+        [
+            "AKIDEXAMPLE",
+            "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY"
+        ]
+    ],
+    "expected": {
+        "error": "The authorization header is missing"
+    },
+    "currentDate": "2011-09-09T23:36:00.000Z"
 }

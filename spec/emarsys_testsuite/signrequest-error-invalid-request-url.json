@@ -27,10 +27,10 @@
         "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
         "accessKeyId": "AKIDEXAMPLE",
         "authHeaderName": "Authorization",
-        "dateHeaderName": "Date",
-        "date": "2011-09-09T23:36:00.000Z"
+        "dateHeaderName": "Date"
     },
     "expected": {
         "error": "The request url shouldn't contains http or https"
-    }
+    },
+    "currentDate": "2011-09-09T23:36:00.000Z"
 }

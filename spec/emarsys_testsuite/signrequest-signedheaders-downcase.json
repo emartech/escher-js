@@ -1,65 +1,65 @@
 {
-  "title": "should use header names lowercased for signedHeaders of auth header",
-  "description": "TEST header will be added to signedHeaders lowercased",
-  "headersToSign": [
-    "TEST"
-  ],
-  "request": {
-    "method": "POST",
-    "url": "/",
-    "headers": [
-      [
-        "X-Ems-Date",
-        "20110909T233600Z"
-      ],
-      [
-        "Host",
-        "iam.amazonaws.com"
-      ],
-      [
-        "TEST",
-        "Test header"
-      ]
+    "title": "should use header names lowercased for signedHeaders of auth header",
+    "description": "TEST header will be added to signedHeaders lowercased",
+    "headersToSign": [
+        "TEST"
     ],
-    "body": "Action=ListUsers&Version=2010-05-08"
-  },
-  "config": {
-    "vendorKey": "EMS",
-    "algoPrefix": "EMS",
-    "hashAlgo": "SHA256",
-    "credentialScope": "us-east-1/iam/aws4_request",
-    "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
-    "accessKeyId": "AKIDEXAMPLE",
-    "authHeaderName": "X-Ems-Auth",
-    "dateHeaderName": "X-Ems-Date",
-    "date": "Fri, 09 Sep 2011 23:36:00 GMT"
-  },
-  "expected": {
     "request": {
-      "method": "POST",
-      "url": "/",
-      "headers": [
-        [
-          "X-Ems-Date",
-          "20110909T233600Z"
+        "method": "POST",
+        "url": "/",
+        "headers": [
+            [
+                "X-Ems-Date",
+                "20110909T233600Z"
+            ],
+            [
+                "Host",
+                "iam.amazonaws.com"
+            ],
+            [
+                "TEST",
+                "Test header"
+            ]
         ],
-        [
-          "Host",
-          "iam.amazonaws.com"
-        ],
-        [
-          "TEST",
-          "Test header"
-        ],
-        [
-          "X-Ems-Auth",
-          "EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=host;test;x-ems-date, Signature=9989d0ba14d639ca4d3a870b5a77fb656e0a60ea73b3ffa8d81c85daf2d2b2d5"
-        ]
-      ],
-      "body": "Action=ListUsers&Version=2010-05-08"
+        "body": "Action=ListUsers&Version=2010-05-08"
     },
-    "canonicalizedRequest": "POST\n/\n\ntest:Test header\n\ntest\nb6359072c78d70ebee1e81adcbab4f01bf2c23245fa365ef83fe8f1f955085e2",
-    "stringToSign": "EMS-HMAC-SHA256\n20110909T233600Z\n20110909/us-east-1/iam/aws4_request\nb83ed7f58bfccc2bec52146c79704ca69e542843e1efc9a0983600ba3e6d7136",
-    "authHeader": "EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=test, Signature=8c5b730221558decd46c608b9fb6f554c9794d33562808cf88e95c7e97aede48"
-  }
+    "config": {
+        "vendorKey": "EMS",
+        "algoPrefix": "EMS",
+        "hashAlgo": "SHA256",
+        "credentialScope": "us-east-1/iam/aws4_request",
+        "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+        "accessKeyId": "AKIDEXAMPLE",
+        "authHeaderName": "X-Ems-Auth",
+        "dateHeaderName": "X-Ems-Date"
+    },
+    "expected": {
+        "request": {
+            "method": "POST",
+            "url": "/",
+            "headers": [
+                [
+                    "X-Ems-Date",
+                    "20110909T233600Z"
+                ],
+                [
+                    "Host",
+                    "iam.amazonaws.com"
+                ],
+                [
+                    "TEST",
+                    "Test header"
+                ],
+                [
+                    "X-Ems-Auth",
+                    "EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=host;test;x-ems-date, Signature=9989d0ba14d639ca4d3a870b5a77fb656e0a60ea73b3ffa8d81c85daf2d2b2d5"
+                ]
+            ],
+            "body": "Action=ListUsers&Version=2010-05-08"
+        },
+        "canonicalizedRequest": "POST\n/\n\ntest:Test header\n\ntest\nb6359072c78d70ebee1e81adcbab4f01bf2c23245fa365ef83fe8f1f955085e2",
+        "stringToSign": "EMS-HMAC-SHA256\n20110909T233600Z\n20110909/us-east-1/iam/aws4_request\nb83ed7f58bfccc2bec52146c79704ca69e542843e1efc9a0983600ba3e6d7136",
+        "authHeader": "EMS-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/iam/aws4_request, SignedHeaders=test, Signature=8c5b730221558decd46c608b9fb6f554c9794d33562808cf88e95c7e97aede48"
+    },
+    "currentDate": "Fri, 09 Sep 2011 23:36:00 GMT"
 }
