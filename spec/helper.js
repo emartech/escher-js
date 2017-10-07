@@ -19,13 +19,7 @@ function using(testSuite, topic, func) {
 
 function getTest(testSuite, testFile) {
   var fileName = 'spec/' + testSuite + '_testsuite/' + testFile + '.json';
-  var test = JSON.parse(fs.readFileSync(fileName, {
-    encoding: 'utf-8'
-  }));
-  if (test.config.date) {
-    test.config.date = new Date(test.config.date);
-  }
-
+  var test = JSON.parse(fs.readFileSync(fileName, { encoding: 'utf-8' }));
   return test;
 }
 

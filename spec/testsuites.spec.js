@@ -9,10 +9,19 @@ var helper = require('./helper');
 
 describe('Escher', function() {
 
+  beforeEach(function(){
+    jasmine.clock().install();
+  });
+
+  afterEach(function(){
+    jasmine.clock().uninstall();
+  });
+
   describe('signRequest', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (!test.expected.error) {
         it(test.title || 'should sign the request properly', function() {
+          jasmine.clock().mockDate(new Date(test.config.date));
           var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test
             .headersToSign);
           expect(JSON.stringify(utils.normalizeHeaders(signedRequest.headers)))
@@ -22,6 +31,7 @@ describe('Escher', function() {
 
       if (test.expected.error) {
         it(test.title || 'should throw error', function() {
+          jasmine.clock().mockDate(new Date(test.config.date));
           expect(function() {
             new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
           }).toThrow(new Error(test.expected.error));
@@ -33,6 +43,7 @@ describe('Escher', function() {
   describe('presignUrl', function() {
     helper.runTestFiles('presignUrl', function(test) {
       it(test.title || 'should presign the URL properly', function() {
+        jasmine.clock().mockDate(new Date(test.config.date));
         var preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
         expect(preSignedUrl).toBe(test.expected.url);
       });
@@ -43,6 +54,7 @@ describe('Escher', function() {
     helper.runTestFiles('authenticate', function(test) {
       if (test.expected.apiKey) {
         it(test.title || 'should authenticate and return with apiKey', function() {
+          jasmine.clock().mockDate(new Date(test.config.date));
           var key = new Escher(test.config).authenticate(test.request, helper.createKeyDb(test.keyDb));
           expect(key).toBe(test.expected.apiKey);
         });
@@ -50,6 +62,7 @@ describe('Escher', function() {
 
       if (test.expected.error) {
         it(test.title || 'should authenticate and return with an error', function() {
+          jasmine.clock().mockDate(new Date(test.config.date));
           expect(function() {
             new Escher(test.config).authenticate(test.request, helper.createKeyDb(test.keyDb), test.mandatorySignedHeaders);
           }).toThrow(new Error(test.expected.error));
@@ -61,6 +74,7 @@ describe('Escher', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (!test.expected.error) {
         it('should authenticate a properly signed request as valid', function() {
+          jasmine.clock().mockDate(new Date(test.config.date));
           var key = new Escher(test.config).authenticate(test.expected.request, helper.createKeyDb([
             [test.config.accessKeyId, test.config.apiSecret],
             ['some_other_apikey', 'some_other_secret']
@@ -77,7 +91,7 @@ describe('AuthHelper', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.authHeader) {
         it(test.title || 'should return the proper auth header', function() {
-          var authHeader = new AuthHelper(test.config, test.config.date).generateHeader(test.request, test.request.body,
+          var authHeader = new AuthHelper(test.config, new Date(test.config.date)).generateHeader(test.request, test.request.body,
             test.headersToSign);
           expect(authHeader).toBe(test.expected.authHeader);
         });
@@ -105,7 +119,7 @@ describe('Signer', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.stringToSign) {
         it(test.title || 'should return the proper string to sign', function() {
-          var stringToSign = new Signer(test.config, test.config.date).getStringToSign(test.request, test.request.body,
+          var stringToSign = new Signer(test.config, new Date(test.config.date)).getStringToSign(test.request, test.request.body,
             test.headersToSign);
           expect(stringToSign).toBe(test.expected.stringToSign);
         });
