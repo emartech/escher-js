@@ -77,7 +77,7 @@ describe('AuthHelper', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.authHeader) {
         it(test.title || 'should return the proper auth header', function() {
-          var authHeader = new AuthHelper(test.config).generateHeader(test.request, test.request.body,
+          var authHeader = new AuthHelper(test.config, test.config.date).generateHeader(test.request, test.request.body,
             test.headersToSign);
           expect(authHeader).toBe(test.expected.authHeader);
         });
@@ -105,7 +105,7 @@ describe('Signer', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.stringToSign) {
         it(test.title || 'should return the proper string to sign', function() {
-          var stringToSign = new Signer(test.config).getStringToSign(test.request, test.request.body,
+          var stringToSign = new Signer(test.config, test.config.date).getStringToSign(test.request, test.request.body,
             test.headersToSign);
           expect(stringToSign).toBe(test.expected.stringToSign);
         });
