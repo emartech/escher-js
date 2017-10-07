@@ -19,7 +19,7 @@
   },
   "main": "lib/escher",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 4.8.4"
   },
   "scripts": {
     "test": "jasmine spec/*.spec.js"
