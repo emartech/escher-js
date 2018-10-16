@@ -1,0 +1,56 @@
+{
+    "headersToSign": [
+        "date",
+        "host"
+    ],
+    "request": {
+        "method": "GET",
+        "url": "/?test=()",
+        "headers": [
+            [
+                "Date",
+                "Mon, 09 Sep 2011 23:36:00 GMT"
+            ],
+            [
+                "Host",
+                "host.foo.com"
+            ]
+        ],
+        "body": ""
+    },
+    "config": {
+        "vendorKey": "AWS4",
+        "algoPrefix": "AWS4",
+        "hashAlgo": "SHA256",
+        "credentialScope": "us-east-1/host/aws4_request",
+        "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+        "accessKeyId": "AKIDEXAMPLE",
+        "authHeaderName": "Authorization",
+        "dateHeaderName": "Date"
+    },
+    "expected": {
+        "request": {
+            "method": "GET",
+            "url": "/?test=%28%29",
+            "headers": [
+                [
+                    "Date",
+                    "Mon, 09 Sep 2011 23:36:00 GMT"
+                ],
+                [
+                    "Host",
+                    "host.foo.com"
+                ],
+                [
+                    "Authorization",
+                    "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=fc975ca905db5beb26c557e997c70b89cf19f9037fc330cda309efe0671fdfe8"
+                ]
+            ],
+            "body": ""
+        },
+        "canonicalizedRequest": "GET\n/\ntest=%28%29\ndate:Mon, 09 Sep 2011 23:36:00 GMT\nhost:host.foo.com\n\ndate;host\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stringToSign": "AWS4-HMAC-SHA256\n20110909T233600Z\n20110909/us-east-1/host/aws4_request\nf0a5df63289e8a4642792302cfdd4f0edb812a5a22e3497e809beb400c310c0a",
+        "authHeader": "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20110909/us-east-1/host/aws4_request, SignedHeaders=date;host, Signature=fc975ca905db5beb26c557e997c70b89cf19f9037fc330cda309efe0671fdfe8"
+    },
+    "currentDate": "2011-09-09T23:36:00.000Z"
+}
