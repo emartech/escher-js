@@ -1,11 +1,11 @@
 'use strict';
 
-var Escher = require('../lib/escher');
-var AuthHelper = require('../lib/authhelper');
-var Canonicalizer = require('../lib/canonicalizer');
-var Signer = require('../lib/signer');
-var utils = require('../lib/utils');
-var helper = require('./helper');
+const Escher = require('../lib/escher');
+const AuthHelper = require('../lib/authhelper');
+const Canonicalizer = require('../lib/canonicalizer');
+const Signer = require('../lib/signer');
+const utils = require('../lib/utils');
+const helper = require('./helper');
 
 describe('Escher', function() {
 
@@ -22,7 +22,7 @@ describe('Escher', function() {
       if (!test.expected.error) {
         it(test.title || 'should sign the request properly', function() {
           jasmine.clock().mockDate(new Date(test.currentDate));
-          var signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test
+          const signedRequest = new Escher(test.config).signRequest(test.request, test.request.body, test
             .headersToSign);
           expect(JSON.stringify(utils.normalizeHeaders(signedRequest.headers)))
             .toBe(JSON.stringify(utils.normalizeHeaders(test.expected.request.headers)));
@@ -44,7 +44,7 @@ describe('Escher', function() {
     helper.runTestFiles('presignUrl', function(test) {
       it(test.title || 'should presign the URL properly', function() {
         jasmine.clock().mockDate(new Date(test.currentDate));
-        var preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
+        const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
         expect(preSignedUrl).toBe(test.expected.url);
       });
     });
@@ -55,7 +55,7 @@ describe('Escher', function() {
       if (test.expected.apiKey) {
         it(test.title || 'should authenticate and return with apiKey', function() {
           jasmine.clock().mockDate(new Date(test.currentDate));
-          var key = new Escher(test.config).authenticate(test.request, helper.createKeyDb(test.keyDb));
+          const key = new Escher(test.config).authenticate(test.request, helper.createKeyDb(test.keyDb));
           expect(key).toBe(test.expected.apiKey);
         });
       }
@@ -75,7 +75,7 @@ describe('Escher', function() {
       if (!test.expected.error) {
         it('should authenticate a properly signed request as valid', function() {
           jasmine.clock().mockDate(new Date(test.currentDate));
-          var key = new Escher(test.config).authenticate(test.expected.request, helper.createKeyDb([
+          const key = new Escher(test.config).authenticate(test.expected.request, helper.createKeyDb([
             [test.config.accessKeyId, test.config.apiSecret],
             ['some_other_apikey', 'some_other_secret']
           ]));
@@ -91,7 +91,7 @@ describe('AuthHelper', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.authHeader) {
         it(test.title || 'should return the proper auth header', function() {
-          var authHeader = new AuthHelper(test.config, new Date(test.currentDate)).generateHeader(test.request, test.request.body,
+          const authHeader = new AuthHelper(test.config, new Date(test.currentDate)).generateHeader(test.request, test.request.body,
             test.headersToSign);
           expect(authHeader).toBe(test.expected.authHeader);
         });
@@ -105,7 +105,7 @@ describe('Canonicalizer', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.canonicalizedRequest) {
         it(test.title || 'should canonicalize the requests', function() {
-          var canonicalizedRequest = new Canonicalizer('SHA256').canonicalizeRequest(
+          const canonicalizedRequest = new Canonicalizer('SHA256').canonicalizeRequest(
             test.request, test.request.body, test.headersToSign);
           expect(canonicalizedRequest).toBe(test.expected.canonicalizedRequest);
         });
@@ -119,7 +119,7 @@ describe('Signer', function() {
     helper.runTestFiles('signRequest', function(test) {
       if (test.expected.stringToSign) {
         it(test.title || 'should return the proper string to sign', function() {
-          var stringToSign = new Signer(test.config, new Date(test.currentDate)).getStringToSign(test.request, test.request.body,
+          const stringToSign = new Signer(test.config, new Date(test.currentDate)).getStringToSign(test.request, test.request.body,
             test.headersToSign);
           expect(stringToSign).toBe(test.expected.stringToSign);
         });

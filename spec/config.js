@@ -1,4 +1,4 @@
-var config = {
+const config = {
   aws4: {
     signRequest: [
       'signrequest-get-vanilla',
