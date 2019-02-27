@@ -1,7 +1,7 @@
 'use strict';
 
 const Escher = require('../lib/escher');
-const utils = require('../lib/utils');
+const Utils = require('../lib/utils');
 const querystring = require('querystring');
 
 const configWithoutSpecifiedDate = {
@@ -40,7 +40,7 @@ describe('Escher date handling', function() {
       const escher = new Escher(configWithoutSpecifiedDate);
 
       const signedRequest = escher.signRequest(clone(requestToSign), '');
-      const date = utils.getHeader(signedRequest, 'x-escher-date');
+      const date = Utils.getHeader(signedRequest, 'x-escher-date');
 
       expect(date).toEqual('19780210T010203Z');
     });
@@ -49,10 +49,10 @@ describe('Escher date handling', function() {
       const escher = new Escher(configWithoutSpecifiedDate);
 
       const firstSignedRequest = escher.signRequest(clone(requestToSign), '');
-      const firstDate = utils.getHeader(firstSignedRequest, 'x-escher-date');
+      const firstDate = Utils.getHeader(firstSignedRequest, 'x-escher-date');
       jasmine.clock().tick(1000);
       const secondSignedRequest = escher.signRequest(clone(requestToSign), '');
-      const secondDate = utils.getHeader(secondSignedRequest, 'x-escher-date');
+      const secondDate = Utils.getHeader(secondSignedRequest, 'x-escher-date');
 
       expect(firstDate).toEqual('19780210T010203Z');
       expect(secondDate).toEqual('19780210T010204Z');
@@ -66,7 +66,7 @@ describe('Escher date handling', function() {
       const escher = new Escher(configWithoutSpecifiedDate);
 
       const signedUrl = escher.preSignUrl(urlToSign, 60);
-      const query = querystring.parse(utils.parseUrl(signedUrl).query);
+      const query = querystring.parse(Utils.parseUrl(signedUrl).query);
       const date = query['X-ESCHER-Date'];
 
       expect(date).toEqual('19780210T010203Z');
@@ -76,11 +76,11 @@ describe('Escher date handling', function() {
       const escher = new Escher(configWithoutSpecifiedDate);
 
       const firstSignedUrl = escher.preSignUrl(urlToSign, 60);
-      const firstQuery = querystring.parse(utils.parseUrl(firstSignedUrl).query);
+      const firstQuery = querystring.parse(Utils.parseUrl(firstSignedUrl).query);
       const firstDate = firstQuery['X-ESCHER-Date'];
       jasmine.clock().tick(1000);
       const secondSignedUrl = escher.preSignUrl(urlToSign, 60);
-      const secondQuery = querystring.parse(utils.parseUrl(secondSignedUrl).query);
+      const secondQuery = querystring.parse(Utils.parseUrl(secondSignedUrl).query);
       const secondDate = secondQuery['X-ESCHER-Date'];
 
       expect(firstDate).toEqual('19780210T010203Z');
@@ -96,7 +96,7 @@ describe('Escher date handling', function() {
       jasmine.clock().tick(15 * 60 * 1000);
 
       const signedUrl = escher.preSignUrl(urlToSign, 1);
-      const parsedSignedUrl = utils.parseUrl(signedUrl);
+      const parsedSignedUrl = Utils.parseUrl(signedUrl);
 
       // should not throw an error
       escher.authenticate({
