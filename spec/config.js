@@ -1,4 +1,4 @@
-var config = {
+const config = {
   aws4: {
     signRequest: [
       'signrequest-get-vanilla',
@@ -85,15 +85,17 @@ var config = {
   }
 };
 
-function getTestSuites() {
-  return Object.keys(config);
+class TestConfig {
+
+  static getTestSuites() {
+    return Object.keys(config);
+  }
+
+  static getTestFilesForSuite(testSuite, topic) {
+    return config[testSuite][topic];
+  }
+
 }
 
-function getTestFilesForSuite(testSuite, topic) {
-  return config[testSuite][topic];
-}
 
-module.exports = {
-  getTestSuites: getTestSuites,
-  getTestFilesForSuite: getTestFilesForSuite
-};
+module.exports = TestConfig;
