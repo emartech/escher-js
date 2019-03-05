@@ -5,24 +5,20 @@ const Utils = require('../lib/utils');
 const querystring = require('querystring');
 
 const configWithoutSpecifiedDate = {
-  "accessKeyId": "AKIDEXAMPLE",
-  "apiSecret": "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
-  "clockSkew": 0
+  accessKeyId: 'AKIDEXAMPLE',
+  apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
+  clockSkew: 0
 };
-const keyDb = function(accessKeyId) {
-  return accessKeyId === "AKIDEXAMPLE" ? "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY" : null;
-};
+const keyDb = accessKeyId => accessKeyId === 'AKIDEXAMPLE' ? 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY' : null;
 
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
+const clone = obj => JSON.parse(JSON.stringify(obj));
 
 describe('Escher date handling', function() {
   const urlToSign = 'https://example.com/something?foo=bar&baz=barbaz';
   const requestToSign = {
-    "method": "GET",
-    "url": "/",
-    "headers": [ [ "Host", "host.foo.com" ] ]
+    method: 'GET',
+    url: '/',
+    headers: [ [ 'Host', 'host.foo.com' ] ]
   };
 
   beforeEach(function(){
@@ -100,9 +96,9 @@ describe('Escher date handling', function() {
 
       // should not throw an error
       escher.authenticate({
-        "method": "GET",
-        "url": parsedSignedUrl.path,
-        "headers": [["Host", parsedSignedUrl.host]]
+        method: 'GET',
+        url: parsedSignedUrl.path,
+        headers: [ [ 'Host', parsedSignedUrl.host ] ]
       }, keyDb);
 
     });

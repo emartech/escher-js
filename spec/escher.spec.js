@@ -7,4 +7,8 @@ describe('Escher', function() {
     const escher = new Escher();
     expect(escher instanceof Escher).toEqual(true);
   });
+  it('should return an instance of Escher with create method', function() {
+    const escher = Escher.create();
+    expect(escher instanceof Escher).toEqual(true);
+  });
 });

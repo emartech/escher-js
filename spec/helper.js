@@ -13,9 +13,7 @@ class Helper {
   static _using(testSuite, topic, func) {
     /* jshint -W040 */
     const testFiles = testConfig.getTestFilesForSuite(testSuite, topic);
-    for (let i = 0, count = testFiles.length; i < count; i++) {
-      func.call(this, Helper._getTest(testSuite, testFiles[i]));
-    }
+    testFiles.forEach(testFile => func.call(this, Helper._getTest(testSuite, testFile)));
   }
 
   static _getTest(testSuite, testFile) {
@@ -24,7 +22,7 @@ class Helper {
   }
 
   static createKeyDb(keyDb) {
-    return function(key) {
+    return key => {
       for (let i = 0; i < keyDb.length; i++) {
         if (keyDb[i][0] === key) {
           return keyDb[i][1];
