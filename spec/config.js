@@ -49,7 +49,8 @@ const config = {
       'signrequest-error-invalid-request-url',
       'signrequest-error-post-missing-escher-key-in-config',
       'signrequest-signedheaders-downcase',
-      'signrequest-get-with-parentheses'
+      'signrequest-get-with-parentheses',
+      'signrequest-get-with-carets'
     ],
     presignUrl: [
       'presignurl-valid-with-path-query'
