@@ -40,7 +40,7 @@
     "api"
   ],
   "devDependencies": {
-    "jasmine": "2.8.0",
+    "jasmine": "^3.4.0",
     "ramda": "^0.26.1",
     "recursive-readdir": "^2.2.2"
   },
