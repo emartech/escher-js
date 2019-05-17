@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "jasmine spec/*.spec.js",
-    "test:common": "tape spec/escher-test-cases.spec-skip.js | tap-spec"
+    "test:common": "tape spec/escher-test-cases.spec-skip.js | tap-dot"
   },
   "keywords": [
     "escher",
@@ -46,7 +46,7 @@
     "ramda": "^0.26.1",
     "recursive-readdir": "^2.2.2",
     "sinon": "^7.3.2",
-    "tap-spec": "^5.0.0",
+    "tap-dot": "^2.0.0",
     "tape": "^4.10.1"
   },
   "dependencies": {
