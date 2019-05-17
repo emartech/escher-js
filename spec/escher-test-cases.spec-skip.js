@@ -19,21 +19,22 @@ const splitParts = path => {
 
 const createTest = ({ path, ..._ }) => ({ test: JSON.parse(readFileSync(path)), ..._ });
 
-const getTestCases = folder =>
-  readdir(folder).then(
-    pipe(
-      filter(filterCases),
-      map(splitParts),
-      map(createTest),
-      groupBy(prop('method')),
-    ),
-  );
+const getTestCases = async folder =>
+  pipe(
+    filter(filterCases),
+    map(splitParts),
+    map(createTest),
+    groupBy(prop('method')),
+  )(await readdir(folder));
+
+const createTitle = ({ test: { title }, group, method }) => `[${group}] #${method} ${title}`;
 
 getTestCases('escher-test-cases').then(testCases => {
-  testCases.signrequest.forEach(({ test, group }) => {
+  testCases.signrequest.forEach(testCase => {
+    const { test } = testCase;
     const signRequest = () => new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
     tape(
-      `${group} signRequest ${test.title}`,
+      createTitle(testCase),
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
         if (!test.expected.error) {
           const signedRequest = signRequest();
@@ -49,9 +50,10 @@ getTestCases('escher-test-cases').then(testCases => {
     );
   });
 
-  testCases.presignurl.forEach(({ test, group }) => {
+  testCases.presignurl.forEach(testCase => {
+    const { test } = testCase;
     tape(
-      `${group} preSignUrl ${test.title}`,
+      createTitle(testCase),
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
         const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
         t.equal(preSignedUrl, test.expected.url);
@@ -60,11 +62,12 @@ getTestCases('escher-test-cases').then(testCases => {
     );
   });
 
-  testCases.authenticate.forEach(({ test, group }) => {
+  testCases.authenticate.forEach(testCase => {
+    const { test } = testCase;
     const authenticate = () =>
       new Escher(test.config).authenticate(test.request, Helper.createKeyDb(test.keyDb), test.mandatorySignedHeaders);
     tape(
-      `${group} authenticate ${test.title}`,
+      createTitle(testCase),
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
         if (!test.expected.error) {
           const key = authenticate();
