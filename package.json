@@ -24,7 +24,8 @@
     "node": ">= 6.14.4"
   },
   "scripts": {
-    "test": "jasmine spec/*.spec.js"
+    "test": "jasmine spec/*.spec.js",
+    "test:common": "tape spec/escher-test-cases.spec-skip.js | tap-spec"
   },
   "keywords": [
     "escher",
@@ -41,8 +42,12 @@
   ],
   "devDependencies": {
     "jasmine": "^3.4.0",
+    "prettier": "^1.17.1",
     "ramda": "^0.26.1",
-    "recursive-readdir": "^2.2.2"
+    "recursive-readdir": "^2.2.2",
+    "sinon": "^7.3.2",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.10.1"
   },
   "dependencies": {
     "dateformat": "3.0.2",
