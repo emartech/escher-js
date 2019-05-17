@@ -2,6 +2,7 @@
 
 const Escher = require('../lib/escher');
 const Utils = require('../lib/utils');
+const Helper = require('./helper');
 const tape = require('tape');
 const { readFileSync } = require('fs');
 const { timeDecorator } = require('./decorators');
@@ -71,5 +72,36 @@ getTestCases('escher-test-cases').then(testCases => {
         t.end();
       }),
     );
+  });
+
+  testCases.authenticate.forEach(({ test }) => {
+    if (test.expected.apiKey) {
+      tape(
+        test.title || 'should authenticate and return with apiKey',
+        timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+          const key = new Escher(test.config).authenticate(test.request, Helper.createKeyDb(test.keyDb));
+          t.equal(key, test.expected.apiKey);
+          t.end();
+        }),
+      );
+    }
+
+    if (test.expected.error) {
+      tape(
+        test.title || 'should authenticate and return with an error',
+        timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+          t.throws(
+            () =>
+              new Escher(test.config).authenticate(
+                test.request,
+                Helper.createKeyDb(test.keyDb),
+                test.mandatorySignedHeaders,
+              ),
+            new Error(test.expected.error),
+          );
+          t.end();
+        }),
+      );
+    }
   });
 });
