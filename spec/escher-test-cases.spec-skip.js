@@ -61,4 +61,15 @@ getTestCases('escher-test-cases').then(testCases => {
       );
     }
   });
+
+  testCases.presignurl.forEach(({ test }) => {
+    tape(
+      test.title || 'should presign the URL properly',
+      timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+        const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
+        t.equal(preSignedUrl, test.expected.url);
+        t.end();
+      }),
+    );
+  });
 });
