@@ -30,42 +30,28 @@ const getTestCases = folder =>
   );
 
 getTestCases('escher-test-cases').then(testCases => {
-  testCases.signrequest.forEach(({ test }) => {
-    if (!test.expected.error) {
-      tape(
-        test.title || 'should sign the request properly',
-        timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
-          const signedRequest = new Escher(test.config).signRequest(
-            test.request,
-            test.request.body,
-            test.headersToSign,
-          );
+  testCases.signrequest.forEach(({ test, group }) => {
+    const signRequest = () => new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
+    tape(
+      `${group} signRequest ${test.title}`,
+      timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+        if (!test.expected.error) {
+          const signedRequest = signRequest();
           t.deepEqual(
-            JSON.stringify(Utils.normalizeHeaders(signedRequest.headers)),
-            JSON.stringify(Utils.normalizeHeaders(test.expected.request.headers)),
+            Utils.normalizeHeaders(signedRequest.headers),
+            Utils.normalizeHeaders(test.expected.request.headers),
           );
-          t.end();
-        }),
-      );
-    }
-
-    if (test.expected.error) {
-      tape(
-        test.title || 'should throw error',
-        timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
-          t.throws(
-            () => new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign),
-            new Error(test.expected.error),
-          );
-          t.end();
-        }),
-      );
-    }
+        } else {
+          t.throws(signRequest, new Error(test.expected.error));
+        }
+        t.end();
+      }),
+    );
   });
 
-  testCases.presignurl.forEach(({ test }) => {
+  testCases.presignurl.forEach(({ test, group }) => {
     tape(
-      test.title || 'should presign the URL properly',
+      `${group} preSignUrl ${test.title}`,
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
         const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
         t.equal(preSignedUrl, test.expected.url);
@@ -74,34 +60,20 @@ getTestCases('escher-test-cases').then(testCases => {
     );
   });
 
-  testCases.authenticate.forEach(({ test }) => {
-    if (test.expected.apiKey) {
-      tape(
-        test.title || 'should authenticate and return with apiKey',
-        timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
-          const key = new Escher(test.config).authenticate(test.request, Helper.createKeyDb(test.keyDb));
+  testCases.authenticate.forEach(({ test, group }) => {
+    const authenticate = () =>
+      new Escher(test.config).authenticate(test.request, Helper.createKeyDb(test.keyDb), test.mandatorySignedHeaders);
+    tape(
+      `${group} authenticate ${test.title}`,
+      timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+        if (!test.expected.error) {
+          const key = authenticate();
           t.equal(key, test.expected.apiKey);
-          t.end();
-        }),
-      );
-    }
-
-    if (test.expected.error) {
-      tape(
-        test.title || 'should authenticate and return with an error',
-        timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
-          t.throws(
-            () =>
-              new Escher(test.config).authenticate(
-                test.request,
-                Helper.createKeyDb(test.keyDb),
-                test.mandatorySignedHeaders,
-              ),
-            new Error(test.expected.error),
-          );
-          t.end();
-        }),
-      );
-    }
+        } else {
+          t.throws(authenticate, new Error(test.expected.error));
+        }
+        t.end();
+      }),
+    );
   });
 });
