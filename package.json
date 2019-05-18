@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "jasmine spec/*.spec.js",
-    "test:common": "tape spec/escher-test-cases.spec-skip.js | tap-dot"
+    "test:common": "tape spec/escher-test-cases/escher-test-cases.spec-skip.js | tap-dot"
   },
   "keywords": [
     "escher",
