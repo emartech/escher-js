@@ -24,8 +24,8 @@
     "node": ">= 6.14.4"
   },
   "scripts": {
-    "test": "jasmine spec/*.spec.js && npm run test:common",
-    "test:common": "tape spec/escher-test-cases/escher-test-cases.spec-tape.js | tap-dot"
+    "test": "jasmine spec/*.spec.js && npm run test:tape",
+    "test:tape": "tape spec/tape-tests.js | faucet"
   },
   "keywords": [
     "escher",
@@ -41,12 +41,12 @@
     "api"
   ],
   "devDependencies": {
+    "faucet": "0.0.1",
     "jasmine": "^3.4.0",
     "prettier": "^1.17.1",
     "ramda": "^0.26.1",
     "recursive-readdir": "^2.2.2",
     "sinon": "^7.3.2",
-    "tap-dot": "^2.0.0",
     "tape": "^4.10.1"
   },
   "dependencies": {

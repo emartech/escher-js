@@ -1,26 +1,8 @@
 'use strict';
 
-const AuthHelper = require('../lib/authhelper');
 const Canonicalizer = require('../lib/canonicalizer');
 const Signer = require('../lib/signer');
 const Helper = require('./helper');
-
-describe('AuthHelper', function() {
-  describe('build', function() {
-    Helper.runTestFiles('signRequest', function(test) {
-      if (test.expected.authHeader) {
-        it(test.title || 'should return the proper auth header', function() {
-          const authHeader = new AuthHelper(test.config, new Date(test.currentDate)).generateHeader(
-            test.request,
-            test.request.body,
-            test.headersToSign,
-          );
-          expect(authHeader).toBe(test.expected.authHeader);
-        });
-      }
-    });
-  });
-});
 
 describe('Canonicalizer', function() {
   describe('canonicalizeRequest', function() {

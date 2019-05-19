@@ -1,22 +1,23 @@
 'use strict';
 
-const Escher = require('../../lib/escher');
-const Utils = require('../../lib/utils');
-const Helper = require('../helper');
+const Escher = require('../lib/escher');
+const Utils = require('../lib/utils');
+const Helper = require('./helper');
 const tape = require('tape');
 const { timeDecorator } = require('./decorators');
-const { getTestCases } = require('./get-test-cases');
 
-getTestCases('escher-test-cases').then(testCases => {
+module.exports = { runEscherTests };
+
+function runEscherTests(testCases) {
   testCases.signrequest.forEach(runSignRequestTape);
   testCases.presignurl.forEach(runPreSignUrlTape);
   testCases.authenticate.forEach(runAuthehticationTape);
   testCases.signrequest.forEach(runReverseSignRequestTape);
-});
+}
 
-function runSignRequestTape({ test, group, method }) {
+function runSignRequestTape({ test, group, method, file }) {
   tape(
-    createTitle(test.title, group, method),
+    createTitle(test.title, group, method, file),
     timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
       if (!test.expected.error) {
         const signedRequest = signRequest(test);
@@ -36,9 +37,9 @@ function signRequest(test) {
   return new Escher(test.config).signRequest(test.request, test.request.body, test.headersToSign);
 }
 
-function runPreSignUrlTape({ test, group, method }) {
+function runPreSignUrlTape({ test, group, method, file }) {
   tape(
-    createTitle(test.title, group, method),
+    createTitle(test.title, group, method, file),
     timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
       const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
       t.equal(preSignedUrl, test.expected.url);
@@ -47,9 +48,9 @@ function runPreSignUrlTape({ test, group, method }) {
   );
 }
 
-function runAuthehticationTape({ test, group, method }) {
+function runAuthehticationTape({ test, group, method, file }) {
   tape(
-    createTitle(test.title, group, method),
+    createTitle(test.title, group, method, file),
     timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
       if (!test.expected.error) {
         const key = authenticate(test);
@@ -89,6 +90,6 @@ function runReverseSignRequestTape({ test, group }) {
   }
 }
 
-function createTitle(title, group, method) {
-  return `[${group}] #${method} ${title}`;
+function createTitle(title, group, method, file) {
+  return `[${group}] ${file} | Escher #${method} ${title}`;
 }

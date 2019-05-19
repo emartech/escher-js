@@ -21,7 +21,7 @@ function filterCases(path) {
 function splitParts(path) {
   const [, group, file] = split('/', path);
   const [method] = split('-', file);
-  return { group, method, path };
+  return { group, method, path, file };
 }
 
 function createTest({ path, ..._ }) {
