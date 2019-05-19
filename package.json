@@ -24,8 +24,8 @@
     "node": ">= 6.14.4"
   },
   "scripts": {
-    "test": "jasmine spec/*.spec.js",
-    "test:common": "tape spec/escher-test-cases/escher-test-cases.spec-skip.js | tap-dot"
+    "test": "jasmine spec/*.spec.js && npm run test:common",
+    "test:common": "tape spec/escher-test-cases/escher-test-cases.spec-tape.js | tap-dot"
   },
   "keywords": [
     "escher",
