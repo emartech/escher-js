@@ -11,6 +11,7 @@ getTestCases('escher-test-cases').then(testCases => {
   testCases.signrequest.forEach(runSignRequestTape);
   testCases.presignurl.forEach(runPreSignUrlTape);
   testCases.authenticate.forEach(runAuthehticationTape);
+  testCases.signrequest.forEach(runReverseSignRequestTape);
 });
 
 function runSignRequestTape({ test, group, method }) {
@@ -67,6 +68,25 @@ function authenticate(test) {
     Helper.createKeyDb(test.keyDb),
     test.mandatorySignedHeaders,
   );
+}
+
+function runReverseSignRequestTape({ test, group }) {
+  if (!test.expected.error) {
+    tape(
+      `[${group}] should authenticate a properly signed request as valid`,
+      timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+        const key = new Escher(test.config).authenticate(
+          test.expected.request,
+          Helper.createKeyDb([
+            [test.config.accessKeyId, test.config.apiSecret],
+            ['some_other_apikey', 'some_other_secret'],
+          ]),
+        );
+        t.equal(key, test.config.accessKeyId);
+        t.end();
+      }),
+    );
+  }
 }
 
 function createTitle(title, group, method) {
