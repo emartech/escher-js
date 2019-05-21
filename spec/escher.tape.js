@@ -2,7 +2,6 @@
 
 const Escher = require('../lib/escher');
 const Utils = require('../lib/utils');
-const Helper = require('./helper');
 const tape = require('tape');
 const { timeDecorator } = require('./decorators');
 
@@ -65,11 +64,7 @@ function runAuthehticationTape({ test, group, method, file }) {
 }
 
 function authenticate(test) {
-  return new Escher(test.config).authenticate(
-    test.request,
-    Helper.createKeyDb(test.keyDb),
-    test.mandatorySignedHeaders,
-  );
+  return new Escher(test.config).authenticate(test.request, createKeyDb(test.keyDb), test.mandatorySignedHeaders);
 }
 
 function runReverseSignRequestTape({ test, group }) {
@@ -79,10 +74,7 @@ function runReverseSignRequestTape({ test, group }) {
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
         const key = new Escher(test.config).authenticate(
           test.expected.request,
-          Helper.createKeyDb([
-            [test.config.accessKeyId, test.config.apiSecret],
-            ['some_other_apikey', 'some_other_secret'],
-          ]),
+          createKeyDb([[test.config.accessKeyId, test.config.apiSecret], ['some_other_apikey', 'some_other_secret']]),
         );
         t.equal(key, test.config.accessKeyId);
         t.end();
@@ -107,4 +99,14 @@ function runEscherCreateTape() {
     t.equal(escher instanceof Escher, true);
     t.end();
   });
+}
+
+function createKeyDb(keyDb) {
+  return key => {
+    for (let i = 0; i < keyDb.length; i++) {
+      if (keyDb[i][0] === key) {
+        return keyDb[i][1];
+      }
+    }
+  };
 }
