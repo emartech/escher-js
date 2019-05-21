@@ -24,7 +24,7 @@
     "node": ">= 6.14.4"
   },
   "scripts": {
-    "test": "npm run code-style && npm run lint && npm run test:tape",
+    "test": "npm run code-style && npm run lint && npm run test:tape ",
     "test:tape": "tape spec/tape-tests.spec.js | faucet",
     "prettier": "prettier --write lib/**/*.js spec/**/*.js",
     "lint": "eslint lib/**/*.js spec/**/*.js",
