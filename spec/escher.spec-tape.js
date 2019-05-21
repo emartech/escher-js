@@ -19,7 +19,7 @@ function runEscherTests(testCases) {
 function runSignRequestTape({ test, group, method, file }) {
   tape(
     createTitle(test.title, group, method, file),
-    timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+    timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
       if (!test.expected.error) {
         const signedRequest = signRequest(test);
         t.deepEqual(
@@ -41,7 +41,7 @@ function signRequest(test) {
 function runPreSignUrlTape({ test, group, method, file }) {
   tape(
     createTitle(test.title, group, method, file),
-    timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+    timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
       const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
       t.equal(preSignedUrl, test.expected.url);
       t.end();
@@ -52,7 +52,7 @@ function runPreSignUrlTape({ test, group, method, file }) {
 function runAuthehticationTape({ test, group, method, file }) {
   tape(
     createTitle(test.title, group, method, file),
-    timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+    timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
       if (!test.expected.error) {
         const key = authenticate(test);
         t.equal(key, test.expected.apiKey);
@@ -76,7 +76,7 @@ function runReverseSignRequestTape({ test, group }) {
   if (!test.expected.error) {
     tape(
       `[${group}] should authenticate a properly signed request as valid`,
-      timeDecorator({ timestamp: new Date(test.config.date).getTime() }, t => {
+      timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
         const key = new Escher(test.config).authenticate(
           test.expected.request,
           Helper.createKeyDb([
