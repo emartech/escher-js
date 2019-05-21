@@ -1,12 +1,12 @@
 'use strict';
 
 const { getTestCases } = require('./get-test-cases');
-const { runAuthHelperTests } = require('./auth-helper.spec-tape');
-const { runEscherTests } = require('./escher.spec-tape');
-const { runSignerTests } = require('./signer.spec-tape');
-const { runCanonicalizerTests } = require('./canonicalizer.spec-tape');
-const { runDateHandlingTests } = require('./date-handling.spec-tape');
-const { runUtilTests } = require('./utils.spec-tape');
+const { runAuthHelperTests } = require('./auth-helper.tape');
+const { runEscherTests } = require('./escher.tape');
+const { runSignerTests } = require('./signer.tape');
+const { runCanonicalizerTests } = require('./canonicalizer.tape');
+const { runDateHandlingTests } = require('./date-handling.tape');
+const { runUtilTests } = require('./utils.tape');
 
 getTestCases('escher-test-cases').then(testCases =>
   [
