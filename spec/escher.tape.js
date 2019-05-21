@@ -23,13 +23,13 @@ function runSignRequestTape({ test, group, method, file }) {
         const signedRequest = signRequest(test);
         t.deepEqual(
           Utils.normalizeHeaders(signedRequest.headers),
-          Utils.normalizeHeaders(test.expected.request.headers),
+          Utils.normalizeHeaders(test.expected.request.headers)
         );
       } else {
         t.throws(() => signRequest(test), new Error(test.expected.error));
       }
       t.end();
-    }),
+    })
   );
 }
 
@@ -44,7 +44,7 @@ function runPreSignUrlTape({ test, group, method, file }) {
       const preSignedUrl = new Escher(test.config).preSignUrl(test.request.url, test.request.expires);
       t.equal(preSignedUrl, test.expected.url);
       t.end();
-    }),
+    })
   );
 }
 
@@ -59,7 +59,7 @@ function runAuthehticationTape({ test, group, method, file }) {
         t.throws(() => authenticate(test), new Error(test.expected.error));
       }
       t.end();
-    }),
+    })
   );
 }
 
@@ -74,11 +74,11 @@ function runReverseSignRequestTape({ test, group }) {
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
         const key = new Escher(test.config).authenticate(
           test.expected.request,
-          createKeyDb([[test.config.accessKeyId, test.config.apiSecret], ['some_other_apikey', 'some_other_secret']]),
+          createKeyDb([[test.config.accessKeyId, test.config.apiSecret], ['some_other_apikey', 'some_other_secret']])
         );
         t.equal(key, test.config.accessKeyId);
         t.end();
-      }),
+      })
     );
   }
 }

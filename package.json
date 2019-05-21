@@ -41,6 +41,9 @@
     "api"
   ],
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-emarsys": "^5.1.0",
+    "eslint-plugin-security": "^1.4.0",
     "faucet": "0.0.1",
     "prettier": "^1.17.1",
     "ramda": "^0.26.1",
