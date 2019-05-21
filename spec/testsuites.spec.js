@@ -1,7 +1,6 @@
 'use strict';
 
 const Canonicalizer = require('../lib/canonicalizer');
-const Signer = require('../lib/signer');
 const Helper = require('./helper');
 
 describe('Canonicalizer', function() {
@@ -15,23 +14,6 @@ describe('Canonicalizer', function() {
             test.headersToSign,
           );
           expect(canonicalizedRequest).toBe(test.expected.canonicalizedRequest);
-        });
-      }
-    });
-  });
-});
-
-describe('Signer', function() {
-  describe('getStringToSign', function() {
-    Helper.runTestFiles('signRequest', function(test) {
-      if (test.expected.stringToSign) {
-        it(test.title || 'should return the proper string to sign', function() {
-          const stringToSign = new Signer(test.config, new Date(test.currentDate)).getStringToSign(
-            test.request,
-            test.request.body,
-            test.headersToSign,
-          );
-          expect(stringToSign).toBe(test.expected.stringToSign);
         });
       }
     });
