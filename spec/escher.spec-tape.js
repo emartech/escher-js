@@ -13,6 +13,7 @@ function runEscherTests(testCases) {
   testCases.presignurl.forEach(runPreSignUrlTape);
   testCases.authenticate.forEach(runAuthehticationTape);
   testCases.signrequest.forEach(runReverseSignRequestTape);
+  runEscherCreateTape();
 }
 
 function runSignRequestTape({ test, group, method, file }) {
@@ -92,4 +93,18 @@ function runReverseSignRequestTape({ test, group }) {
 
 function createTitle(title, group, method, file) {
   return `[${group}] ${file} | Escher #${method} ${title}`;
+}
+
+function runEscherCreateTape() {
+  tape('should return an instance of Escher after new keyword', t => {
+    const escher = new Escher();
+    t.equal(escher instanceof Escher, true);
+    t.end();
+  });
+
+  tape('should return an instance of Escher with create method', t => {
+    const escher = Escher.create();
+    t.equal(escher instanceof Escher, true);
+    t.end();
+  });
 }

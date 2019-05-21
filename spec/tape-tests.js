@@ -2,7 +2,7 @@
 
 const { getTestCases } = require('./get-test-cases');
 const { runAuthHelperTests } = require('./auth-helper.spec-tape');
-const { runEscherTests } = require('./escher-test-cases.spec-tape');
+const { runEscherTests } = require('./escher.spec-tape');
 const { runSignerTests } = require('./signer.spec-tape');
 const { runCanonicalizerTests } = require('./canonicalizer.spec-tape');
 
