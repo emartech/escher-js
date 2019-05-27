@@ -6,3 +6,9 @@ Escher helps you creating secure HTTP requests (for APIs) by signing HTTP(s) req
 The algorithm is based on [Amazon's _AWS Signature Version 4_](http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html), but we have generalized and extended it.
 
 More details are available at our [Escher documentation site](http://escherauth.io/).
+
+## Development
+
+The [Test Cases](https://github.com/EscherAuth/test-cases) are included as git submodule.
+
+Don't forget to use the `git pull --recurse-submodules` and the `git clone --recurse-submodules` to pull and clone the remote repository.
