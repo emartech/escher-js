@@ -1,0 +1,3 @@
+[submodule "escher-test-cases"]
+	path = escher-test-cases
+	url = https://github.com/EscherAuth/test-cases.git
