@@ -21,7 +21,7 @@
   ],
   "main": "lib/escher",
   "engines": {
-    "node": ">= 8.16.0"
+    "node": ">= 8.9.0"
   },
   "scripts": {
     "test": "npm run code-style && npm run lint && npm run test:tape",
