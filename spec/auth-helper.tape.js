@@ -15,7 +15,7 @@ function runGenerateHeaderTape({ test, group, file }) {
       const authHeader = new AuthHelper(test.config, new Date(test.config.date)).generateHeader(
         test.request,
         test.request.body,
-        test.headersToSign,
+        test.headersToSign
       );
       t.equal(authHeader, test.expected.authHeader);
       t.end();
