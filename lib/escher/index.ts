@@ -1,1 +1,1 @@
-export const Escher = require('./escher');
+export * from './escher';
