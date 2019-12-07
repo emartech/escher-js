@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/jasmine": "^3.5.0",
     "@types/node": "^12.12.14",
+    "@types/ramda": "^0.26.37",
     "eslint": "^5.16.0",
     "eslint-config-emarsys": "^5.1.0",
     "eslint-plugin-security": "^1.4.0",
