@@ -1,31 +1,34 @@
 import { EscherConfig } from '../../interface';
+import { getEscherConfig } from './lib/get-escher-config';
+import { checkPartialEscherConfig } from './lib/check-partial-escher-config';
 const DeprecatedEscher = require('./deprecated-escher');
 
 export class Escher {
-  private _deprecatedEscher: any;
+  private _config: EscherConfig;
 
-  constructor(partialConfig?: Partial<EscherConfig>) {
-    this._deprecatedEscher = new DeprecatedEscher(partialConfig);
+  constructor(partialConfig?: any) {
+    checkPartialEscherConfig(partialConfig);
+    this._config = getEscherConfig(partialConfig);
   }
 
   preSignUrl(url: string, expires: number): string {
-    return this._deprecatedEscher.preSignUrl(url, expires);
+    return new DeprecatedEscher(this._config).preSignUrl(url, expires);
   }
 
   signRequest(requestOptions: any, body: any, headersToSign: any): any {
-    return this._deprecatedEscher.signRequest(requestOptions, body, headersToSign);
+    return new DeprecatedEscher(this._config).signRequest(requestOptions, body, headersToSign);
   }
 
   authenticate(request: any, keyDB: any, mandatorySignedHeaders: any): any {
-    return this._deprecatedEscher.authenticate(request, keyDB, mandatorySignedHeaders);
+    return new DeprecatedEscher(this._config).authenticate(request, keyDB, mandatorySignedHeaders);
   }
 
   validateRequest(request: any, body: any): void {
-    this._deprecatedEscher.validateRequest(request, body);
+    new DeprecatedEscher(this._config).validateRequest(request, body);
   }
 
   validateMandatorySignedHeaders(mandatorySignedHeaders: any): void {
-    this._deprecatedEscher.validateMandatorySignedHeaders(mandatorySignedHeaders);
+    new DeprecatedEscher(this._config).validateMandatorySignedHeaders(mandatorySignedHeaders);
   }
 
   public static create(configToMerge?: Partial<EscherConfig>): any {
