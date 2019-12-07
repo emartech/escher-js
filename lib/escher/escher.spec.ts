@@ -1,4 +1,5 @@
 import { Escher } from './escher';
+import { createRequest } from './factory';
 
 describe('Escher', () => {
   describe('invalid config', () => {
@@ -12,8 +13,15 @@ describe('Escher', () => {
     it('should throw error when one of headers is not string', () => {
       const headers = [1];
       expect(() => new Escher().validateMandatorySignedHeaders(headers)).toThrow(
-        new Error('The mandatorySignedHeaders parameter must be undefined or array of strings')
+        new Error('The mandatorySignedHeaders parameter must be undefined or array of strings'),
       );
+    });
+  });
+
+  describe('#validateRequest', () => {
+    it('should throw error when request method is invalid', () => {
+      const request = createRequest({ method: 'invalid method' });
+      expect(() => new Escher().validateRequest(request)).toThrow(new Error('The request method is invalid'));
     });
   });
 });

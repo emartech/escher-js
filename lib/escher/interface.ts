@@ -9,3 +9,11 @@ export type EscherConfig = {
 };
 
 export type ValidateMandatorySignedHeaders = (headers?: any) => void;
+
+export type Request = {
+  method?: any;
+  body?: any;
+  url: string;
+};
+
+export type ValidateRequest = (request: Request, body?: any) => void;
