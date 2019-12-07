@@ -28,7 +28,8 @@
     "test:tape": "npm run build && tape spec/tape-tests.spec.js | faucet",
     "prettier": "prettier --write lib/**/*.js spec/**/*.js",
     "lint": "eslint lib/**/*.js spec/**/*.js",
-    "code-style": "prettier --check lib/**/*.js spec/**/*.js",
+    "lint:ts": "tslint 'lib/**/*.ts'",
+    "code-style": "npm run lint:ts && prettier --check lib/**/*.js spec/**/*.js",
     "build": "npm run clear-dist && tsc",
     "clear-dist": "rm -rf dist"
   },
@@ -56,6 +57,7 @@
     "sinon": "^7.3.2",
     "tape": "^4.10.1",
     "tslint": "^5.20.1",
+    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.7.3"
   },
   "dependencies": {
