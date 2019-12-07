@@ -20,7 +20,7 @@
     "strictNullChecks": true,
     "pretty": true,
     "target": "es2017",
-    "rootDir": "./lib",
+    "rootDir": "./",
     "outDir": "./dist"
   },
   "exclude": ["node_modules", "dist", "spec"]

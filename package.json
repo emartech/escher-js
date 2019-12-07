@@ -19,7 +19,7 @@
       "url": "https://github.com/emartech/escher-js/blob/master/LICENSE"
     }
   ],
-  "main": "dist/escher.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">= 8.9.0"
   },
@@ -47,6 +47,7 @@
     "api"
   ],
   "devDependencies": {
+    "@types/node": "^12.12.14",
     "eslint": "^5.16.0",
     "eslint-config-emarsys": "^5.1.0",
     "eslint-plugin-security": "^1.4.0",
