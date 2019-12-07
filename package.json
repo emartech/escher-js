@@ -24,8 +24,9 @@
     "node": ">= 8.9.0"
   },
   "scripts": {
-    "test": "npm run code-style && npm run test:tape",
-    "test:tape": "npm run build && tape spec/tape-tests.spec.js | faucet",
+    "all-in": "npm run code-style && npm t",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:e2e": "npm run build && tape spec/tape-tests.spec.js | faucet",
     "test:unit": "JASMINE_CONFIG_PATH=./jasmine.unit.json jasmine",
     "test:unit:watch": "TS_NODE_TRANSPILE_ONLY=1 onchange 'lib/**/*.js' 'lib/**/*.ts' -i -d 500 -- npm run test:unit",
     "prettier": "prettier --write lib/**/*.js spec/**/*.js lib/**/*.ts",
