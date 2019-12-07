@@ -1,4 +1,4 @@
-import { EscherConfig } from '../../../../interface';
+import { EscherConfig } from '../../interface';
 import { getEscherConfig } from './get-escher-config';
 
 describe('Get Escher Config', () => {

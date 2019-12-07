@@ -7,3 +7,5 @@ export type EscherConfig = {
   dateHeaderName: string;
   clockSkew: number;
 };
+
+export type ValidateMandatorySignedHeaders = (headers?: any) => void;
