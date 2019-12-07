@@ -1,3 +1,1 @@
-import { Escher } from './lib/escher';
-
-export default Escher;
+export * from './lib';

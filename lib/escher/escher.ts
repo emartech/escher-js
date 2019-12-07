@@ -1,7 +1,8 @@
-import { EscherConfig, Request } from './interface';
+import { EscherConfig, Request } from '../interface';
 import { getEscherConfig } from './lib/get-escher-config';
 import { checkPartialEscherConfig } from './lib/check-partial-escher-config';
-import { validateMandatorySignedHeaders, validateRequest } from './actions';
+import { validateMandatorySignedHeaders } from '../validate-mandatory-signed-headers';
+import { validateRequest } from '../validate-request';
 const DeprecatedEscher = require('./deprecated-escher');
 
 export class Escher {

@@ -1,4 +1,4 @@
-import { Request } from './interface';
+import { Request } from '../interface';
 import { v4 } from 'uuid';
 
 export const createRequest = (override: Partial<Request> = {}) => ({ url: 'http://index.hu', ...override });

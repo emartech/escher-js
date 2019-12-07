@@ -1,8 +1,8 @@
-import { ValidateMandatorySignedHeaders } from '../../interface';
+import { ValidateMandatorySignedHeaders } from '../interface';
 import { is, all } from 'ramda';
 
 export const validateMandatorySignedHeaders: ValidateMandatorySignedHeaders = headers => {
-  if (typeof headers === 'undefined') {
+  if (headers === undefined) {
     return;
   }
   if (!is(Array, headers) || !isAllString(headers)) {

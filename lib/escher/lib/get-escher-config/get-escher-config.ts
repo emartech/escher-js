@@ -1,4 +1,4 @@
-import { EscherConfig } from '../../interface';
+import { EscherConfig } from '../../../interface';
 import { defaultTo } from 'ramda';
 
 export type GetEscherConfig = (partialConfig?: Partial<EscherConfig>) => EscherConfig;
@@ -11,5 +11,5 @@ export const getEscherConfig: GetEscherConfig = partialConfig => ({
   authHeaderName: 'X-Escher-Auth',
   dateHeaderName: 'X-Escher-Date',
   clockSkew: 300,
-  ...defaultTo({}, partialConfig)
+  ...defaultTo({}, partialConfig),
 });
