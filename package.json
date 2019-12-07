@@ -24,14 +24,12 @@
     "node": ">= 8.9.0"
   },
   "scripts": {
-    "test": "npm run code-style && npm run lint && npm run test:tape",
+    "test": "npm run code-style && npm run test:tape",
     "test:tape": "npm run build && tape spec/tape-tests.spec.js | faucet",
     "test:unit": "JASMINE_CONFIG_PATH=./jasmine.unit.json jasmine",
     "test:unit:watch": "TS_NODE_TRANSPILE_ONLY=1 onchange 'lib/**/*.js' 'lib/**/*.ts' -i -d 500 -- npm run test:unit",
-    "prettier": "prettier --write lib/**/*.js spec/**/*.js",
-    "lint": "eslint lib/**/*.js spec/**/*.js",
-    "lint:ts": "tslint 'lib/**/*.ts'",
-    "code-style": "npm run lint:ts && prettier --check lib/**/*.js spec/**/*.js",
+    "prettier": "prettier --write lib/**/*.js spec/**/*.js lib/**/*.ts",
+    "code-style": "tslint 'lib/**/*.ts'",
     "build": "npm run clear-dist && tsc",
     "clear-dist": "rm -rf dist"
   },
@@ -53,9 +51,6 @@
     "@types/node": "^12.12.14",
     "@types/ramda": "^0.26.37",
     "@types/uuid": "^3.4.6",
-    "eslint": "^5.16.0",
-    "eslint-config-emarsys": "^5.1.0",
-    "eslint-plugin-security": "^1.4.0",
     "faucet": "0.0.1",
     "jasmine": "^3.5.0",
     "onchange": "^6.1.0",
