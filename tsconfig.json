@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "checkJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2017"],
+    "isolatedModules": false,
+    "module": "none",
+    "moduleResolution": "node",
+    "noEmitHelpers": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "pretty": true,
+    "target": "es2017",
+    "rootDir": "./lib",
+    "outDir": "./dist"
+  },
+  "exclude": ["node_modules", "dist", "spec"]
+}

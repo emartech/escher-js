@@ -1,7 +1,7 @@
 'use strict';
 
-const Escher = require('../lib/escher');
-const Utils = require('../lib/utils');
+const Escher = require('../dist/escher');
+const Utils = require('../dist/utils');
 const tape = require('tape');
 const { timeDecorator } = require('./decorators');
 
