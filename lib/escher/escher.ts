@@ -28,7 +28,7 @@ export class Escher {
     validateRequest(request, body);
   }
 
-  validateMandatorySignedHeaders(headers: any): void {
+  validateMandatorySignedHeaders(headers?: any): void {
     validateMandatorySignedHeaders(headers);
   }
 
