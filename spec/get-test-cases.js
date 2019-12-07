@@ -10,7 +10,7 @@ async function getTestCases(folder) {
     filter(filterCases),
     map(splitParts),
     map(createTest),
-    groupBy(prop('method'))
+    groupBy(prop('method')),
   )(await readdir(folder));
 }
 

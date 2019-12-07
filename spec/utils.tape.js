@@ -13,7 +13,7 @@ function runUtilTests() {
       const formattedDateString = Utils.toHeaderDateFormat(new Date(originalDateString));
       t.equal(formattedDateString, originalDateString);
       t.end();
-    }
+    },
   );
 
   tape('Utils #normalizeHeaders should accept headers with integer value', t => {

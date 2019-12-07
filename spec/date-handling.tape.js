@@ -10,13 +10,13 @@ const { clone } = require('ramda');
 const configWithoutSpecifiedDate = {
   accessKeyId: 'AKIDEXAMPLE',
   apiSecret: 'wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY',
-  clockSkew: 0
+  clockSkew: 0,
 };
 const urlToSign = 'https://example.com/something?foo=bar&baz=barbaz';
 const requestToSign = {
   method: 'GET',
   url: '/',
-  headers: [['Host', 'host.foo.com']]
+  headers: [['Host', 'host.foo.com']],
 };
 
 module.exports = { runDateHandlingTests };
@@ -32,7 +32,7 @@ function runDateHandlingTests() {
 
       t.equal(date, '19780210T010203Z');
       t.end();
-    })
+    }),
   );
 
   tape(
@@ -50,7 +50,7 @@ function runDateHandlingTests() {
       t.equal(secondDate, '19780210T010204Z');
 
       t.end();
-    })
+    }),
   );
 
   tape(
@@ -64,7 +64,7 @@ function runDateHandlingTests() {
 
       t.equal(date, '19780210T010203Z');
       t.end();
-    })
+    }),
   );
 
   tape(
@@ -83,7 +83,7 @@ function runDateHandlingTests() {
       t.equal(firstDate, '19780210T010203Z');
       t.equal(secondDate, '19780210T010204Z');
       t.end();
-    })
+    }),
   );
 
   tape(
@@ -100,13 +100,13 @@ function runDateHandlingTests() {
           {
             method: 'GET',
             url: parsedSignedUrl.path,
-            headers: [['Host', parsedSignedUrl.host]]
+            headers: [['Host', parsedSignedUrl.host]],
           },
-          keyDb
-        )
+          keyDb,
+        ),
       );
       t.end();
-    })
+    }),
   );
 }
 
