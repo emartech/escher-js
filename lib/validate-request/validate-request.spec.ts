@@ -1,5 +1,5 @@
 import { validateRequest } from './validate-request';
-import { createRequest, createValidRequest } from '../escher/factory';
+import { createRequest, createValidRequest } from '../factory';
 import { v4 } from 'uuid';
 
 describe('Validate Request', () => {

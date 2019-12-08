@@ -1,7 +1,7 @@
 export type EscherConfig = {
   algoPrefix: string;
   vendorKey: string;
-  hashAlgo: string;
+  hashAlgo: 'SHA256' | 'SHA512';
   credentialScope: string;
   authHeaderName: string;
   dateHeaderName: string;
@@ -17,3 +17,23 @@ export type Request = {
 };
 
 export type ValidateRequest = (request: Request, body?: any) => void;
+
+export type RequestHeaders = { [key: string]: string | number };
+
+type RequestBase = {
+  headers: RequestHeaders;
+  url: string;
+};
+
+export type RequestBody = string | Buffer;
+
+type RequestWithoutBody = {
+  method: 'OPTIONS' | 'GET' | 'HEAD' | 'DELETE' | 'TRACE' | 'CONNECT';
+} & RequestBase;
+
+type RequestWithBody = {
+  method: 'PUT' | 'POST' | 'PATCH';
+  body: RequestBody;
+} & RequestBase;
+
+export type ValidRequest = RequestWithoutBody | RequestWithBody;
