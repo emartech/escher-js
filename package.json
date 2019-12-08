@@ -29,6 +29,7 @@
     "test:e2e": "npm run build && tape spec/tape-tests.spec.js | faucet",
     "test:unit": "JASMINE_CONFIG_PATH=./jasmine.unit.json jasmine",
     "test:unit:watch": "TS_NODE_TRANSPILE_ONLY=1 onchange 'lib/**/*.js' 'lib/**/*.ts' -i -d 500 -- npm run test:unit",
+    "test:e2e:watch": "TS_NODE_TRANSPILE_ONLY=1 onchange 'spec/**/*.js' 'lib/**/*.js' 'lib/**/*.ts' -i -d 500 -- npm run test:e2e",
     "prettier": "prettier --write lib/**/*.js spec/**/*.js lib/**/*.ts",
     "code-style": "tslint 'lib/**/*.ts'",
     "build": "npm run clear-dist && tsc",
