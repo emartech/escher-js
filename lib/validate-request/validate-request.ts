@@ -1,10 +1,11 @@
-import { ValidateRequest, Request } from '../interface';
-import { includes, is, test } from 'ramda';
+import { ValidateRequest, Request, RequestHeaderValue } from '../interface';
+import { includes, is, test, forEach, toPairs } from 'ramda';
 
 export const validateRequest: ValidateRequest = (request, body) => {
   validateMethod(request);
   validateBody(request, body);
   validateUrl(request);
+  validateHeaderValues(request);
 };
 
 function validateMethod(request: Request): void {
@@ -32,4 +33,15 @@ function validateUrl(request: Request): void {
   if (!test(/^https?:\/\//, request.url)) {
     throw new Error(`The request url shouldn't contains http or https`);
   }
+}
+
+function validateHeaderValues(request: Request): void {
+  const headers = is(Array, request.headers)
+    ? (request.headers as [string, RequestHeaderValue][])
+    : toPairs(request.headers as { [_: string]: RequestHeaderValue });
+  forEach(([headerName, headerValue]) => {
+    if (!is(String, headerValue) && !is(Number, headerValue)) {
+      throw new Error(`Header value should be string or number [${headerName}]`);
+    }
+  }, headers);
 }

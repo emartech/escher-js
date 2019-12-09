@@ -1,7 +1,11 @@
 import { Request, EscherConfig, ValidRequest } from './interface';
 import { v4 } from 'uuid';
 
-export const createRequest = (override: Partial<Request> = {}): Request => ({ url: 'http://index.hu', ...override });
+export const createRequest = (override: Partial<Request> = {}): Request => ({
+  url: 'http://index.hu',
+  headers: [],
+  ...override,
+});
 
 export const createValidRequest = (override: Partial<ValidRequest> = {}): ValidRequest =>
   ({

@@ -97,4 +97,44 @@ describe('Validate Request', () => {
       });
     });
   });
+
+  [
+    {
+      should: 'throw error when header value is a Buffer and headers is an array',
+      headers: [['headerName', Buffer.from(v4())]],
+    },
+    {
+      should: 'throw error when header value is a Buffer and headers is an object',
+      headers: { headerName: Buffer.from(v4()) },
+    },
+  ].forEach(testCase => {
+    it(`should ${testCase.should}`, () => {
+      expect(() => validateRequest(createRequest({ method: 'GET', headers: testCase.headers as any }))).toThrow(
+        new Error('Header value should be string or number [headerName]'),
+      );
+    });
+  });
+
+  [
+    {
+      should: 'not throw error when header value is a number and headers is an array',
+      headers: [['headerName', 3]],
+    },
+    {
+      should: 'not throw error when header value is a string and headers is an array',
+      headers: [['headerName', v4()]],
+    },
+    {
+      should: 'not throw error when header value is a number and headers is an object',
+      headers: { headerName: 3 },
+    },
+    {
+      should: 'not throw error when header value is a string and headers is an object',
+      headers: { headerName: v4() },
+    },
+  ].forEach(testCase => {
+    it(`should ${testCase.should}`, () => {
+      validateRequest(createRequest({ method: 'GET', headers: testCase.headers as any }));
+    });
+  });
 });

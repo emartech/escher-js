@@ -14,11 +14,14 @@ export type Request = {
   method?: any;
   body?: any;
   url: string;
+  headers: [string, RequestHeaderValue][] | { [_: string]: RequestHeaderValue };
 };
 
 export type ValidateRequest = (request: Request, body?: any) => void;
 
-export type RequestHeaders = { [key: string]: string | number };
+export type RequestHeaderValue = string | number;
+
+export type RequestHeaders = { [_: string]: RequestHeaderValue };
 
 type RequestBase = {
   headers: RequestHeaders;
