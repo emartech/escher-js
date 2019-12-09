@@ -34,8 +34,9 @@ describe('Validate Request', () => {
       { request: createValidRequest({ method: 'PUT', body: Buffer.from(v4()) }) },
       { request: createValidRequest({ method: 'PATCH', body: Buffer.from(v4()) }) },
     ].forEach(testCase => {
-      it(`should not throw error when method is ${testCase.request.method} body type is ${typeof testCase.request
-        .body}`, () => {
+      it(`should not throw error when method is ${
+        testCase.request.method
+      } body type is ${typeof (testCase.request as any).body}`, () => {
         validateRequest(testCase.request);
       });
     });
