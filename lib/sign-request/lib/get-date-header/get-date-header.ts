@@ -1,13 +1,13 @@
-import { EscherConfig, RequestHeaders } from '../../../interface';
+import { EscherConfig, RequestHeader } from '../../../interface';
 import { pipe, trim, toLower } from 'ramda';
 const formatDate = require('dateformat');
 
-export type GetDateHeader = (config: EscherConfig, date: Date) => RequestHeaders;
+export type GetDateHeader = (config: EscherConfig, date: Date) => RequestHeader;
 
 export const getDateHeader: GetDateHeader = (config, date) => {
   const headerName = getHeaderName(config);
   const headerValue = getHeaderValue(date, headerName);
-  return { [headerName]: headerValue };
+  return [headerName, headerValue];
 };
 
 function getHeaderName(config: EscherConfig): string {

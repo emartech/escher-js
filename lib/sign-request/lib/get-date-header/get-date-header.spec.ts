@@ -1,6 +1,5 @@
 import { createEscherConfig } from '../../../factory';
 import { getDateHeader } from './get-date-header';
-import { keys } from 'ramda';
 
 describe('Get Date Header', () => {
   [
@@ -28,9 +27,9 @@ describe('Get Date Header', () => {
     it(`should ${testCase.should}`, () => {
       const config = createEscherConfig({ dateHeaderName: testCase.dateHeaderName });
 
-      const result = getDateHeader(config, new Date());
+      const [headerName] = getDateHeader(config, new Date());
 
-      expect(keys(result)).toEqual([testCase.expected]);
+      expect(headerName).toEqual(testCase.expected);
     });
   });
 
@@ -39,13 +38,13 @@ describe('Get Date Header', () => {
       should: 'convert date to header date',
       dateHeaderName: 'date',
       date: new Date(0),
-      expected: { date: 'Thu, 01 Jan 1970 00:00:00 GMT' },
+      expected: ['date', 'Thu, 01 Jan 1970 00:00:00 GMT'],
     },
     {
       should: 'convert date to long date',
       dateHeaderName: 'not-date',
       date: new Date(0),
-      expected: { 'not-date': '19700101T000000Z' },
+      expected: ['not-date', '19700101T000000Z'],
     },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
@@ -53,7 +52,7 @@ describe('Get Date Header', () => {
 
       const result = getDateHeader(config, testCase.date);
 
-      expect(result).toEqual(testCase.expected as any);
+      expect(result).toEqual(testCase.expected);
     });
   });
 });

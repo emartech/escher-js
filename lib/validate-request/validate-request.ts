@@ -1,5 +1,5 @@
-import { ValidateRequest, Request, RequestHeaderValue } from '../interface';
-import { includes, is, test, forEach, toPairs } from 'ramda';
+import { ValidateRequest, Request } from '../interface';
+import { includes, is, test, forEach } from 'ramda';
 
 export const validateRequest: ValidateRequest = (request, body) => {
   validateMethod(request);
@@ -36,12 +36,9 @@ function validateUrl(request: Request): void {
 }
 
 function validateHeaderValues(request: Request): void {
-  const headers = is(Array, request.headers)
-    ? (request.headers as [string, RequestHeaderValue][])
-    : toPairs(request.headers as { [_: string]: RequestHeaderValue });
   forEach(([headerName, headerValue]) => {
     if (!is(String, headerValue) && !is(Number, headerValue)) {
       throw new Error(`Header value should be string or number [${headerName}]`);
     }
-  }, headers);
+  }, request.headers);
 }

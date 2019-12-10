@@ -8,23 +8,21 @@ export type EscherConfig = {
   clockSkew: number;
 };
 
-export type ValidateMandatorySignedHeaders = (headers?: any) => void;
-
 export type Request = {
   method?: any;
   body?: any;
   url: string;
-  headers: [string, RequestHeaderValue][] | { [_: string]: RequestHeaderValue };
+  headers: [string, RequestHeaderValue][];
 };
-
-export type ValidateRequest = (request: Request, body?: any) => void;
 
 export type RequestHeaderValue = string | number;
 
-export type RequestHeaders = { [_: string]: RequestHeaderValue };
+export type RequestHeaderName = string;
+
+export type RequestHeader = [RequestHeaderName, RequestHeaderValue];
 
 type RequestBase = {
-  headers: RequestHeaders;
+  headers: RequestHeader[];
   url: string;
 };
 
@@ -40,3 +38,7 @@ type RequestWithBody = {
 } & RequestBase;
 
 export type ValidRequest = RequestWithoutBody | RequestWithBody;
+
+export type ValidateRequest = (request: Request, body?: any) => void;
+
+export type ValidateMandatorySignedHeaders = (headers?: any) => void;
