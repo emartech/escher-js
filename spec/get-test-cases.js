@@ -1,6 +1,6 @@
 'use strict';
 const readdir = require('recursive-readdir');
-const { allPass, test, complement, filter, pipe, map, split, groupBy, prop } = require('ramda');
+const { allPass, test, complement, filter, pipe, map, split, groupBy, prop, sort, comparator, lt } = require('ramda');
 const { readFileSync } = require('fs');
 
 module.exports = { getTestCases };
@@ -8,6 +8,7 @@ module.exports = { getTestCases };
 async function getTestCases(folder) {
   return pipe(
     filter(filterCases),
+    sort(comparator(lt)),
     map(splitParts),
     map(createTest),
     groupBy(prop('method')),
