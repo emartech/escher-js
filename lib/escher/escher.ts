@@ -2,6 +2,7 @@ import { EscherConfig, Request } from '../interface';
 import { getEscherConfig, checkPartialEscherConfig } from './lib';
 import { validateMandatorySignedHeaders } from '../validate-mandatory-signed-headers';
 import { validateRequest } from '../validate-request';
+import { signRequest } from '../sign-request';
 const DeprecatedEscher = require('./deprecated-escher');
 
 export class Escher {
@@ -17,7 +18,7 @@ export class Escher {
   }
 
   signRequest(requestOptions: any, body: any, headersToSign: any): any {
-    return new DeprecatedEscher(this._config).signRequest(requestOptions, body, headersToSign);
+    return signRequest(this._config, requestOptions, body, headersToSign);
   }
 
   authenticate(request: any, keyDB: any, mandatorySignedHeaders: any): any {
