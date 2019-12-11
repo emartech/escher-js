@@ -1,8 +1,8 @@
-import { Request, EscherConfig, ValidRequest } from './interface';
+import { Request, EscherConfig, ValidRequest, RequestHeader, RequestHeaderValue, RequestHeaderName } from './interface';
 import { v4 } from 'uuid';
 
 export const createRequest = (override: Partial<Request> = {}): Request => ({
-  url: 'http://index.hu',
+  url: '/example',
   headers: [],
   ...override,
 });
@@ -10,7 +10,7 @@ export const createRequest = (override: Partial<Request> = {}): Request => ({
 export const createValidRequest = (override: Partial<ValidRequest> = {}): ValidRequest =>
   ({
     method: 'GET',
-    url: 'http://index.hu',
+    url: '/example',
     headers: [],
     ...override,
   } as any);
@@ -32,3 +32,8 @@ export const createEscherConfig = ({
   hashAlgo,
   vendorKey,
 });
+
+export const createRequestHeader = ({
+  name = v4(),
+  value = v4(),
+}: Partial<{ name: RequestHeaderName; value: RequestHeaderValue }> = {}): RequestHeader => [name, value];

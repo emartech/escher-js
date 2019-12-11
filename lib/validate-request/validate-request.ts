@@ -30,7 +30,7 @@ function isBodyRequiredMethod(request: Request): boolean {
 }
 
 function validateUrl(request: Request): void {
-  if (!test(/^https?:\/\//, request.url)) {
+  if (test(/^https?:\/\//, request.url)) {
     throw new Error(`The request url shouldn't contains http or https`);
   }
 }

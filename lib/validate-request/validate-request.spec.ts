@@ -16,8 +16,13 @@ describe('Validate Request', () => {
       expectedError: new Error('The request method is invalid'),
     },
     {
-      should: 'throw error when url does not start with http:// or https://',
-      request: createRequest({ method: 'GET', url: 'invalid url' }),
+      should: 'throw error when url starts with http://',
+      request: createRequest({ method: 'GET', url: 'http://index.hu' }),
+      expectedError: new Error(`The request url shouldn't contains http or https`),
+    },
+    {
+      should: 'throw error when url starts with https://',
+      request: createRequest({ method: 'GET', url: 'https://index.hu' }),
       expectedError: new Error(`The request url shouldn't contains http or https`),
     },
   ].forEach(testCase => {
@@ -65,19 +70,9 @@ describe('Validate Request', () => {
     });
   });
 
-  [
-    {
-      should: 'not throw error when url starts with https://',
-      request: createRequest({ method: 'GET', url: 'https://' }),
-    },
-    {
-      should: 'not throw error when url starts with http://',
-      request: createRequest({ method: 'GET', url: 'http://' }),
-    },
-  ].forEach(testCase => {
-    it(`should ${testCase.should}`, () => {
-      validateRequest(testCase.request);
-    });
+  it(`should not throw error when url does not start with http:// or https://`, () => {
+    const url = '/example';
+    validateRequest(createRequest({ method: 'GET', url }));
   });
 
   describe('body passed', () => {
