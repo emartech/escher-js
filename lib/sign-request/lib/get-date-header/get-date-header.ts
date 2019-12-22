@@ -1,5 +1,6 @@
 import { EscherConfig, RequestHeader } from '../../../interface';
 import { pipe, trim, toLower } from 'ramda';
+import { convertToAwsLongDate } from '../convert-to-aws-long-date';
 const formatDate = require('dateformat');
 
 export type GetDateHeader = (config: EscherConfig, date: Date) => RequestHeader;
@@ -18,6 +19,5 @@ function getHeaderName(config: EscherConfig): string {
 }
 
 function getHeaderValue(date: Date, headerName: string): string {
-  const pattern = headerName === 'date' ? 'GMT:ddd, dd mmm yyyy HH:MM:ss Z' : `GMT:yyyymmdd'T'HHMMss'Z'`;
-  return formatDate(date, pattern, true);
+  return headerName === 'date' ? formatDate(date, 'GMT:ddd, dd mmm yyyy HH:MM:ss Z', true) : convertToAwsLongDate(date);
 }
