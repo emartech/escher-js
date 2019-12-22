@@ -7,6 +7,7 @@ export type EscherConfig = {
   authHeaderName: string;
   dateHeaderName: string;
   clockSkew: number;
+  apiSecret: string;
 };
 
 export type Request = {

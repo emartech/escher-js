@@ -24,6 +24,7 @@ export const createEscherConfig = ({
   dateHeaderName = v4(),
   clockSkew = 600,
   accessKeyId = v4(),
+  apiSecret = v4(),
 }: Partial<EscherConfig> = {}): EscherConfig => ({
   algoPrefix,
   authHeaderName,
@@ -33,6 +34,7 @@ export const createEscherConfig = ({
   hashAlgo,
   vendorKey,
   accessKeyId,
+  apiSecret,
 });
 
 export const createRequestHeader = ({

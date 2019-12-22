@@ -6,24 +6,39 @@ describe('Check Partial Escher Config', () => {
   [
     {
       should: 'throw error when hashAlgo is not SHA256 or SHA512',
-      partialEscherConfig: { hashAlgo: 'otherHashAlgo' },
-      expectedError: new Error('Only SHA256 and SHA512 hash algorithms are allowed')
+      partialEscherConfig: createPartialEscherConfig({ hashAlgo: 'otherHashAlgo' }),
+      expectedError: new Error('Only SHA256 and SHA512 hash algorithms are allowed'),
     },
     {
       should: 'throw error when algoPrefix is not string',
-      partialEscherConfig: { algoPrefix: 1 },
-      expectedError: new Error('Algorithm prefix should be a string')
+      partialEscherConfig: createPartialEscherConfig({ algoPrefix: 1 }),
+      expectedError: new Error('Algorithm prefix should be a string'),
     },
     {
       should: 'throw error when vendorKey is not string',
-      partialEscherConfig: { vendorKey: 1 },
-      expectedError: new Error('Vendor key should be an uppercase string')
+      partialEscherConfig: createPartialEscherConfig({ vendorKey: 1 }),
+      expectedError: new Error('Vendor key should be an uppercase string'),
     },
     {
       should: 'throw error when vendorKey is uppercase',
-      partialEscherConfig: { vendorKey: 'vendorkey' },
-      expectedError: new Error('Vendor key should be an uppercase string')
-    }
+      partialEscherConfig: createPartialEscherConfig({ vendorKey: 'vendorkey' }),
+      expectedError: new Error('Vendor key should be an uppercase string'),
+    },
+    {
+      should: 'throw error when no apiSecret',
+      partialEscherConfig: {},
+      expectedError: new Error('Invalid Escher key'),
+    },
+    {
+      should: 'throw error when apiSecret is not string',
+      partialEscherConfig: { apiSecret: 1 },
+      expectedError: new Error('Invalid Escher key'),
+    },
+    {
+      should: 'throw error when apiSecret is empty string',
+      partialEscherConfig: { apiSecret: '' },
+      expectedError: new Error('Invalid Escher key'),
+    },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
       expect(() => checkPartialEscherConfig(testCase.partialEscherConfig)).toThrow(testCase.expectedError);
@@ -33,20 +48,20 @@ describe('Check Partial Escher Config', () => {
   [
     {
       should: 'not throw error when algoPrefix is string',
-      partialEscherConfig: { algoPrefix: v4() }
+      partialEscherConfig: createPartialEscherConfig({ algoPrefix: v4() }),
     },
     {
       should: 'not throw error when vendorKey is string',
-      partialEscherConfig: { vendorKey: toUpper(v4()) }
+      partialEscherConfig: createPartialEscherConfig({ vendorKey: toUpper(v4()) }),
     },
     {
       should: 'not throw error when hashAlgo SHA256',
-      partialEscherConfig: { hashAlgo: 'SHA256' }
+      partialEscherConfig: createPartialEscherConfig({ hashAlgo: 'SHA256' }),
     },
     {
       should: 'not throw error when hashAlgo SHA512',
-      partialEscherConfig: { hashAlgo: 'SHA512' }
-    }
+      partialEscherConfig: createPartialEscherConfig({ hashAlgo: 'SHA512' }),
+    },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
       checkPartialEscherConfig(testCase.partialEscherConfig);
@@ -57,3 +72,7 @@ describe('Check Partial Escher Config', () => {
     checkPartialEscherConfig();
   });
 });
+
+function createPartialEscherConfig(override = {}) {
+  return { apiSecret: v4(), ...override };
+}
