@@ -11,5 +11,6 @@ export const getEscherConfig: GetEscherConfig = partialConfig => ({
   authHeaderName: 'X-Escher-Auth',
   dateHeaderName: 'X-Escher-Date',
   clockSkew: 300,
+  accessKeyId: '',
   ...defaultTo({}, partialConfig),
 });

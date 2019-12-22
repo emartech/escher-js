@@ -1,4 +1,5 @@
 export type EscherConfig = {
+  accessKeyId: string;
   algoPrefix: string;
   vendorKey: string;
   hashAlgo: 'SHA256' | 'SHA512';
