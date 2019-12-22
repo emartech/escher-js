@@ -2,35 +2,13 @@ import { createEscherConfig } from '../../../factory';
 import { getDateHeader } from './get-date-header';
 
 describe('Get Date Header', () => {
-  [
-    {
-      should: 'return with the date header name',
-      dateHeaderName: 'date-header-name',
-      expected: 'date-header-name',
-    },
-    {
-      should: 'remove whitespaces from date header name left',
-      dateHeaderName: '      date-header-name',
-      expected: 'date-header-name',
-    },
-    {
-      should: 'remove whitespaces from date header name right',
-      dateHeaderName: 'date-header-name      ',
-      expected: 'date-header-name',
-    },
-    {
-      should: 'convert to lower case',
-      dateHeaderName: 'Date-Header-Name',
-      expected: 'date-header-name',
-    },
-  ].forEach(testCase => {
-    it(`should ${testCase.should}`, () => {
-      const config = createEscherConfig({ dateHeaderName: testCase.dateHeaderName });
+  it(`should return normalized header name`, () => {
+    const dateHeaderName = '    Date-Header-Name     ';
+    const config = createEscherConfig({ dateHeaderName });
 
-      const [headerName] = getDateHeader(config, new Date());
+    const [headerName] = getDateHeader(config, new Date());
 
-      expect(headerName).toEqual(testCase.expected);
-    });
+    expect(headerName).toEqual('date-header-name');
   });
 
   [
