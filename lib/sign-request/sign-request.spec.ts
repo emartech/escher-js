@@ -14,6 +14,15 @@ describe('SignRequest', () => {
     expect(validateRequest).toHaveBeenCalledWith(request, body);
   });
 
+  it('should calls validate escher config with escher config', () => {
+    const validateEscherConfig = jasmine.createSpy('validateEscherConfig');
+    const config = createEscherConfig();
+
+    createSignRequest(createStrategy({ validateEscherConfig }))(config, createValidRequest(), v4(), []);
+
+    expect(validateEscherConfig).toHaveBeenCalledWith(config);
+  });
+
   it('should calls get date header with config and date from get date', () => {
     const getDateHeader = jasmine.createSpy('getDateHeader').and.returnValue(createRequestHeader());
     const date = new Date();
@@ -125,6 +134,7 @@ function createStrategy({
   getDateHeader = () => [v4(), v4()],
   getHeadersToSign = () => [],
   validateRequest = () => {},
+  validateEscherConfig = () => {},
 }: Partial<SignRequestStrategy> = {}): SignRequestStrategy {
-  return { getAuthorizationHeader, getDate, getDateHeader, getHeadersToSign, validateRequest };
+  return { getAuthorizationHeader, getDate, getDateHeader, getHeadersToSign, validateRequest, validateEscherConfig };
 }
