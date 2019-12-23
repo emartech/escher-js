@@ -1,4 +1,4 @@
-import { is, toUpper, has, includes, isNil, isEmpty } from 'ramda';
+import { is, toUpper, has, includes, isNil } from 'ramda';
 
 export type CheckPartialEscherConfig = (partialEscherConfig?: any) => void;
 
@@ -14,9 +14,6 @@ export const checkPartialEscherConfig: CheckPartialEscherConfig = config => {
   }
   if (has('hashAlgo', config) && !includes(config.hashAlgo, ['SHA256', 'SHA512'])) {
     throw new Error('Only SHA256 and SHA512 hash algorithms are allowed');
-  }
-  if (!has('apiSecret', config) || !isString(config.apiSecret) || isEmpty(config.apiSecret)) {
-    throw new Error('Invalid Escher key');
   }
 };
 

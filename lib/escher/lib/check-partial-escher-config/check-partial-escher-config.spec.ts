@@ -1,6 +1,7 @@
 import { checkPartialEscherConfig } from './check-partial-escher-config';
 import { v4 } from 'uuid';
 import { toUpper } from 'ramda';
+import { EscherConfig } from '../../../interface';
 
 describe('Check Partial Escher Config', () => {
   [
@@ -23,21 +24,6 @@ describe('Check Partial Escher Config', () => {
       should: 'throw error when vendorKey is uppercase',
       partialEscherConfig: createPartialEscherConfig({ vendorKey: 'vendorkey' }),
       expectedError: new Error('Vendor key should be an uppercase string'),
-    },
-    {
-      should: 'throw error when no apiSecret',
-      partialEscherConfig: {},
-      expectedError: new Error('Invalid Escher key'),
-    },
-    {
-      should: 'throw error when apiSecret is not string',
-      partialEscherConfig: { apiSecret: 1 },
-      expectedError: new Error('Invalid Escher key'),
-    },
-    {
-      should: 'throw error when apiSecret is empty string',
-      partialEscherConfig: { apiSecret: '' },
-      expectedError: new Error('Invalid Escher key'),
     },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
@@ -73,6 +59,6 @@ describe('Check Partial Escher Config', () => {
   });
 });
 
-function createPartialEscherConfig(override = {}) {
+function createPartialEscherConfig(override: any = {}): Partial<EscherConfig> {
   return { apiSecret: v4(), ...override };
 }
