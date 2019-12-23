@@ -45,6 +45,5 @@ function getDefaultConfig(): EscherConfig {
     dateHeaderName: 'X-Escher-Date',
     clockSkew: 300,
     accessKeyId: '',
-    apiSecret: '',
   };
 }

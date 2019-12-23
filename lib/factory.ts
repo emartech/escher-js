@@ -15,26 +15,16 @@ export const createValidRequest = (override: Partial<ValidRequest> = {}): ValidR
     ...override,
   } as any);
 
-export const createEscherConfig = ({
-  algoPrefix = v4(),
-  vendorKey = v4(),
-  hashAlgo = 'SHA512',
-  credentialScope = v4(),
-  authHeaderName = v4(),
-  dateHeaderName = v4(),
-  clockSkew = 600,
-  accessKeyId = v4(),
-  apiSecret = v4(),
-}: Partial<EscherConfig> = {}): EscherConfig => ({
-  algoPrefix,
-  authHeaderName,
-  clockSkew,
-  credentialScope,
-  dateHeaderName,
-  hashAlgo,
-  vendorKey,
-  accessKeyId,
-  apiSecret,
+export const createEscherConfig = (override: Partial<EscherConfig> = {}): EscherConfig => ({
+  algoPrefix: v4(),
+  vendorKey: v4(),
+  hashAlgo: 'SHA512',
+  credentialScope: v4(),
+  authHeaderName: v4(),
+  dateHeaderName: v4(),
+  clockSkew: 600,
+  accessKeyId: v4(),
+  ...override,
 });
 
 export const createRequestHeader = ({
