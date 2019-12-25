@@ -1,6 +1,6 @@
 {
   "spec_files": [
-    "./lib/**/*.spec.ts"
+    "./src/**/*.spec.ts"
   ],
   "helpers": [
     "./jasmine.compiler.js",

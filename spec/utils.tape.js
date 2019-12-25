@@ -1,6 +1,6 @@
 'use strict';
 
-const Utils = require('../dist/lib/utils');
+const Utils = require('../dist/src/utils');
 const tape = require('tape');
 
 module.exports = { runUtilTests };
