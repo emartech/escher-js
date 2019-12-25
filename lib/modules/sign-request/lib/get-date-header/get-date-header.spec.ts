@@ -1,4 +1,4 @@
-import { createEscherConfig } from '../../../factory';
+import { createEscherConfig } from '../../../../factory';
 import { getDateHeader } from './get-date-header';
 
 describe('Get Date Header', () => {

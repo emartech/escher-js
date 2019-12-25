@@ -1,4 +1,4 @@
-import { EscherConfig } from '../../../interface';
+import { EscherConfig } from '../../../../interface';
 import { toLower, defaultTo } from 'ramda';
 
 export type GetHeadersToSign = (config: EscherConfig, additionalHeadersToSign?: string[]) => string[];

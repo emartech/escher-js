@@ -1,5 +1,5 @@
 import { getHeadersToSign } from './get-headers-to-sign';
-import { createEscherConfig } from '../../../factory';
+import { createEscherConfig } from '../../../../factory';
 import { v4 } from 'uuid';
 
 describe('Get Headers To Sign', () => {

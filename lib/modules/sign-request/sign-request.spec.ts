@@ -1,6 +1,6 @@
 import { SignRequestStrategy, createSignRequest } from './sign-request';
 import { v4 } from 'uuid';
-import { createEscherConfig, createValidRequest, createRequestHeader } from '../factory';
+import { createEscherConfig, createValidRequest, createRequestHeader } from '../../factory';
 import { dissoc } from 'ramda';
 
 describe('SignRequest', () => {

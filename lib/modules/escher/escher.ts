@@ -1,4 +1,4 @@
-import { EscherConfig, Request } from '../interface';
+import { EscherConfig, Request } from '../../interface';
 import { getEscherConfig, checkPartialEscherConfig } from './lib';
 import { validateMandatorySignedHeaders } from '../validate-mandatory-signed-headers';
 import { validateRequest } from '../validate-request';

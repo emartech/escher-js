@@ -1,4 +1,4 @@
-import { RequestHeader, EscherConfig, ValidRequest, RequestBody, RequestHeaderValue } from '../../../interface';
+import { RequestHeader, EscherConfig, ValidRequest, RequestBody, RequestHeaderValue } from '../../../../interface';
 import {
   pipe,
   map,

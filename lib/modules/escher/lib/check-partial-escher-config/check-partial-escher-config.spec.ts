@@ -1,7 +1,7 @@
 import { checkPartialEscherConfig } from './check-partial-escher-config';
 import { v4 } from 'uuid';
 import { toUpper } from 'ramda';
-import { EscherConfig } from '../../../interface';
+import { EscherConfig } from '../../../../interface';
 
 describe('Check Partial Escher Config', () => {
   [

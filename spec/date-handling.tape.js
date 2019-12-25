@@ -2,7 +2,7 @@
 
 const querystring = require('querystring');
 const tape = require('tape');
-const { Escher } = require('../dist/lib/escher');
+const { Escher } = require('../dist/lib/modules/escher');
 const Utils = require('../dist/lib/utils');
 const { timeDecorator } = require('./decorators');
 const { clone } = require('ramda');

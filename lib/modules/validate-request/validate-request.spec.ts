@@ -1,7 +1,7 @@
 import { validateRequest } from './validate-request';
-import { createRequest, createValidRequest } from '../factory';
+import { createRequest, createValidRequest } from '../../factory';
 import { v4 } from 'uuid';
-import { RequestHeader } from '../interface';
+import { RequestHeader } from '../../interface';
 
 describe('Validate Request', () => {
   [

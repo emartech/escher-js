@@ -1,4 +1,4 @@
-import { ValidateMandatorySignedHeaders } from '../interface';
+import { ValidateMandatorySignedHeaders } from '../../interface';
 import { is, all } from 'ramda';
 
 export const validateMandatorySignedHeaders: ValidateMandatorySignedHeaders = headers => {

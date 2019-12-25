@@ -1,4 +1,4 @@
-import { ValidRequest, EscherConfig, RequestBody, ValidateRequest, RequestHeader } from '../interface';
+import { ValidRequest, EscherConfig, RequestBody, ValidateRequest, RequestHeader } from '../../interface';
 import { GetAuthorizationHeader, GetDateHeader, GetDate, GetHeadersToSign, ValidateEscherConfig } from './lib';
 import { head, toLower, pipe, any } from 'ramda';
 

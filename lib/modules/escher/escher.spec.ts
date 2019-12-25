@@ -1,5 +1,5 @@
 import { Escher } from './escher';
-import { createRequest } from '../factory';
+import { createRequest } from '../../factory';
 
 describe('Escher', () => {
   describe('invalid config', () => {

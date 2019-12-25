@@ -1,4 +1,4 @@
-import { EscherConfig } from '../../../interface';
+import { EscherConfig } from '../../../../interface';
 import { defaultTo } from 'ramda';
 
 export type GetEscherConfig = (partialConfig?: Partial<EscherConfig>) => EscherConfig;

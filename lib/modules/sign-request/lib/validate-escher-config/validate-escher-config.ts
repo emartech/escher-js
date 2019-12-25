@@ -1,4 +1,4 @@
-import { EscherConfig } from '../../../interface';
+import { EscherConfig } from '../../../../interface';
 import { has, is, isEmpty } from 'ramda';
 
 export type ValidateEscherConfig = (config: EscherConfig) => void;

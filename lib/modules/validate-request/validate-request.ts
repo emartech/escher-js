@@ -1,4 +1,4 @@
-import { ValidateRequest, Request } from '../interface';
+import { ValidateRequest, Request } from '../../interface';
 import { includes, is, test, forEach } from 'ramda';
 
 export const validateRequest: ValidateRequest = (request, body) => {
