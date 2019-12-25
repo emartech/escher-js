@@ -3,6 +3,7 @@ import { getEscherConfig, checkPartialEscherConfig } from './lib';
 import { validateMandatorySignedHeaders } from '../validate-mandatory-signed-headers';
 import { validateRequest } from '../validate-request';
 import { signRequest } from '../sign-request';
+import { presignUrl } from '../presign-url';
 const DeprecatedEscher = require('./deprecated-escher');
 
 export class Escher {
@@ -13,8 +14,8 @@ export class Escher {
     this._config = getEscherConfig(partialConfig);
   }
 
-  preSignUrl(url: string, expires: number): string {
-    return new DeprecatedEscher(this._config).preSignUrl(url, expires);
+  preSignUrl(url: string, expiration: number): string {
+    return presignUrl(this._config, url, expiration, new Date());
   }
 
   signRequest(requestOptions: any, body: any, headersToSign: any): any {

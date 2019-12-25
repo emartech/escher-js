@@ -1,6 +1,5 @@
 import { EscherConfig, RequestHeader } from '../../../../interface';
-import { convertToAwsLongDate } from '../convert-to-aws-long-date';
-import { getNormalizedHeaderName } from '../get-normalized-header-name';
+import { convertToAwsLongDate, getNormalizedHeaderName } from '../../../../lib';
 const formatDate = require('dateformat');
 
 export type GetDateHeader = (config: EscherConfig, date: Date) => RequestHeader;
