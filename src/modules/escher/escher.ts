@@ -4,7 +4,7 @@ import { validateMandatorySignedHeaders } from '../validate-mandatory-signed-hea
 import { validateRequest } from '../validate-request';
 import { signRequest } from '../sign-request';
 import { presignUrl } from '../presign-url';
-const DeprecatedEscher = require('./deprecated-escher');
+import { authenticate } from '../authenticate';
 
 export class Escher {
   private _config: EscherConfig;
@@ -23,7 +23,7 @@ export class Escher {
   }
 
   authenticate(request: any, keyDB: any, mandatorySignedHeaders: any): any {
-    return new DeprecatedEscher(this._config).authenticate(request, keyDB, mandatorySignedHeaders);
+    return authenticate(this._config, request, keyDB, mandatorySignedHeaders);
   }
 
   validateRequest(request: Request, body?: any): void {
