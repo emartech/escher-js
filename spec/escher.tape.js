@@ -1,7 +1,7 @@
 'use strict';
 
 const { Escher } = require('../dist/src/modules/escher');
-const Utils = require('../dist/src/utils');
+const Utils = require('../dist/src/deprecated/utils');
 const tape = require('tape');
 const { timeDecorator } = require('./decorators');
 

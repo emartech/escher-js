@@ -1,8 +1,8 @@
 'use strict';
 
-const AuthHelper = require('../../authhelper');
-const Canonicalizer = require('../../canonicalizer');
-const Utils = require('../../utils');
+const AuthHelper = require('./authhelper');
+const Canonicalizer = require('./canonicalizer');
+const Utils = require('./utils');
 
 const allowedHashAlgos = ['SHA256', 'SHA512'];
 const allowedRequestMethods = ['OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'PATCH', 'CONNECT'];

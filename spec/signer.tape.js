@@ -1,6 +1,6 @@
 'use strict';
 
-const Signer = require('../dist/src/signer');
+const Signer = require('../dist/src/deprecated/signer');
 const tape = require('tape');
 
 module.exports = { runSignerTests };

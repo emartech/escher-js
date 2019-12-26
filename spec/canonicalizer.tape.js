@@ -1,7 +1,7 @@
 'use strict';
 
 const tape = require('tape');
-const Canonicalizer = require('../dist/src/canonicalizer');
+const Canonicalizer = require('../dist/src/deprecated/canonicalizer');
 
 module.exports = { runCanonicalizerTests };
 

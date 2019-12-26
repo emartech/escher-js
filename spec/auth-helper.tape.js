@@ -1,7 +1,7 @@
 'use strict';
 
 const tape = require('tape');
-const AuthHelper = require('../dist/src/authhelper');
+const AuthHelper = require('../dist/src/deprecated/authhelper');
 
 module.exports = { runAuthHelperTests };
 
