@@ -1,46 +1,41 @@
 import { validateRequest } from '../validate-request';
 import { validateMandatorySignedHeaders } from '../validate-mandatory-signed-headers';
 import { getUrlWithParsedQuery, convertToAwsShortDate, getSignature } from '../../lib';
-import crypto = require('crypto');
+import { isEqualFixedTime, getHeaderValue, isPresignedUrl, authenticatePresignedUrl } from './lib';
 
 export const authenticate = (config: any, request: any, keyDB: any, mandatorySignedHeaders: any) => {
   const currentDate = new Date();
   validateRequest(request);
   validateMandatorySignedHeaders(mandatorySignedHeaders);
   const uri = getUrlWithParsedQuery(request.url);
-  const isPresignedUrl =
-    Object.prototype.hasOwnProperty.call(uri.query, getParamKey(config, 'Signature')) && request.method === 'GET';
+  const presignedUrl = isPresignedUrl(config, uri, request);
+
+  if (presignedUrl) {
+    return authenticatePresignedUrl(config, request, keyDB, mandatorySignedHeaders, currentDate);
+  }
 
   let requestDate: any;
   let parsedAuthParts: any;
   let requestBody: any;
   let expires: any;
-  if (isPresignedUrl) {
-    requestDate = parseLongDate(uri.query[getParamKey(config, 'Date')] as string);
-    parsedAuthParts = parseFromQuery(config, uri.query, requestDate, keyDB);
-    requestBody = 'UNSIGNED-PAYLOAD';
-    expires = parseInt(uri.query[getParamKey(config, 'Expires')] as string);
-    const canonicalizedQueryString = canonicalizeQuery(filterKeysFrom(uri.query, [getParamKey(config, 'Signature')]));
-    request.url = uri.pathname + (canonicalizedQueryString ? '?' + canonicalizedQueryString : '');
-  } else {
-    requestDate =
-      config.dateHeaderName.toLowerCase() === 'date'
-        ? new Date(getHeader(request, config.dateHeaderName))
-        : parseLongDate(getHeader(request, config.dateHeaderName));
-    parsedAuthParts = parseAuthHeader(config, getHeader(request, config.authHeaderName), requestDate, keyDB);
-    requestBody = request.body || '';
-    expires = 0;
-  }
+
+  requestDate =
+    config.dateHeaderName.toLowerCase() === 'date'
+      ? new Date(getHeaderValue(request, config.dateHeaderName))
+      : parseLongDate(getHeaderValue(request, config.dateHeaderName));
+  parsedAuthParts = parseAuthHeader(config, getHeaderValue(request, config.authHeaderName), requestDate, keyDB);
+  requestBody = request.body || '';
+  expires = 0;
 
   if (!request.host) {
-    request.host = getHeader(request, 'host');
+    request.host = getHeaderValue(request, 'host');
   }
 
   if (!mandatorySignedHeaders) {
     mandatorySignedHeaders = [];
   }
   mandatorySignedHeaders.push('host');
-  if (!isPresignedUrl) {
+  if (!presignedUrl) {
     mandatorySignedHeaders.push(config.dateHeaderName.toLowerCase());
   }
   mandatorySignedHeaders.forEach((mandatoryHeader: any) => {
@@ -49,7 +44,7 @@ export const authenticate = (config: any, request: any, keyDB: any, mandatorySig
     }
   });
 
-  if (!fixedTimeComparison(parsedAuthParts.config.credentialScope, config.credentialScope)) {
+  if (!isEqualFixedTime(parsedAuthParts.config.credentialScope, config.credentialScope)) {
     throw new Error('Invalid Credential Scope');
   }
 
@@ -57,7 +52,7 @@ export const authenticate = (config: any, request: any, keyDB: any, mandatorySig
     throw new Error('Invalid hash algorithm, only SHA256 and SHA512 are allowed');
   }
 
-  if (!fixedTimeComparison(parsedAuthParts.shortDate, convertToAwsShortDate(requestDate))) {
+  if (!isEqualFixedTime(parsedAuthParts.shortDate, convertToAwsShortDate(requestDate))) {
     throw new Error('Invalid date in authorization header, it should equal with date header');
   }
 
@@ -74,16 +69,12 @@ export const authenticate = (config: any, request: any, keyDB: any, mandatorySig
     requestBody,
     parsedAuthParts.signedHeaders,
   );
-  if (!fixedTimeComparison(parsedAuthParts.signature, generatedAuthParts)) {
+  if (!isEqualFixedTime(parsedAuthParts.signature, generatedAuthParts)) {
     throw new Error('The signatures do not match');
   }
 
   return parsedAuthParts.config.accessKeyId;
 };
-
-function getParamKey(config: any, paramName: any): any {
-  return ['X', config.vendorKey, paramName].join('-');
-}
 
 function isDateWithinRange(config: any, requestTime: any, currentTime: any, expires: any): any {
   return (
@@ -100,99 +91,6 @@ function parseLongDate(longDate: any): any {
   }
 
   return new Date(m[1] + '-' + m[2] + '-' + m[3] + ' ' + m[4] + ':' + m[5] + ':' + m[6] + ' GMT');
-}
-
-function fixedTimeComparison(a: any, b: any): any {
-  try {
-    return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
-  } catch (err) {
-    return false;
-  }
-}
-
-function getHeader(request: any, headerName: any): any {
-  headerName = headerName.toLowerCase();
-  if (request.headers instanceof Array) {
-    for (let i = 0, j = request.headers.length; i < j; i++) {
-      if (request.headers[i][0].toLowerCase() === headerName) {
-        return request.headers[i][1];
-      }
-    }
-  } else {
-    if (request.headers.hasOwnProperty(headerName)) {
-      return request.headers[headerName];
-    }
-  }
-
-  throw new Error('The ' + headerName + ' header is missing');
-}
-
-function filterKeysFrom(hash: any, keysToFilter: any): any {
-  const result: any = {};
-  Object.keys(hash).forEach(key => {
-    if (!keysToFilter.includes(key)) {
-      result[key] = hash[key];
-    }
-  });
-
-  return result;
-}
-
-function canonicalizeQuery(query: any): any {
-  const encodeComponent = (component: any) =>
-    encodeURIComponent(component)
-      .replace(/'/g, '%27')
-      .replace(/\(/g, '%28')
-      .replace(/\)/g, '%29');
-
-  const join = (key: any, value: any) => encodeComponent(key) + '=' + encodeComponent(value);
-
-  return Object.keys(query)
-    .map(key => {
-      const value = query[key];
-      if (typeof value === 'string') {
-        return join(key, value);
-      }
-      return value
-        .sort()
-        .map((oneValue: any) => join(key, oneValue))
-        .join('&');
-    })
-    .sort()
-    .join('&');
-}
-
-function parseFromQuery(config: any, query: any, requestDate: any, keyDB: any): any {
-  const credentialRegExpDefinition = '([A-Za-z0-9\\-_]+)/([0-9]{8})/([A-Za-z0-9\\-_ /]+)';
-  // eslint-disable-next-line security/detect-non-literal-regexp
-  const credentialParts = getQueryPart(config, query, 'Credentials').match(new RegExp(credentialRegExpDefinition));
-  const algoRegExp = config.algoPrefix + '-HMAC-([A-Za-z0-9\\,]+)';
-  const parsedConfig = {
-    vendorKey: config.vendorKey,
-    algoPrefix: config.algoPrefix,
-    date: requestDate,
-    // eslint-disable-next-line security/detect-non-literal-regexp
-    hashAlgo: getQueryPart(config, query, 'Algorithm').match(new RegExp(algoRegExp))[1],
-    accessKeyId: credentialParts[1],
-    apiSecret: keyDB(credentialParts[1]),
-    credentialScope: credentialParts[3],
-  };
-
-  if (typeof parsedConfig.apiSecret !== 'string') {
-    throw new Error('Invalid Escher key');
-  }
-
-  return {
-    shortDate: credentialParts[2],
-    config: parsedConfig,
-    signedHeaders: getQueryPart(config, query, 'SignedHeaders').split(';'),
-    signature: getQueryPart(config, query, 'Signature'),
-    expires: getQueryPart(config, query, 'Expires'),
-  };
-}
-
-function getQueryPart(config: any, query: any, key: any): any {
-  return query['X-' + config.vendorKey + '-' + key] || '';
 }
 
 function parseAuthHeader(config: any, authHeader: any, requestDate: any, keyDB: any): any {
