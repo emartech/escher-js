@@ -1,7 +1,7 @@
 import { getUrlWithParsedQuery, convertToAwsShortDate, getSignature, getNormalizedHeaderName } from '../../../../lib';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
 import { EscherConfig } from '../../../../interface';
-import { split, defaultTo, pipe, append, map, forEach, includes } from 'ramda';
+import { split, defaultTo, pipe, append, map, forEach, includes, join, last } from 'ramda';
 import { ParsedUrlQuery } from 'querystring';
 
 export const authenticatePresignedUrl = (
@@ -11,17 +11,23 @@ export const authenticatePresignedUrl = (
   mandatorySignedHeaders: any,
   currentDate: any,
 ) => {
-  const url = getUrlWithParsedQuery(request.url);
-  const signedHeaders = getSignedHeaders(config, url.query);
+  const urlWithParsedQuery = getUrlWithParsedQuery(request.url);
+  const signedHeaders = getSignedHeaders(config, urlWithParsedQuery.query);
 
-  const requestDate = parseLongDate(url.query[getParamKey(config, 'Date')] as string);
-  const parsedAuthParts = parseFromQuery(config, url.query, keyDB);
+  const requestDate = parseLongDate(urlWithParsedQuery.query[getParamKey(config, 'Date')] as string);
+  const parsedAuthParts = parseFromQuery(config, urlWithParsedQuery.query, keyDB);
   const requestBody = 'UNSIGNED-PAYLOAD';
-  const expires = parseInt(url.query[getParamKey(config, 'Expires')] as string);
-  const canonicalizedQueryString = canonicalizeQuery(filterKeysFrom(url.query, [getParamKey(config, 'Signature')]));
-  request.url = url.pathname + (canonicalizedQueryString ? '?' + canonicalizedQueryString : '');
+  const expires = parseInt(urlWithParsedQuery.query[getParamKey(config, 'Expires')] as string);
+  const canonicalizedQueryString = canonicalizeQuery(
+    filterKeysFrom(urlWithParsedQuery.query, [getParamKey(config, 'Signature')]),
+  );
+  request.url = urlWithParsedQuery.pathname + (canonicalizedQueryString ? '?' + canonicalizedQueryString : '');
 
   checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders);
+
+  if (typeof parsedAuthParts.config.apiSecret !== 'string') {
+    throw new Error('Invalid Escher key');
+  }
 
   if (!isEqualFixedTime(parsedAuthParts.config.credentialScope, config.credentialScope)) {
     throw new Error('Invalid Credential Scope');
@@ -106,28 +112,23 @@ function canonicalizeQuery(query: any): any {
 }
 
 function parseFromQuery(config: any, query: any, keyDB: any): any {
-  const credentialRegExpDefinition = '([A-Za-z0-9\\-_]+)/([0-9]{8})/([A-Za-z0-9\\-_ /]+)';
-  // eslint-disable-next-line security/detect-non-literal-regexp
-  const credentialParts = getQueryPart(config, query, 'Credentials').match(new RegExp(credentialRegExpDefinition));
-  const algoRegExp = config.algoPrefix + '-HMAC-([A-Za-z0-9\\,]+)';
-  const parsedConfig = {
-    vendorKey: config.vendorKey,
-    algoPrefix: config.algoPrefix,
-    // eslint-disable-next-line security/detect-non-literal-regexp
-    hashAlgo: getQueryPart(config, query, 'Algorithm').match(new RegExp(algoRegExp))[1],
-    accessKeyId: credentialParts[1],
-    apiSecret: keyDB(credentialParts[1]),
-    credentialScope: credentialParts[3],
-  };
-
-  if (typeof parsedConfig.apiSecret !== 'string') {
-    throw new Error('Invalid Escher key');
-  }
-
+  const credentials = getQueryPart(config, query, 'Credentials');
+  const algorithm = getQueryPart(config, query, 'Algorithm');
+  const accessKeyId = getAccessKeyId(credentials);
+  const apiSecret = keyDB(accessKeyId);
+  const credentialScope = getCredentialScope(credentials);
+  const shortDate = getShortDate(credentials);
+  const hashAlgo = getHashAlgorithm(algorithm);
   return {
-    shortDate: credentialParts[2],
-    config: parsedConfig,
-    signedHeaders: getQueryPart(config, query, 'SignedHeaders').split(';'),
+    shortDate,
+    config: {
+      vendorKey: config.vendorKey,
+      algoPrefix: config.algoPrefix,
+      hashAlgo,
+      accessKeyId,
+      apiSecret,
+      credentialScope,
+    },
     signature: getQueryPart(config, query, 'Signature'),
     expires: getQueryPart(config, query, 'Expires'),
   };
@@ -152,4 +153,23 @@ function checkMandatorySignHeaders(signedHeaders: string[], mandatorySignedHeade
       }
     }),
   )(mandatorySignedHeaders);
+}
+
+function getAccessKeyId(credentials: string): string | undefined {
+  const [accessKeyId] = split('/', credentials);
+  return accessKeyId;
+}
+
+function getCredentialScope(credentials: string): string {
+  const [, , ...credentialScopeParts] = split('/', credentials);
+  return join('/', credentialScopeParts);
+}
+
+function getShortDate(credentials: string): string | undefined {
+  const [, shortDate] = split('/', credentials);
+  return shortDate;
+}
+
+function getHashAlgorithm(algorithm: string): string | undefined {
+  return last(split('-', algorithm));
 }
