@@ -33,7 +33,7 @@
     "prettier": "prettier --write src/**/*.js spec/**/*.js src/**/*.ts",
     "code-style": "tslint 'src/**/*.ts'",
     "build": "npm run clear-dist && tsc",
-    "clear-dist": "rm -rf dist"
+    "clear-dist": "rm -rf dist/*"
   },
   "keywords": [
     "escher",

@@ -1,4 +1,4 @@
-import { EscherConfig, ValidRequest, RequestBody, RequestHeader, RequestHeaderValue } from '../../interface';
+import { ValidRequest, RequestBody, RequestHeader, RequestHeaderValue, EscherConfig } from '../../interface';
 import {
   reduce,
   split,
@@ -21,20 +21,28 @@ import { createHash, createHmac } from 'crypto';
 import { getUrlWithParsedQuery } from '../get-url-with-parsed-query';
 import { normalize } from 'path';
 import { getNormalizedHeaderName } from '../get-normalized-header-name';
+import { canonicalizeQuery } from '../canonicalize-query/canonicalize-query';
+
+export type SignatureConfig = {
+  hashAlgo: 'SHA256' | 'SHA512';
+  algoPrefix: string;
+  apiSecret: string;
+  credentialScope: string;
+};
 
 export function getSignature(
-  config: EscherConfig,
+  config: SignatureConfig | EscherConfig,
   date: Date,
   request: ValidRequest,
   body: RequestBody,
   headersToSign: string[],
 ): string {
-  const signingKey = getSigningKey(config, date);
-  const stringToSign = getStringToSign(config, date, request, body, headersToSign);
+  const signingKey = getSigningKey(config as any, date);
+  const stringToSign = getStringToSign(config as any, date, request, body, headersToSign);
   return hmac(config.hashAlgo, signingKey, stringToSign).toString('hex') as string;
 }
 
-function getSigningKey(config: EscherConfig, date: Date): Buffer {
+function getSigningKey(config: SignatureConfig, date: Date): Buffer {
   return reduce(
     (signingKey, data) => hmac(config.hashAlgo, signingKey, data),
     Buffer.from(`${config.algoPrefix}${config.apiSecret}`),
@@ -43,7 +51,7 @@ function getSigningKey(config: EscherConfig, date: Date): Buffer {
 }
 
 function getStringToSign(
-  config: EscherConfig,
+  config: SignatureConfig,
   date: Date,
   request: ValidRequest,
   body: RequestBody,
@@ -57,7 +65,7 @@ function getStringToSign(
   ]);
 }
 function getCanonicalizedRequestChecksum(
-  config: EscherConfig,
+  config: SignatureConfig,
   request: ValidRequest,
   body: RequestBody,
   headersToSign: string[],
@@ -78,7 +86,7 @@ function hmac(algorithm: string, key: Buffer, data: string): Buffer {
 }
 
 function getCanonicalizeRequest(
-  config: EscherConfig,
+  config: SignatureConfig,
   request: ValidRequest,
   body: RequestBody,
   headersToSign: string[],
@@ -133,28 +141,4 @@ function getNormalizedHeaderValue(headerValue: RequestHeaderValue): string {
       return isInsideOfQuotes ? piece : piece.replace(/\s+/, ' ');
     })
     .join('"');
-}
-
-function canonicalizeQuery(query: any): any {
-  const encodeComponent = (component: any) =>
-    encodeURIComponent(component)
-      .replace(/'/g, '%27')
-      .replace(/\(/g, '%28')
-      .replace(/\)/g, '%29');
-
-  const join = (key: any, value: any) => encodeComponent(key) + '=' + encodeComponent(value);
-
-  return Object.keys(query)
-    .map(key => {
-      const value = query[key];
-      if (typeof value === 'string') {
-        return join(key, value);
-      }
-      return value
-        .sort()
-        .map((oneValue: any) => join(key, oneValue))
-        .join('&');
-    })
-    .sort()
-    .join('&');
 }
