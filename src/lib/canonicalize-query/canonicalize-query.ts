@@ -1,23 +1,29 @@
-export const canonicalizeQuery = (query: any): any => {
-  const encodeComponent = (component: any) =>
-    encodeURIComponent(component)
-      .replace(/'/g, '%27')
-      .replace(/\(/g, '%28')
-      .replace(/\)/g, '%29');
+import { ParsedUrlQuery } from 'querystring';
+import { pipe, replace, toPairs, join, map, comparator, lt, sort, is, reduce } from 'ramda';
 
-  const join = (key: any, value: any) => encodeComponent(key) + '=' + encodeComponent(value);
-
-  return Object.keys(query)
-    .map(key => {
-      const value = query[key];
-      if (typeof value === 'string') {
-        return join(key, value);
-      }
-      return value
-        .sort()
-        .map((oneValue: any) => join(key, oneValue))
-        .join('&');
-    })
-    .sort()
-    .join('&');
+export const canonicalizeQuery = (query: ParsedUrlQuery): string => {
+  return pipe(
+    (_: ParsedUrlQuery) => toPairs<string | string[]>(_),
+    reduce((pairs: [string, string][], pair: [string, string | string[]]) => [...pairs, ...flattenPair(pair)], []),
+    map(canonicalizePair),
+    sort(comparator(lt)) as any,
+    join('&'),
+  )(query);
 };
+
+function flattenPair([key, value]: [string, string | string[]]): [string, string][] {
+  return is(Array, value) ? map(_ => [key, _], value as any) : [[key, value]];
+}
+
+function canonicalizePair([key, value]: [string, string]): string {
+  return `${getEncodedComponent(key)}=${getEncodedComponent(value)}`;
+}
+
+function getEncodedComponent(input: string): string {
+  return pipe(
+    encodeURIComponent,
+    replace(/'/g, '%27'),
+    replace(/\(/g, '%28'),
+    replace(/\)/g, '%29'),
+  )(input);
+}
