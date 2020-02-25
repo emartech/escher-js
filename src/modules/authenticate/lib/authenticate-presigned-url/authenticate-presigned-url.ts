@@ -2,19 +2,13 @@ import {
   getUrlWithParsedQuery,
   convertToAwsShortDate,
   getSignature,
-  getNormalizedHeaderName,
   SignatureConfig,
 } from '../../../../lib';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
 import { EscherConfig, ValidRequest } from '../../../../interface';
 import {
   split,
-  defaultTo,
   pipe,
-  append,
-  map,
-  forEach,
-  includes,
   join,
   last,
   is,
@@ -25,6 +19,7 @@ import {
 import { ParsedUrlQuery } from 'querystring';
 import { UrlWithParsedQuery } from 'url';
 import { canonicalizeQuery } from '../../../../lib/canonicalize-query/canonicalize-query';
+import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
 
 export const authenticatePresignedUrl = (
   config: any,
@@ -76,19 +71,6 @@ function getCredentialScope(credentials: string): string {
 
 function getHashAlgorithm(algorithm: string): string {
   return last(split('-', algorithm))!;
-}
-
-function checkMandatorySignHeaders(signedHeaders: string[], mandatorySignedHeaders: string[]): void {
-  pipe(
-    defaultTo([]),
-    append('host') as any,
-    map(getNormalizedHeaderName),
-    forEach(mandatoryHeader => {
-      if (!includes(mandatoryHeader, signedHeaders)) {
-        throw new Error(`The ${mandatoryHeader} header is not signed`);
-      }
-    }),
-  )(mandatorySignedHeaders);
 }
 
 function checkSignatureConfig(config: any, signatureConfig: SignatureConfig): void {
