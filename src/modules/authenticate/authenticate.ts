@@ -34,7 +34,7 @@ export const authenticate = (config: any, request: any, keyDB: any, mandatorySig
   if (!mandatorySignedHeaders) {
     mandatorySignedHeaders = [];
   }
-
+  mandatorySignedHeaders.push('host');
   if (!presignedUrl) {
     mandatorySignedHeaders.push(config.dateHeaderName.toLowerCase());
   }
