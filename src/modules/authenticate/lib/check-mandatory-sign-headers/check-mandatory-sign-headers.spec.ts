@@ -26,4 +26,16 @@ describe('Check Mandatory Sign Headers', () => {
     const mandatorySignedHeaders: string[] = ['signed-header'];
     expect(() => checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders)).not.toThrow();
   });
+
+  it('should normalize mandatory signed header names before comparison', () => {
+    const signedHeaders: string[] = ['host', 'signed-header'];
+    const mandatorySignedHeaders: string[] = ['Host ', ' SIGNED-HEADER '];
+    expect(() => checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders)).not.toThrow();
+  });
+
+  it('should normalize signed header names before comparison', () => {
+    const signedHeaders: string[] = ['Host ', ' SIGNED-HEADER '];
+    const mandatorySignedHeaders: string[] = ['signed-header'];
+    expect(() => checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders)).not.toThrow();
+  });
 });
