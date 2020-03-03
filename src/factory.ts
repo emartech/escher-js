@@ -1,4 +1,12 @@
-import { Request, EscherConfig, ValidRequest, RequestHeader, RequestHeaderValue, RequestHeaderName } from './interface';
+import {
+  Request,
+  EscherConfig,
+  ValidRequest,
+  RequestHeader,
+  RequestHeaderValue,
+  RequestHeaderName,
+  SignatureConfig,
+} from './interface';
 import { v4 } from 'uuid';
 
 export const createRequest = (override: Partial<Request> = {}): Request => ({
@@ -31,3 +39,10 @@ export const createRequestHeader = ({
   name = v4(),
   value = v4(),
 }: Partial<{ name: RequestHeaderName; value: RequestHeaderValue }> = {}): RequestHeader => [name, value];
+
+export const createSignatureConfig = ({
+  algoPrefix = v4(),
+  apiSecret = v4(),
+  credentialScope = v4(),
+  hashAlgo = 'SHA256',
+}: Partial<SignatureConfig> = {}): SignatureConfig => ({ algoPrefix, apiSecret, credentialScope, hashAlgo });

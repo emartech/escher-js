@@ -44,3 +44,12 @@ export type ValidRequest = RequestWithoutBody | RequestWithBody;
 export type ValidateRequest = (request: Request, body?: any) => void;
 
 export type ValidateMandatorySignedHeaders = (headers?: any) => void;
+
+export type SignatureConfig = {
+  hashAlgo: 'SHA256' | 'SHA512';
+  algoPrefix: string;
+  apiSecret: string;
+  credentialScope: string;
+};
+
+export type AuthenticateConfig = any;

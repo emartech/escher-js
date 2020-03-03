@@ -1,4 +1,4 @@
-import { ValidRequest, RequestBody, RequestHeader, RequestHeaderValue, EscherConfig } from '../../interface';
+import { ValidRequest, RequestBody, RequestHeader, RequestHeaderValue, EscherConfig, SignatureConfig } from '../../interface';
 import {
   reduce,
   split,
@@ -22,13 +22,6 @@ import { getUrlWithParsedQuery } from '../get-url-with-parsed-query';
 import { normalize } from 'path';
 import { getNormalizedHeaderName } from '../get-normalized-header-name';
 import { canonicalizeQuery } from '../canonicalize-query/canonicalize-query';
-
-export type SignatureConfig = {
-  hashAlgo: 'SHA256' | 'SHA512';
-  algoPrefix: string;
-  apiSecret: string;
-  credentialScope: string;
-};
 
 export function getSignature(
   config: SignatureConfig | EscherConfig,

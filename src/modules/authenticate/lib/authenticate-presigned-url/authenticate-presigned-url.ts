@@ -1,25 +1,12 @@
-import {
-  getUrlWithParsedQuery,
-  convertToAwsShortDate,
-  getSignature,
-  SignatureConfig,
-} from '../../../../lib';
+import { getUrlWithParsedQuery, convertToAwsShortDate, getSignature } from '../../../../lib';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
-import { EscherConfig, ValidRequest } from '../../../../interface';
-import {
-  split,
-  pipe,
-  join,
-  last,
-  is,
-  fromPairs,
-  toPairs,
-  filter,
-} from 'ramda';
+import { EscherConfig, ValidRequest, SignatureConfig } from '../../../../interface';
+import { split, pipe, join, last, fromPairs, toPairs, filter } from 'ramda';
 import { ParsedUrlQuery } from 'querystring';
 import { UrlWithParsedQuery } from 'url';
 import { canonicalizeQuery } from '../../../../lib/canonicalize-query/canonicalize-query';
 import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
+import { checkSignatureConfig } from '../check-signature-config';
 
 export const authenticatePresignedUrl = (
   config: any,
@@ -71,18 +58,6 @@ function getCredentialScope(credentials: string): string {
 
 function getHashAlgorithm(algorithm: string): string {
   return last(split('-', algorithm))!;
-}
-
-function checkSignatureConfig(config: any, signatureConfig: SignatureConfig): void {
-  if (!is(String, signatureConfig.apiSecret)) {
-    throw new Error('Invalid Escher key');
-  }
-  if (!isEqualFixedTime(signatureConfig.credentialScope, config.credentialScope)) {
-    throw new Error('Invalid Credential Scope');
-  }
-  if (!['SHA256', 'SHA512'].includes(signatureConfig.hashAlgo)) {
-    throw new Error('Invalid hash algorithm, only SHA256 and SHA512 are allowed');
-  }
 }
 
 function checkRequestDate(config: any, query: ParsedUrlQuery, currentDate: Date): void {
