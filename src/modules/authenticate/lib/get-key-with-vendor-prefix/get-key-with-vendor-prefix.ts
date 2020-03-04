@@ -1,5 +1,5 @@
-import { EscherConfig } from '../../../../interface';
+import { AuthenticateConfig } from '../../../../interface';
 
-export type GetKeyWithVendorPrefix = (config: EscherConfig, key: string) => string;
+export type GetKeyWithVendorPrefix = (config: AuthenticateConfig, key: string) => string;
 
 export const getKeyWithVendorPrefix: GetKeyWithVendorPrefix = ({ vendorKey }, key) => `X-${vendorKey}-${key}`;
