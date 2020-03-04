@@ -1,5 +1,5 @@
 import { ValidRequest, RequestHeaderValue, RequestHeader } from '../../../../interface';
-import { find, isNil, last } from 'ramda';
+import { isNil, last, find } from 'ramda';
 import { getNormalizedHeaderName } from '../../../../lib';
 
 export type GetHeaderValue = (request: ValidRequest, soughtHeaderName: string) => RequestHeaderValue;

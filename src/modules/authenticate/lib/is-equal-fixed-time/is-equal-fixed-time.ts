@@ -1,10 +1,9 @@
-import { timingSafeEqual } from 'crypto';
-
 export type IsEqualFixedTime = (a: string, b: string) => boolean;
+export type IsEqual = (a: NodeJS.ArrayBufferView, b: NodeJS.ArrayBufferView) => boolean;
 
-export const isEqualFixedTime: IsEqualFixedTime = (a, b) => {
+export const createIsEqualFixedTime = (isEqual: IsEqual): IsEqualFixedTime => (a, b) => {
   try {
-    return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+    return isEqual(Buffer.from(a), Buffer.from(b));
   } catch (err) {
     return false;
   }

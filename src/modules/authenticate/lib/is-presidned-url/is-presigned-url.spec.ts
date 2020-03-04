@@ -18,15 +18,15 @@ describe('Is Presigned Url', () => {
 
     const result = isPresignedUrl(createAuthenticateConfig(), { query: createParsedUrlQuery() } as any, request);
 
-    expect(result).toEqual(true);
+    expect(result).toEqual(false);
   });
 
-  it('should return false when no signature header', () => {
+  it('should return false when no signature query', () => {
     const config = createAuthenticateConfig();
     const query = createParsedUrlQuery({ config, query: {} });
 
     const result = isPresignedUrl(config, { query } as any, createValidRequest({ method: 'GET' }));
 
-    expect(result).toEqual(true);
+    expect(result).toEqual(false);
   });
 });
