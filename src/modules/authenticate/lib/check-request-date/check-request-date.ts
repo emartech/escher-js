@@ -4,11 +4,13 @@ import { convertToAwsShortDate } from '../../../../lib';
 import { parseLongDate } from '../parse-long-date';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
 import { split } from 'ramda';
+import { AuthenticateConfig } from '../../../../interface';
 
-export function checkRequestDate(config: any, query: ParsedUrlQuery, currentDate: Date): void {
+export type CheckRequestDate = (config: AuthenticateConfig, query: ParsedUrlQuery, currentDate: Date) => void;
+
+export const checkRequestDate: CheckRequestDate = (config, query, currentDate) => {
   const credentials = getQueryPart(config, query, 'Credentials');
   const shortDate = getShortDate(credentials);
-  // console.error({ date: getQueryPart(config, query, 'Date'), credentials });
   const requestDate = parseLongDate(getQueryPart(config, query, 'Date'));
   if (!isEqualFixedTime(shortDate!, convertToAwsShortDate(requestDate))) {
     throw new Error('Invalid date in authorization header, it should equal with date header');
@@ -20,7 +22,7 @@ export function checkRequestDate(config: any, query: ParsedUrlQuery, currentDate
   if (!isDateWithinRange(config, requestTime, currentTime, expires)) {
     throw new Error('The request date is not within the accepted time range');
   }
-}
+};
 
 function getShortDate(credentials: string): string | undefined {
   const [, shortDate] = split('/', credentials);

@@ -1,12 +1,14 @@
 import { getUrlWithParsedQuery } from '../../../../lib';
-import { EscherConfig, SignatureConfig, AuthenticateConfig, ValidRequest } from '../../../../interface';
-import { split, join, last } from 'ramda';
+import { AuthenticateConfig, ValidRequest } from '../../../../interface';
+import { split } from 'ramda';
 import { ParsedUrlQuery } from 'querystring';
 import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
 import { checkSignatureConfig } from '../check-signature-config';
 import { getQueryPart } from '../get-query-part';
 import { checkRequestDate } from '../check-request-date';
 import { checkSignature } from '../check-signature';
+import { getSignatureConfig } from '../get-signature-config';
+import { getAccessKeyId } from '../get-access-key-id';
 
 export const authenticatePresignedUrl = (
   config: AuthenticateConfig,
@@ -25,37 +27,6 @@ export const authenticatePresignedUrl = (
   return getAccessKeyId(getQueryPart(config, urlWithParsedQuery.query, 'Credentials'));
 };
 
-function getSignedHeaders(config: EscherConfig, query: ParsedUrlQuery): string[] {
+function getSignedHeaders(config: AuthenticateConfig, query: ParsedUrlQuery): string[] {
   return split(';', getQueryPart(config, query, 'SignedHeaders'));
-}
-
-function getSignatureConfig(
-  { vendorKey, algoPrefix }: AuthenticateConfig,
-  query: ParsedUrlQuery,
-  keyDB: Function,
-): SignatureConfig {
-  const credentials = getQueryPart({ vendorKey }, query, 'Credentials');
-  const apiSecret = getApiSecret(credentials, keyDB);
-  const credentialScope = getCredentialScope(credentials);
-  const hashAlgo = getHashAlgorithm(getQueryPart({ vendorKey }, query, 'Algorithm')) as any;
-  return { algoPrefix, apiSecret, credentialScope, hashAlgo };
-}
-
-function getApiSecret(credentials: string, keyDB: Function): string {
-  const accessKeyId = getAccessKeyId(credentials);
-  return keyDB(accessKeyId);
-}
-
-function getAccessKeyId(credentials: string): string | undefined {
-  const [accessKeyId] = split('/', credentials);
-  return accessKeyId;
-}
-
-function getCredentialScope(credentials: string): string {
-  const [, , ...credentialScopeParts] = split('/', credentials);
-  return join('/', credentialScopeParts);
-}
-
-function getHashAlgorithm(algorithm: string): string {
-  return last(split('-', algorithm))!;
 }

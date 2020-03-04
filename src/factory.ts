@@ -6,8 +6,11 @@ import {
   RequestHeaderValue,
   RequestHeaderName,
   SignatureConfig,
+  AuthenticateConfig,
 } from './interface';
 import { v4 } from 'uuid';
+import { pipe, toPairs, map, fromPairs } from 'ramda';
+import { ParsedUrlQuery } from 'querystring';
 
 export const createRequest = (override: Partial<Request> = {}): Request => ({
   url: '/example',
@@ -46,3 +49,12 @@ export const createSignatureConfig = ({
   credentialScope = v4(),
   hashAlgo = 'SHA256',
 }: Partial<SignatureConfig> = {}): SignatureConfig => ({ algoPrefix, apiSecret, credentialScope, hashAlgo });
+
+export const createAuthenticateConfig = ({
+  algoPrefix = v4(),
+  vendorKey = v4(),
+  clockSkew = 0,
+}: Partial<AuthenticateConfig> = {}): AuthenticateConfig => ({ algoPrefix, vendorKey, clockSkew });
+
+export const createParsedUrlQuery = ({ query = {}, config = createAuthenticateConfig() } = {}): ParsedUrlQuery =>
+  (pipe as any)(toPairs, map(([key, value]: any) => [`X-${config.vendorKey}-${key}`, value]), fromPairs)(query);
