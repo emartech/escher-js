@@ -52,4 +52,11 @@ export type SignatureConfig = {
   credentialScope: string;
 };
 
-export type AuthenticateConfig = { algoPrefix: string; vendorKey: string; clockSkew: number; credentialScope: string };
+export type AuthenticateConfig = {
+  algoPrefix: string;
+  vendorKey: string;
+  clockSkew: number;
+  credentialScope: string;
+  authHeaderName: string;
+  dateHeaderName: string;
+};

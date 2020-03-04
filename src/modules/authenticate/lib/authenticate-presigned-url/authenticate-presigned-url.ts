@@ -20,13 +20,17 @@ export type AuthenticatePresignedUrlStrategy = {
   getAccessKeyId: GetAccessKeyId;
 };
 
-export const createAuthenticatePresignedUrl = (strategy: AuthenticatePresignedUrlStrategy) => (
+export type AuthenticatePresignedUrl = (
   config: AuthenticateConfig,
   request: ValidRequest,
   keyDB: Function,
   mandatorySignedHeaders: string[],
   currentDate: Date,
-) => {
+) => string;
+
+export const createAuthenticatePresignedUrl = (
+  strategy: AuthenticatePresignedUrlStrategy,
+): AuthenticatePresignedUrl => (config, request, keyDB, mandatorySignedHeaders, currentDate) => {
   const urlWithParsedQuery = strategy.getUrlWithParsedQuery(request.url);
   const signedHeaders = strategy.getSignedHeadersFromQuery(config, urlWithParsedQuery.query);
   const signatureConfig = strategy.getSignatureConfig(config, urlWithParsedQuery.query, keyDB);

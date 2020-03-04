@@ -55,7 +55,16 @@ export const createAuthenticateConfig = ({
   vendorKey = v4(),
   clockSkew = 0,
   credentialScope = v4(),
-}: Partial<AuthenticateConfig> = {}): AuthenticateConfig => ({ algoPrefix, vendorKey, clockSkew, credentialScope });
+  authHeaderName = v4(),
+  dateHeaderName = v4(),
+}: Partial<AuthenticateConfig> = {}): AuthenticateConfig => ({
+  algoPrefix,
+  vendorKey,
+  clockSkew,
+  credentialScope,
+  authHeaderName,
+  dateHeaderName,
+});
 
 export const createParsedUrlQuery = ({ query = {}, config = createAuthenticateConfig() } = {}): ParsedUrlQuery =>
   (pipe as any)(toPairs, map(([key, value]: any) => [`X-${config.vendorKey}-${key}`, value]), fromPairs)(query);
