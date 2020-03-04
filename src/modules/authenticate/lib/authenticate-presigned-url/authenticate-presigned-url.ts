@@ -1,32 +1,38 @@
-import { getUrlWithParsedQuery } from '../../../../lib';
+import { GetUrlWithParsedQuery } from '../../../../lib';
 import { AuthenticateConfig, ValidRequest } from '../../../../interface';
-import { split } from 'ramda';
-import { ParsedUrlQuery } from 'querystring';
-import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
-import { checkSignatureConfig } from '../check-signature-config';
+import { CheckMandatorySignHeaders } from '../check-mandatory-sign-headers';
+import { CheckSignatureConfig } from '../check-signature-config';
 import { getQueryPart } from '../get-query-part';
-import { checkRequestDate } from '../check-request-date';
-import { checkSignature } from '../check-signature';
-import { getSignatureConfig } from '../get-signature-config';
-import { getAccessKeyId } from '../get-access-key-id';
+import { CheckRequestDate } from '../check-request-date';
+import { CheckSignature } from '../check-signature';
+import { GetSignatureConfig } from '../get-signature-config';
+import { GetAccessKeyId } from '../get-access-key-id';
+import { GetSignedHeadersFromQuery } from '../get-signed-headers-from-query';
 
-export const authenticatePresignedUrl = (
+export type AuthenticatePresignedUrlStrategy = {
+  getUrlWithParsedQuery: GetUrlWithParsedQuery;
+  getSignedHeadersFromQuery: GetSignedHeadersFromQuery;
+  getSignatureConfig: GetSignatureConfig;
+  checkMandatorySignHeaders: CheckMandatorySignHeaders;
+  checkSignatureConfig: CheckSignatureConfig;
+  checkRequestDate: CheckRequestDate;
+  checkSignature: CheckSignature;
+  getAccessKeyId: GetAccessKeyId;
+};
+
+export const createAuthenticatePresignedUrl = (strategy: AuthenticatePresignedUrlStrategy) => (
   config: AuthenticateConfig,
   request: ValidRequest,
   keyDB: Function,
   mandatorySignedHeaders: string[],
   currentDate: Date,
 ) => {
-  const urlWithParsedQuery = getUrlWithParsedQuery(request.url);
-  const signedHeaders = getSignedHeaders(config, urlWithParsedQuery.query);
-  const signatureConfig = getSignatureConfig(config, urlWithParsedQuery.query, keyDB);
-  checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders);
-  checkSignatureConfig(config, signatureConfig);
-  checkRequestDate(config, urlWithParsedQuery.query, currentDate);
-  checkSignature(config, signatureConfig, urlWithParsedQuery, request, signedHeaders);
-  return getAccessKeyId(getQueryPart(config, urlWithParsedQuery.query, 'Credentials'));
+  const urlWithParsedQuery = strategy.getUrlWithParsedQuery(request.url);
+  const signedHeaders = strategy.getSignedHeadersFromQuery(config, urlWithParsedQuery.query);
+  const signatureConfig = strategy.getSignatureConfig(config, urlWithParsedQuery.query, keyDB);
+  strategy.checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders);
+  strategy.checkSignatureConfig(config, signatureConfig);
+  strategy.checkRequestDate(config, urlWithParsedQuery.query, currentDate);
+  strategy.checkSignature(config, signatureConfig, urlWithParsedQuery, request, signedHeaders);
+  return strategy.getAccessKeyId(getQueryPart(config, urlWithParsedQuery.query, 'Credentials'));
 };
-
-function getSignedHeaders(config: AuthenticateConfig, query: ParsedUrlQuery): string[] {
-  return split(';', getQueryPart(config, query, 'SignedHeaders'));
-}
