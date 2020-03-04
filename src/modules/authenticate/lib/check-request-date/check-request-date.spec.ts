@@ -1,5 +1,3 @@
-import { pipe, toPairs, fromPairs, map } from 'ramda';
-import { ParsedUrlQuery } from 'querystring';
 import { checkRequestDate } from './check-request-date';
 import { createAuthenticateConfig, createParsedUrlQuery } from '../../../../factory';
 

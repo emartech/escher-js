@@ -1,4 +1,4 @@
-import { createSignatureConfig } from '../../../../factory';
+import { createSignatureConfig, createAuthenticateConfig } from '../../../../factory';
 import { checkSignatureConfig } from './check-signature-config';
 import { v4 } from 'uuid';
 
@@ -6,21 +6,21 @@ describe('Check Signature Config', () => {
   it('should throw error when apiSecret is not string', () => {
     const apiSecret: any = 1;
     const config = createSignatureConfig({ apiSecret });
-    expect(() => checkSignatureConfig({}, config)).toThrow(new Error('Invalid Escher key'));
+    expect(() => checkSignatureConfig(createAuthenticateConfig(), config)).toThrow(new Error('Invalid Escher key'));
   });
 
   it('should not throw error when apiSecret is string', () => {
     const apiSecret = v4();
     const credentialScope = v4();
     const config = createSignatureConfig({ apiSecret, credentialScope });
-    expect(() => checkSignatureConfig({ credentialScope }, config)).not.toThrow();
+    expect(() => checkSignatureConfig(createAuthenticateConfig({ credentialScope }), config)).not.toThrow();
   });
 
   it('should throw error when credentialScopes are not the same', () => {
     const signatureConfigCredentialScope = 'signatureConfigCredentialScope';
     const authenticateConfigCredentialScope = 'authenticateConfigCredentialScope';
     const config = createSignatureConfig({ credentialScope: signatureConfigCredentialScope });
-    const authenticateConfig = { credentialScope: authenticateConfigCredentialScope };
+    const authenticateConfig = createAuthenticateConfig({ credentialScope: authenticateConfigCredentialScope });
     expect(() => checkSignatureConfig(authenticateConfig, config)).toThrow(new Error('Invalid Credential Scope'));
   });
 
@@ -28,7 +28,7 @@ describe('Check Signature Config', () => {
     const signatureConfigCredentialScope = 'credentialScope';
     const authenticateConfigCredentialScope = 'credentialScope';
     const config = createSignatureConfig({ credentialScope: signatureConfigCredentialScope });
-    const authenticateConfig = { credentialScope: authenticateConfigCredentialScope };
+    const authenticateConfig = createAuthenticateConfig({ credentialScope: authenticateConfigCredentialScope });
     expect(() => checkSignatureConfig(authenticateConfig, config)).not.toThrow();
   });
 
@@ -36,7 +36,7 @@ describe('Check Signature Config', () => {
     const hashAlgo: any = v4();
     const credentialScope = v4();
     const config = createSignatureConfig({ hashAlgo, credentialScope });
-    expect(() => checkSignatureConfig({ credentialScope }, config)).toThrow(
+    expect(() => checkSignatureConfig(createAuthenticateConfig({ credentialScope }), config)).toThrow(
       new Error('Invalid hash algorithm, only SHA256 and SHA512 are allowed'),
     );
   });
@@ -45,13 +45,13 @@ describe('Check Signature Config', () => {
     const hashAlgo = 'SHA256';
     const credentialScope = v4();
     const config = createSignatureConfig({ hashAlgo, credentialScope });
-    expect(() => checkSignatureConfig({ credentialScope }, config)).not.toThrow();
+    expect(() => checkSignatureConfig(createAuthenticateConfig({ credentialScope }), config)).not.toThrow();
   });
 
   it('should not throw error when hashAlgo is SHA512', () => {
     const hashAlgo = 'SHA512';
     const credentialScope = v4();
     const config = createSignatureConfig({ hashAlgo, credentialScope });
-    expect(() => checkSignatureConfig({ credentialScope }, config)).not.toThrow();
+    expect(() => checkSignatureConfig(createAuthenticateConfig({ credentialScope }), config)).not.toThrow();
   });
 });

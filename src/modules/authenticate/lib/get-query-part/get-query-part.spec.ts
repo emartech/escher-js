@@ -1,12 +1,13 @@
 import { getQueryPart } from './get-query-part';
 import { v4 } from 'uuid';
+import { createAuthenticateConfig } from '../../../../factory';
 
 describe('Get Query Part', () => {
   it('should return existing query value', () => {
     const vendorKey = v4();
     const key = v4();
     const value = v4();
-    const config = { vendorKey };
+    const config = createAuthenticateConfig({ vendorKey });
     const query = { [`X-${vendorKey}-${key}`]: value };
 
     const result = getQueryPart(config, query, key);
@@ -18,7 +19,7 @@ describe('Get Query Part', () => {
     const key = v4();
     const query = {};
 
-    const result = getQueryPart({ vendorKey: v4() }, query, key);
+    const result = getQueryPart(createAuthenticateConfig({ vendorKey: v4() }), query, key);
 
     expect(result).toEqual('');
   });
