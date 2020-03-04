@@ -6,3 +6,4 @@ export * from './get-credential';
 export * from './get-normalized-header-name';
 export * from './get-signed-headers';
 export * from './get-signature';
+export * from './canonicalize-query';
