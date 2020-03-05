@@ -4,12 +4,13 @@ import { getUrlWithParsedQuery } from '../../lib';
 import { isPresignedUrl, authenticatePresignedUrl } from './lib';
 import { authenticateHeaders } from './lib/authenticate-headers';
 import { AuthenticateConfig, ValidRequest } from '../../interface';
+import { defaultTo } from 'ramda';
 
 export type Authenticate = (
   config: AuthenticateConfig,
   request: ValidRequest,
   keyDB: Function,
-  mandatorySignedHeaders: string[],
+  mandatorySignedHeaders: string[] | undefined,
 ) => string;
 
 export const authenticate: Authenticate = (config, request, keyDB, mandatorySignedHeaders) => {
@@ -18,6 +19,6 @@ export const authenticate: Authenticate = (config, request, keyDB, mandatorySign
   validateMandatorySignedHeaders(mandatorySignedHeaders);
   const uri = getUrlWithParsedQuery(request.url);
   return isPresignedUrl(config, uri, request)
-    ? authenticatePresignedUrl(config, request, keyDB, mandatorySignedHeaders, currentDate)
-    : authenticateHeaders(config, request, keyDB, mandatorySignedHeaders, currentDate);
+    ? authenticatePresignedUrl(config, request, keyDB, defaultTo([], mandatorySignedHeaders), currentDate)
+    : authenticateHeaders(config, request, keyDB, defaultTo([], mandatorySignedHeaders), currentDate);
 };

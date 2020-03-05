@@ -34,7 +34,7 @@ export const createAuthenticatePresignedUrl = (
   const urlWithParsedQuery = strategy.getUrlWithParsedQuery(request.url);
   const signedHeaders = strategy.getSignedHeadersFromQuery(config, urlWithParsedQuery.query);
   const signatureConfig = strategy.getSignatureConfig(config, urlWithParsedQuery.query, keyDB);
-  strategy.checkMandatorySignHeaders(signedHeaders, mandatorySignedHeaders);
+  strategy.checkMandatorySignHeaders(signedHeaders, [...mandatorySignedHeaders, 'host']);
   strategy.checkSignatureConfig(config, signatureConfig);
   strategy.checkRequestDate(config, urlWithParsedQuery.query, currentDate);
   strategy.checkSignature(config, signatureConfig, urlWithParsedQuery, request, signedHeaders);

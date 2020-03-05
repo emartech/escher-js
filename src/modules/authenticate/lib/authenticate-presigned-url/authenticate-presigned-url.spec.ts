@@ -53,7 +53,7 @@ describe('Create Authenticate Presigned Url', () => {
   });
 
   it('should calls getSignedHeadersFromQuery with config and query', () => {
-    const mandatorySignedHeaders = [v4()];
+    const mandatorySignedHeader = v4();
     const signedHeaders = [v4()];
     const getSignedHeadersFromQuery = () => signedHeaders;
     const checkMandatorySignHeaders = jasmine.createSpy('checkMandatorySignHeaders');
@@ -61,10 +61,10 @@ describe('Create Authenticate Presigned Url', () => {
       createAuthenticateConfig(),
       createValidRequest(),
       () => {},
-      mandatorySignedHeaders,
+      [mandatorySignedHeader],
       new Date(),
     );
-    expect(checkMandatorySignHeaders).toHaveBeenCalledWith(signedHeaders, mandatorySignedHeaders);
+    expect(checkMandatorySignHeaders).toHaveBeenCalledWith(signedHeaders, [mandatorySignedHeader, 'host']);
   });
 
   it('should calls checkSignatureConfig with config and signatureConfig', () => {
