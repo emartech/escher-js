@@ -4,15 +4,15 @@ import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
 import { checkSignatureConfig } from '../check-signature-config';
 import { checkRequestDate } from '../check-request-date';
 import { checkSignature } from '../check-signature';
-import { getSignatureConfig } from '../get-signature-config';
+import { getSignatureConfigFromQuery } from '../get-signature-config-from-query';
 import { getSignedHeadersFromQuery } from '../get-signed-headers-from-query';
 import { createAuthenticatePresignedUrl } from './authenticate-presigned-url';
 import { getAccessKeyId } from '../get-access-key-id';
 
 export const authenticatePresignedUrl = createAuthenticatePresignedUrl({
   getUrlWithParsedQuery,
-  getSignedHeadersFromQuery: getSignedHeadersFromQuery,
-  getSignatureConfig,
+  getSignedHeadersFromQuery,
+  getSignatureConfig: getSignatureConfigFromQuery,
   checkMandatorySignHeaders,
   checkSignatureConfig,
   checkRequestDate,

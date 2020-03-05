@@ -1,13 +1,13 @@
 import { createAuthenticateConfig, createParsedUrlQuery } from '../../../../factory';
 import { v4 } from 'uuid';
-import { getSignatureConfig } from './get-signature-config';
+import { getSignatureConfigFromQuery } from './get-signature-config-from-query';
 
-describe('Get Signature Config', () => {
+describe('Get Signature Config From Query', () => {
   it('should return algoPrefix from authenticate config', () => {
     const algoPrefix = v4();
     const config = createAuthenticateConfig({ algoPrefix });
 
-    const result = getSignatureConfig(config, createParsedUrlQuery(), () => {});
+    const result = getSignatureConfigFromQuery(config, createParsedUrlQuery(), () => {});
 
     expect(result.algoPrefix).toEqual(algoPrefix);
   });
@@ -20,7 +20,7 @@ describe('Get Signature Config', () => {
     });
     const keyDB = jasmine.createSpy('keyDB');
 
-    getSignatureConfig(config, query, keyDB);
+    getSignatureConfigFromQuery(config, query, keyDB);
 
     expect(keyDB).toHaveBeenCalledWith('AKIDEXAMPLE');
   });
@@ -29,7 +29,7 @@ describe('Get Signature Config', () => {
     const apiSecret = v4();
     const keyDB = () => apiSecret;
 
-    const result = getSignatureConfig(createAuthenticateConfig(), createParsedUrlQuery(), keyDB);
+    const result = getSignatureConfigFromQuery(createAuthenticateConfig(), createParsedUrlQuery(), keyDB);
 
     expect(result.apiSecret).toEqual(apiSecret);
   });
@@ -41,7 +41,7 @@ describe('Get Signature Config', () => {
       query: createQuery({ Credentials: 'AKIDEXAMPLE/19780210/escher_request/example/scope' }),
     });
 
-    const result = getSignatureConfig(config, query, () => {});
+    const result = getSignatureConfigFromQuery(config, query, () => {});
 
     expect(result.credentialScope).toEqual('escher_request/example/scope');
   });
@@ -53,7 +53,7 @@ describe('Get Signature Config', () => {
       query: createQuery({ Credentials: 'AKIDEXAMPLE/19780210/escher_request/example/scope' }),
     });
 
-    const result = getSignatureConfig(config, query, () => {});
+    const result = getSignatureConfigFromQuery(config, query, () => {});
 
     expect(result.credentialScope).toEqual('escher_request/example/scope');
   });
@@ -65,7 +65,7 @@ describe('Get Signature Config', () => {
       query: createQuery({ Algorithm: 'HMAC-SHA512' }),
     });
 
-    const result = getSignatureConfig(config, query, () => {});
+    const result = getSignatureConfigFromQuery(config, query, () => {});
 
     expect(result.hashAlgo).toEqual('SHA512');
   });

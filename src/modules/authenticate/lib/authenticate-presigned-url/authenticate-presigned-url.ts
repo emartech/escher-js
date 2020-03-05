@@ -5,14 +5,14 @@ import { CheckSignatureConfig } from '../check-signature-config';
 import { getQueryPart } from '../get-query-part';
 import { CheckRequestDate } from '../check-request-date';
 import { CheckSignature } from '../check-signature';
-import { GetSignatureConfig } from '../get-signature-config';
+import { GetSignatureConfigFromQuery } from '../get-signature-config-from-query';
 import { GetAccessKeyId } from '../get-access-key-id';
 import { GetSignedHeadersFromQuery } from '../get-signed-headers-from-query';
 
 export type AuthenticatePresignedUrlStrategy = {
   getUrlWithParsedQuery: GetUrlWithParsedQuery;
   getSignedHeadersFromQuery: GetSignedHeadersFromQuery;
-  getSignatureConfig: GetSignatureConfig;
+  getSignatureConfig: GetSignatureConfigFromQuery;
   checkMandatorySignHeaders: CheckMandatorySignHeaders;
   checkSignatureConfig: CheckSignatureConfig;
   checkRequestDate: CheckRequestDate;
