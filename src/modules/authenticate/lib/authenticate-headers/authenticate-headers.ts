@@ -1,8 +1,11 @@
 import { AuthenticateConfig, ValidRequest } from '../../../../interface';
-import { convertToAwsShortDate, getSignature, getNormalizedHeaderName } from '../../../../lib';
+import { getSignature, getNormalizedHeaderName, convertToAwsLongDate } from '../../../../lib';
 import { getHeaderValue } from '../get-header-value';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
 import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
+import { checkRequestDate } from '../check-request-date';
+import { split, last, init, defaultTo } from 'ramda';
+import { parseLongDate } from '../parse-long-date';
 
 export type AuthenticateHeaders = (
   config: AuthenticateConfig,
@@ -19,24 +22,27 @@ export const authenticateHeaders: AuthenticateHeaders = (
   mandatorySignedHeaders,
   currentDate,
 ) => {
-  let requestDate: any;
-  let parsedAuthParts: any;
-  let requestBody: any;
-  let expires: any;
-
-  requestDate =
-    config.dateHeaderName.toLowerCase() === 'date'
-      ? new Date(getHeaderValue(request, config.dateHeaderName))
-      : parseLongDate(getHeaderValue(request, config.dateHeaderName));
-  parsedAuthParts = parseAuthHeader(config, getHeaderValue(request, config.authHeaderName), requestDate, keyDB);
-  requestBody = request.body || '';
-  expires = 0;
+  const requestDate = getRequestDate(config, request);
+  const parsedAuthParts: any = parseAuthHeader(
+    config,
+    getHeaderValue(request, config.authHeaderName),
+    requestDate,
+    keyDB,
+  );
+  const expires = 0;
 
   checkMandatorySignHeaders(parsedAuthParts.signedHeaders, [
     ...mandatorySignedHeaders,
     'host',
     getNormalizedHeaderName(config.dateHeaderName),
   ]);
+  checkRequestDate(
+    config,
+    getCredentials(getHeaderValue(request, config.authHeaderName) as any),
+    convertToAwsLongDate(requestDate),
+    expires,
+    currentDate,
+  );
 
   if (!isEqualFixedTime(parsedAuthParts.config.credentialScope, config.credentialScope)) {
     throw new Error('Invalid Credential Scope');
@@ -46,21 +52,11 @@ export const authenticateHeaders: AuthenticateHeaders = (
     throw new Error('Invalid hash algorithm, only SHA256 and SHA512 are allowed');
   }
 
-  if (!isEqualFixedTime(parsedAuthParts.shortDate, convertToAwsShortDate(requestDate))) {
-    throw new Error('Invalid date in authorization header, it should equal with date header');
-  }
-
-  const requestTime = requestDate.getTime();
-  const currentTime = currentDate.getTime();
-  if (!isDateWithinRange(config, requestTime, currentTime, expires)) {
-    throw new Error('The request date is not within the accepted time range');
-  }
-
   const generatedAuthParts = getSignature(
     parsedAuthParts.config,
     requestDate,
     request,
-    requestBody,
+    defaultTo('', request.body),
     parsedAuthParts.signedHeaders,
   );
   if (!isEqualFixedTime(parsedAuthParts.signature, generatedAuthParts)) {
@@ -70,21 +66,15 @@ export const authenticateHeaders: AuthenticateHeaders = (
   return parsedAuthParts.config.accessKeyId;
 };
 
-function isDateWithinRange(config: any, requestTime: any, currentTime: any, expires: any): any {
-  return (
-    requestTime - config.clockSkew * 1000 <= currentTime &&
-    currentTime < requestTime + expires * 1000 + config.clockSkew * 1000
-  );
+function getRequestDate(config: AuthenticateConfig, request: ValidRequest): Date {
+  const dateHeaderName = getNormalizedHeaderName(config.dateHeaderName);
+  const dateHeaderValue = getHeaderValue(request, dateHeaderName) as string;
+  return dateHeaderName === 'date' ? new Date(dateHeaderValue) : parseLongDate(dateHeaderValue);
 }
 
-function parseLongDate(longDate: any): any {
-  const longDateRegExp = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
-  const m = longDate.match(longDateRegExp);
-  if (!m) {
-    throw new Error('Invalid date header, expected format is: 20151104T092022Z');
-  }
-
-  return new Date(m[1] + '-' + m[2] + '-' + m[3] + ' ' + m[4] + ':' + m[5] + ':' + m[6] + ' GMT');
+function getCredentials(header: string): string {
+  const [, credentialsPair] = split(' ', header);
+  return init(last(split('=', credentialsPair))!);
 }
 
 function parseAuthHeader(config: any, authHeader: any, requestDate: any, keyDB: any): any {
