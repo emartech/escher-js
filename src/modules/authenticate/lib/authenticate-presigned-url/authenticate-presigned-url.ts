@@ -32,11 +32,18 @@ export const createAuthenticatePresignedUrl = (
   strategy: AuthenticatePresignedUrlStrategy,
 ): AuthenticatePresignedUrl => (config, request, keyDB, mandatorySignedHeaders, currentDate) => {
   const urlWithParsedQuery = strategy.getUrlWithParsedQuery(request.url);
-  const signedHeaders = strategy.getSignedHeadersFromQuery(config, urlWithParsedQuery.query);
-  const signatureConfig = strategy.getSignatureConfig(config, urlWithParsedQuery.query, keyDB);
+  const { query } = urlWithParsedQuery;
+  const signedHeaders = strategy.getSignedHeadersFromQuery(config, query);
+  const signatureConfig = strategy.getSignatureConfig(config, query, keyDB);
   strategy.checkMandatorySignHeaders(signedHeaders, [...mandatorySignedHeaders, 'host']);
   strategy.checkSignatureConfig(config, signatureConfig);
-  strategy.checkRequestDate(config, urlWithParsedQuery.query, currentDate);
+  strategy.checkRequestDate(
+    config,
+    getQueryPart(config, query, 'Credentials'),
+    getQueryPart(config, query, 'Date'),
+    parseInt(getQueryPart(config, query, 'Expires')),
+    currentDate,
+  );
   strategy.checkSignature(config, signatureConfig, urlWithParsedQuery, request, signedHeaders);
-  return strategy.getAccessKeyId(getQueryPart(config, urlWithParsedQuery.query, 'Credentials'));
+  return strategy.getAccessKeyId(getQueryPart(config, query, 'Credentials'));
 };

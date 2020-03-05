@@ -82,9 +82,15 @@ describe('Create Authenticate Presigned Url', () => {
     expect(checkSignatureConfig).toHaveBeenCalledWith(config, signatureConfig);
   });
 
-  it('should calls checkRequestDate with config, query and current date', () => {
+  it('should calls checkRequestDate with config, credentials, request date, expires and current date', () => {
+    const credentials = v4();
+    const expires = 0;
+    const requestDate = new Date().toISOString();
     const config = createAuthenticateConfig();
-    const query = createParsedUrlQuery();
+    const query = createParsedUrlQuery({
+      config,
+      query: { Credentials: credentials, Date: requestDate, Expires: expires.toString() },
+    });
     const date = new Date();
     const checkRequestDate = jasmine.createSpy('checkRequestDate');
     const getUrlWithParsedQuery = () => ({ query } as any);
@@ -95,7 +101,7 @@ describe('Create Authenticate Presigned Url', () => {
       [],
       date,
     );
-    expect(checkRequestDate).toHaveBeenCalledWith(config, query, date);
+    expect(checkRequestDate).toHaveBeenCalledWith(config, credentials, requestDate, expires, date);
   });
 
   it('should calls checkSignature with config, signature config, url with parsed query, request and signed headers', () => {
