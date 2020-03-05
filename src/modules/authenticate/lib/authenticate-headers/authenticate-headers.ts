@@ -1,7 +1,8 @@
 import { AuthenticateConfig, ValidRequest } from '../../../../interface';
-import { convertToAwsShortDate, getSignature } from '../../../../lib';
+import { convertToAwsShortDate, getSignature, getNormalizedHeaderName } from '../../../../lib';
 import { getHeaderValue } from '../get-header-value';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
+import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
 
 export type AuthenticateHeaders = (
   config: AuthenticateConfig,
@@ -31,21 +32,11 @@ export const authenticateHeaders: AuthenticateHeaders = (
   requestBody = request.body || '';
   expires = 0;
 
-  if (!request.host) {
-    request.host = getHeaderValue(request, 'host');
-  }
-
-  if (!mandatorySignedHeaders) {
-    mandatorySignedHeaders = [];
-  }
-
-  mandatorySignedHeaders.push('host');
-  mandatorySignedHeaders.push(config.dateHeaderName.toLowerCase());
-  mandatorySignedHeaders.forEach((mandatoryHeader: any) => {
-    if (!parsedAuthParts.signedHeaders.includes(mandatoryHeader.toLowerCase())) {
-      throw new Error('The ' + mandatoryHeader + ' header is not signed');
-    }
-  });
+  checkMandatorySignHeaders(parsedAuthParts.signedHeaders, [
+    ...mandatorySignedHeaders,
+    'host',
+    getNormalizedHeaderName(config.dateHeaderName),
+  ]);
 
   if (!isEqualFixedTime(parsedAuthParts.config.credentialScope, config.credentialScope)) {
     throw new Error('Invalid Credential Scope');
