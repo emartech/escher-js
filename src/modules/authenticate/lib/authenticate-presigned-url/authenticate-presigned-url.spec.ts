@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 import {
   createSignatureConfig,
   createAuthenticateConfig,
-  createValidRequest,
+  createEscherRequest,
   createParsedUrlQuery,
 } from '../../../../factory';
 
@@ -13,7 +13,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getUrlWithParsedQuery = jasmine.createSpy('getUrlWithParsedQuery').and.returnValue({});
     createAuthenticatePresignedUrl(createStrategy({ getUrlWithParsedQuery }))(
       createAuthenticateConfig(),
-      createValidRequest({ url }),
+      createEscherRequest({ url }),
       () => {},
       [],
       new Date(),
@@ -28,7 +28,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getUrlWithParsedQuery = () => ({ query } as any);
     createAuthenticatePresignedUrl(createStrategy({ getUrlWithParsedQuery, getSignedHeadersFromQuery }))(
       config,
-      createValidRequest(),
+      createEscherRequest(),
       () => {},
       [],
       new Date(),
@@ -44,7 +44,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getUrlWithParsedQuery = () => ({ query } as any);
     createAuthenticatePresignedUrl(createStrategy({ getUrlWithParsedQuery, getSignatureConfig }))(
       config,
-      createValidRequest(),
+      createEscherRequest(),
       keyDB,
       [],
       new Date(),
@@ -59,7 +59,7 @@ describe('Create Authenticate Presigned Url', () => {
     const checkMandatorySignHeaders = jasmine.createSpy('checkMandatorySignHeaders');
     createAuthenticatePresignedUrl(createStrategy({ getSignedHeadersFromQuery, checkMandatorySignHeaders }))(
       createAuthenticateConfig(),
-      createValidRequest(),
+      createEscherRequest(),
       () => {},
       [mandatorySignedHeader],
       new Date(),
@@ -74,7 +74,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getSignatureConfig = () => signatureConfig;
     createAuthenticatePresignedUrl(createStrategy({ checkSignatureConfig, getSignatureConfig }))(
       config,
-      createValidRequest(),
+      createEscherRequest(),
       () => {},
       [],
       new Date(),
@@ -96,7 +96,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getUrlWithParsedQuery = () => ({ query } as any);
     createAuthenticatePresignedUrl(createStrategy({ checkRequestDate, getUrlWithParsedQuery }))(
       config,
-      createValidRequest(),
+      createEscherRequest(),
       () => {},
       [],
       date,
@@ -110,7 +110,7 @@ describe('Create Authenticate Presigned Url', () => {
     const config = createAuthenticateConfig();
     const signatureConfig = createSignatureConfig();
     const date = new Date();
-    const request = createValidRequest();
+    const request = createEscherRequest();
     const getUrlWithParsedQuery = () => urlWithParsedQuery;
     const getSignatureConfig = () => signatureConfig;
     const getSignedHeadersFromQuery = () => signedHeaders;
@@ -129,7 +129,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getUrlWithParsedQuery = () => ({ query } as any);
     createAuthenticatePresignedUrl(createStrategy({ getAccessKeyId, getUrlWithParsedQuery }))(
       config,
-      createValidRequest(),
+      createEscherRequest(),
       () => {},
       [],
       new Date(),
@@ -142,7 +142,7 @@ describe('Create Authenticate Presigned Url', () => {
     const getAccessKeyId = () => accessKeyId;
     const result = createAuthenticatePresignedUrl(createStrategy({ getAccessKeyId }))(
       createAuthenticateConfig(),
-      createValidRequest(),
+      createEscherRequest(),
       () => {},
       [],
       new Date(),

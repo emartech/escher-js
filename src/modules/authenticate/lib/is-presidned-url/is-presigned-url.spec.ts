@@ -1,12 +1,12 @@
 import { isPresignedUrl } from './is-presigned-url';
-import { createAuthenticateConfig, createParsedUrlQuery, createValidRequest } from '../../../../factory';
+import { createAuthenticateConfig, createParsedUrlQuery, createEscherRequest } from '../../../../factory';
 import { v4 } from 'uuid';
 
 describe('Is Presigned Url', () => {
   it('should return true when has signature query and method is GET', () => {
     const config = createAuthenticateConfig();
     const query = createParsedUrlQuery({ config, query: { Signature: v4() } });
-    const request = createValidRequest({ method: 'GET' });
+    const request = createEscherRequest({ method: 'GET' });
 
     const result = isPresignedUrl(config, { query } as any, request);
 
@@ -14,7 +14,7 @@ describe('Is Presigned Url', () => {
   });
 
   it('should return false when method is not GET', () => {
-    const request = createValidRequest({ method: 'POST' });
+    const request = createEscherRequest({ method: 'POST' });
 
     const result = isPresignedUrl(createAuthenticateConfig(), { query: createParsedUrlQuery() } as any, request);
 
@@ -25,7 +25,7 @@ describe('Is Presigned Url', () => {
     const config = createAuthenticateConfig();
     const query = createParsedUrlQuery({ config, query: {} });
 
-    const result = isPresignedUrl(config, { query } as any, createValidRequest({ method: 'GET' }));
+    const result = isPresignedUrl(config, { query } as any, createEscherRequest({ method: 'GET' }));
 
     expect(result).toEqual(false);
   });

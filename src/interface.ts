@@ -1,3 +1,23 @@
+export type Authenticate = (
+  config: AuthenticateConfig,
+  request: EscherRequest,
+  keyDB: Function,
+  mandatorySignedHeaders: string[] | undefined,
+) => string;
+
+export type PresignUrl = (config: EscherConfig, url: string, expiration: number, date: Date) => string;
+
+export type SignRequest = (
+  config: EscherConfig,
+  requestToSign: EscherRequest,
+  body: EscherRequestBody,
+  additionalHeadersToSign: string[],
+) => EscherRequest;
+
+export type ValidateMandatorySignedHeaders = (headers?: string[]) => void;
+
+export type ValidateRequest = (request: EscherRequest, body?: any) => void;
+
 export type EscherConfig = {
   accessKeyId: string;
   algoPrefix: string;
@@ -10,40 +30,29 @@ export type EscherConfig = {
   apiSecret?: string;
 };
 
-export type Request = {
-  method?: any;
-  body?: any;
-  url: string;
-  headers: [string, RequestHeaderValue][];
-};
+export type EscherRequestHeaderValue = string | number;
 
-export type RequestHeaderValue = string | number;
+export type EscherRequestHeaderName = string;
 
-export type RequestHeaderName = string;
+export type EscherRequestHeader = [EscherRequestHeaderName, EscherRequestHeaderValue];
 
-export type RequestHeader = [RequestHeaderName, RequestHeaderValue];
-
-type RequestBase = {
-  headers: RequestHeader[];
+type EscherRequestBase = {
+  headers: EscherRequestHeader[];
   url: string;
 };
 
-export type RequestBody = string | Buffer;
+export type EscherRequestBody = string | Buffer;
 
 type RequestWithoutBody = {
   method: 'OPTIONS' | 'GET' | 'HEAD' | 'DELETE' | 'TRACE' | 'CONNECT';
-} & RequestBase;
+} & EscherRequestBase;
 
-type RequestWithBody = {
+type EscherRequestWithBody = {
   method: 'PUT' | 'POST' | 'PATCH';
-  body: RequestBody;
-} & RequestBase;
+  body: EscherRequestBody;
+} & EscherRequestBase;
 
-export type ValidRequest = RequestWithoutBody | RequestWithBody;
-
-export type ValidateRequest = (request: Request, body?: any) => void;
-
-export type ValidateMandatorySignedHeaders = (headers?: any) => void;
+export type EscherRequest = RequestWithoutBody | EscherRequestWithBody;
 
 export type SignatureConfig = {
   hashAlgo: 'SHA256' | 'SHA512';

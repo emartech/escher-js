@@ -1,5 +1,5 @@
 import { GetUrlWithParsedQuery } from '../../../../lib';
-import { AuthenticateConfig, ValidRequest } from '../../../../interface';
+import { AuthenticateConfig, EscherRequest } from '../../../../interface';
 import { CheckMandatorySignHeaders } from '../check-mandatory-sign-headers';
 import { CheckSignatureConfig } from '../check-signature-config';
 import { getQueryPart } from '../get-query-part';
@@ -22,7 +22,7 @@ export type AuthenticatePresignedUrlStrategy = {
 
 export type AuthenticatePresignedUrl = (
   config: AuthenticateConfig,
-  request: ValidRequest,
+  request: EscherRequest,
   keyDB: Function,
   mandatorySignedHeaders: string[],
   currentDate: Date,

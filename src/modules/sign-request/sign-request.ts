@@ -1,4 +1,4 @@
-import { ValidRequest, EscherConfig, RequestBody, ValidateRequest, RequestHeader } from '../../interface';
+import { ValidateRequest, EscherRequestHeader, SignRequest } from '../../interface';
 import { GetAuthorizationHeader, GetDateHeader, GetDate, GetHeadersToSign, ValidateEscherConfig } from './lib';
 import { head, toLower, pipe, any } from 'ramda';
 
@@ -10,13 +10,6 @@ export type SignRequestStrategy = {
   getDate: GetDate;
   validateEscherConfig: ValidateEscherConfig;
 };
-
-export type SignRequest = (
-  config: EscherConfig,
-  requestToSign: ValidRequest,
-  body: RequestBody,
-  additionalHeadersToSign: string[],
-) => ValidRequest;
 
 export const createSignRequest = (strategy: SignRequestStrategy): SignRequest => (
   config,
@@ -47,7 +40,7 @@ export const createSignRequest = (strategy: SignRequestStrategy): SignRequest =>
   };
 };
 
-function addHeader(header: RequestHeader): (headers: RequestHeader[]) => RequestHeader[] {
+function addHeader(header: EscherRequestHeader): (headers: EscherRequestHeader[]) => EscherRequestHeader[] {
   return headers => {
     if (any(([headerName]) => toLower(headerName) === toLower(head(header) as string), headers)) {
       return headers;

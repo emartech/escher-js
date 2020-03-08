@@ -1,4 +1,4 @@
-import { EscherConfig, ValidRequest } from '../../interface';
+import { EscherConfig, EscherRequest, PresignUrl } from '../../interface';
 import {
   getUrlWithParsedQuery,
   convertToAwsLongDate,
@@ -10,8 +10,6 @@ import {
 import { format, UrlWithParsedQuery } from 'url';
 import { map, pipe, toPairs, fromPairs, defaultTo, pick } from 'ramda';
 import { ParsedUrlQuery } from 'querystring';
-
-export type PresignUrl = (config: EscherConfig, url: string, expiration: number, date: Date) => string;
 
 export const presignUrl: PresignUrl = (config, url, expiration, date) => {
   const headersToSign = ['host'];
@@ -26,7 +24,7 @@ export const presignUrl: PresignUrl = (config, url, expiration, date) => {
     }),
   );
 
-  const request: ValidRequest = {
+  const request: EscherRequest = {
     method: 'GET',
     url: defaultTo('', parsedNewUrl.path),
     headers: [['Host', defaultTo('', parsedNewUrl.host)]],

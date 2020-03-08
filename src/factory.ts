@@ -1,10 +1,9 @@
 import {
-  Request,
   EscherConfig,
-  ValidRequest,
-  RequestHeader,
-  RequestHeaderValue,
-  RequestHeaderName,
+  EscherRequest,
+  EscherRequestHeader,
+  EscherRequestHeaderValue,
+  EscherRequestHeaderName,
   SignatureConfig,
   AuthenticateConfig,
 } from './interface';
@@ -12,13 +11,7 @@ import { v4 } from 'uuid';
 import { pipe, toPairs, map, fromPairs } from 'ramda';
 import { ParsedUrlQuery } from 'querystring';
 
-export const createRequest = (override: Partial<Request> = {}): Request => ({
-  url: '/example',
-  headers: [],
-  ...override,
-});
-
-export const createValidRequest = (override: Partial<ValidRequest> = {}): ValidRequest =>
+export const createEscherRequest = (override: Partial<EscherRequest> = {}): EscherRequest =>
   ({
     method: 'GET',
     url: '/example',
@@ -38,10 +31,13 @@ export const createEscherConfig = (override: Partial<EscherConfig> = {}): Escher
   ...override,
 });
 
-export const createRequestHeader = ({
+export const createEscherRequestHeader = ({
   name = v4(),
   value = v4(),
-}: Partial<{ name: RequestHeaderName; value: RequestHeaderValue }> = {}): RequestHeader => [name, value];
+}: Partial<{ name: EscherRequestHeaderName; value: EscherRequestHeaderValue }> = {}): EscherRequestHeader => [
+  name,
+  value,
+];
 
 export const createSignatureConfig = ({
   algoPrefix = v4(),

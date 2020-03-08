@@ -1,4 +1,4 @@
-import { SignatureConfig, ValidRequest, AuthenticateConfig } from '../../../../interface';
+import { SignatureConfig, EscherRequest, AuthenticateConfig } from '../../../../interface';
 import { UrlWithParsedQuery } from 'url';
 import { getQueryPart } from '../get-query-part';
 import { parseLongDate } from '../parse-long-date';
@@ -11,7 +11,7 @@ export type CheckSignature = (
   config: AuthenticateConfig,
   signatureConfig: SignatureConfig,
   urlWithParsedQuery: UrlWithParsedQuery,
-  request: ValidRequest,
+  request: EscherRequest,
   signedHeaders: string[],
 ) => void;
 
@@ -31,7 +31,7 @@ export const checkSignature: CheckSignature = (config, signatureConfig, urlWithP
   }
 };
 
-function canonicalizedRequestUrl(urlWithParsedQuery: UrlWithParsedQuery, request: ValidRequest): ValidRequest {
+function canonicalizedRequestUrl(urlWithParsedQuery: UrlWithParsedQuery, request: EscherRequest): EscherRequest {
   const canonicalizedQueryString = canonicalizeQuery(dropSignature(urlWithParsedQuery.query));
   return {
     ...request,

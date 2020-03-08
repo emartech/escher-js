@@ -1,8 +1,8 @@
-import { EscherConfig, RequestHeader } from '../../../../interface';
+import { EscherConfig, EscherRequestHeader } from '../../../../interface';
 import { convertToAwsLongDate, getNormalizedHeaderName } from '../../../../lib';
 const formatDate = require('dateformat');
 
-export type GetDateHeader = (config: EscherConfig, date: Date) => RequestHeader;
+export type GetDateHeader = (config: EscherConfig, date: Date) => EscherRequestHeader;
 
 export const getDateHeader: GetDateHeader = (config, date) => {
   const headerName = getNormalizedHeaderName(config.dateHeaderName);

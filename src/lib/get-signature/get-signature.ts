@@ -1,4 +1,4 @@
-import { ValidRequest, RequestBody, RequestHeader, RequestHeaderValue, EscherConfig, SignatureConfig } from '../../interface';
+import { EscherRequest, EscherRequestBody, EscherRequestHeader, EscherRequestHeaderValue, EscherConfig, SignatureConfig } from '../../interface';
 import {
   reduce,
   split,
@@ -26,8 +26,8 @@ import { canonicalizeQuery } from '../canonicalize-query/canonicalize-query';
 export function getSignature(
   config: SignatureConfig | EscherConfig,
   date: Date,
-  request: ValidRequest,
-  body: RequestBody,
+  request: EscherRequest,
+  body: EscherRequestBody,
   headersToSign: string[],
 ): string {
   const signingKey = getSigningKey(config as any, date);
@@ -46,8 +46,8 @@ function getSigningKey(config: SignatureConfig, date: Date): Buffer {
 function getStringToSign(
   config: SignatureConfig,
   date: Date,
-  request: ValidRequest,
-  body: RequestBody,
+  request: EscherRequest,
+  body: EscherRequestBody,
   headersToSign: string[],
 ): string {
   return join('\n', [
@@ -59,8 +59,8 @@ function getStringToSign(
 }
 function getCanonicalizedRequestChecksum(
   config: SignatureConfig,
-  request: ValidRequest,
-  body: RequestBody,
+  request: EscherRequest,
+  body: EscherRequestBody,
   headersToSign: string[],
 ): string {
   return hash(config.hashAlgo, getCanonicalizeRequest(config, request, body, headersToSign));
@@ -80,8 +80,8 @@ function hmac(algorithm: string, key: Buffer, data: string): Buffer {
 
 function getCanonicalizeRequest(
   config: SignatureConfig,
-  request: ValidRequest,
-  body: RequestBody,
+  request: EscherRequest,
+  body: EscherRequestBody,
   headersToSign: string[],
 ): string {
   const url = getUrlWithParsedQuery(request.url);
@@ -100,12 +100,12 @@ function getCanonicalizeRequest(
   return join('\n', [request.method, path, query, headers, '', headerNames, bodyChecksum]);
 }
 
-function getSigneableHeaders(headers: RequestHeader[], headersToSign: string[]): RequestHeader[] {
+function getSigneableHeaders(headers: EscherRequestHeader[], headersToSign: string[]): EscherRequestHeader[] {
   const normalizedHeadersToSign = map(getNormalizedHeaderName, headersToSign);
   return filter(([headerName]) => includes(getNormalizedHeaderName(headerName), normalizedHeadersToSign), headers);
 }
 
-function getNormalizedHeaders(headers: RequestHeader[]): RequestHeader[] {
+function getNormalizedHeaders(headers: EscherRequestHeader[]): EscherRequestHeader[] {
   return (pipe as any)(
     groupBy(
       pipe(
@@ -124,7 +124,7 @@ function getNormalizedHeaders(headers: RequestHeader[]): RequestHeader[] {
   )(headers);
 }
 
-function getNormalizedHeaderValue(headerValue: RequestHeaderValue): string {
+function getNormalizedHeaderValue(headerValue: EscherRequestHeaderValue): string {
   return headerValue
     .toString()
     .trim()

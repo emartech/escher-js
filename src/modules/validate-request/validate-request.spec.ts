@@ -1,28 +1,28 @@
 import { validateRequest } from './validate-request';
-import { createRequest, createValidRequest } from '../../factory';
+import { createEscherRequest } from '../../factory';
 import { v4 } from 'uuid';
-import { RequestHeader } from '../../interface';
+import { EscherRequestHeader } from '../../interface';
 
 describe('Validate Request', () => {
   [
     {
       should: 'throw error when method is not string',
-      request: createRequest({ method: 1 }),
+      request: createEscherRequest({ method: 1 } as any),
       expectedError: new Error('The request method is invalid'),
     },
     {
       should: 'throw error when method is not allowed method',
-      request: createRequest({ method: 'invalid method' }),
+      request: createEscherRequest({ method: 'invalid method' } as any),
       expectedError: new Error('The request method is invalid'),
     },
     {
       should: 'throw error when url starts with http://',
-      request: createRequest({ method: 'GET', url: 'http://index.hu' }),
+      request: createEscherRequest({ method: 'GET', url: 'http://index.hu' }),
       expectedError: new Error(`The request url shouldn't contains http or https`),
     },
     {
       should: 'throw error when url starts with https://',
-      request: createRequest({ method: 'GET', url: 'https://index.hu' }),
+      request: createEscherRequest({ method: 'GET', url: 'https://index.hu' }),
       expectedError: new Error(`The request url shouldn't contains http or https`),
     },
   ].forEach(testCase => {
@@ -33,12 +33,12 @@ describe('Validate Request', () => {
 
   describe('body required methods', () => {
     [
-      { request: createValidRequest({ method: 'POST', body: v4() }) },
-      { request: createValidRequest({ method: 'PUT', body: v4() }) },
-      { request: createValidRequest({ method: 'PATCH', body: v4() }) },
-      { request: createValidRequest({ method: 'POST', body: Buffer.from(v4()) }) },
-      { request: createValidRequest({ method: 'PUT', body: Buffer.from(v4()) }) },
-      { request: createValidRequest({ method: 'PATCH', body: Buffer.from(v4()) }) },
+      { request: createEscherRequest({ method: 'POST', body: v4() }) },
+      { request: createEscherRequest({ method: 'PUT', body: v4() }) },
+      { request: createEscherRequest({ method: 'PATCH', body: v4() }) },
+      { request: createEscherRequest({ method: 'POST', body: Buffer.from(v4()) }) },
+      { request: createEscherRequest({ method: 'PUT', body: Buffer.from(v4()) }) },
+      { request: createEscherRequest({ method: 'PATCH', body: Buffer.from(v4()) }) },
     ].forEach(testCase => {
       it(`should not throw error when method is ${
         testCase.request.method
@@ -49,12 +49,12 @@ describe('Validate Request', () => {
   });
 
   [
-    { request: createValidRequest({ method: 'OPTIONS' }) },
-    { request: createValidRequest({ method: 'GET' }) },
-    { request: createValidRequest({ method: 'HEAD' }) },
-    { request: createValidRequest({ method: 'DELETE' }) },
-    { request: createValidRequest({ method: 'TRACE' }) },
-    { request: createValidRequest({ method: 'CONNECT' }) },
+    { request: createEscherRequest({ method: 'OPTIONS' }) },
+    { request: createEscherRequest({ method: 'GET' }) },
+    { request: createEscherRequest({ method: 'HEAD' }) },
+    { request: createEscherRequest({ method: 'DELETE' }) },
+    { request: createEscherRequest({ method: 'TRACE' }) },
+    { request: createEscherRequest({ method: 'CONNECT' }) },
   ].forEach(testCase => {
     it(`should not throw error when method is ${testCase.request.method}`, () => {
       validateRequest(testCase.request);
@@ -64,7 +64,7 @@ describe('Validate Request', () => {
   ['POST', 'PUT', 'PATCH'].forEach(method => {
     it(`should throw error when method is ${method} and request body is not string or buffer`, () => {
       const body = 1;
-      expect(() => validateRequest(createRequest({ method, body }))).toThrow(
+      expect(() => validateRequest(createEscherRequest({ method, body }  as any))).toThrow(
         new Error(`The request body shouldn't be empty if the request method is ${method}`),
       );
     });
@@ -72,18 +72,18 @@ describe('Validate Request', () => {
 
   it(`should not throw error when url does not start with http:// or https://`, () => {
     const url = '/example';
-    validateRequest(createRequest({ method: 'GET', url }));
+    validateRequest(createEscherRequest({ method: 'GET', url }));
   });
 
   describe('body passed', () => {
     describe('body required methods', () => {
       [
-        { request: createRequest({ method: 'POST' }), body: v4() },
-        { request: createRequest({ method: 'PUT' }), body: v4() },
-        { request: createRequest({ method: 'PATCH' }), body: v4() },
-        { request: createRequest({ method: 'POST' }), body: Buffer.from(v4()) },
-        { request: createRequest({ method: 'PUT' }), body: Buffer.from(v4()) },
-        { request: createRequest({ method: 'PATCH' }), body: Buffer.from(v4()) },
+        { request: createEscherRequest({ method: 'POST' }), body: v4() },
+        { request: createEscherRequest({ method: 'PUT' }), body: v4() },
+        { request: createEscherRequest({ method: 'PATCH' }), body: v4() },
+        { request: createEscherRequest({ method: 'POST' }), body: Buffer.from(v4()) },
+        { request: createEscherRequest({ method: 'PUT' }), body: Buffer.from(v4()) },
+        { request: createEscherRequest({ method: 'PATCH' }), body: Buffer.from(v4()) },
       ].forEach(testCase => {
         it(`should not throw error when method is ${
           testCase.request.method
@@ -102,7 +102,7 @@ describe('Validate Request', () => {
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
       expect(() =>
-        validateRequest(createRequest({ method: 'GET', headers: testCase.headers as RequestHeader[] })),
+        validateRequest(createEscherRequest({ method: 'GET', headers: testCase.headers as EscherRequestHeader[] })),
       ).toThrow(new Error('Header value should be string or number [headerName]'));
     });
   });
@@ -118,7 +118,7 @@ describe('Validate Request', () => {
     },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
-      validateRequest(createRequest({ method: 'GET', headers: testCase.headers as RequestHeader[] }));
+      validateRequest(createEscherRequest({ method: 'GET', headers: testCase.headers as EscherRequestHeader[] }));
     });
   });
 });

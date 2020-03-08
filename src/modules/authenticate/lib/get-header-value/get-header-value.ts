@@ -1,16 +1,16 @@
-import { ValidRequest, RequestHeaderValue, RequestHeader } from '../../../../interface';
+import { EscherRequest, EscherRequestHeaderValue, EscherRequestHeader } from '../../../../interface';
 import { isNil, last, find } from 'ramda';
 import { getNormalizedHeaderName } from '../../../../lib';
 
-export type GetHeaderValue = (request: ValidRequest, soughtHeaderName: string) => RequestHeaderValue;
+export type GetHeaderValue = (request: EscherRequest, soughtHeaderName: string) => EscherRequestHeaderValue;
 
 export const getHeaderValue: GetHeaderValue = (request, soughtHeaderName) => {
-  const value = find<RequestHeader>(
+  const value = find<EscherRequestHeader>(
     ([name]) => getNormalizedHeaderName(name) === getNormalizedHeaderName(soughtHeaderName),
     request.headers,
   );
   if (isNil(value)) {
     throw new Error(`The ${soughtHeaderName} header is missing`);
   }
-  return last(value) as RequestHeaderValue;
+  return last(value) as EscherRequestHeaderValue;
 };

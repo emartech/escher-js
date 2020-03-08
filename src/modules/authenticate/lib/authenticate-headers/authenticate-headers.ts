@@ -1,4 +1,4 @@
-import { AuthenticateConfig, ValidRequest } from '../../../../interface';
+import { AuthenticateConfig, EscherRequest } from '../../../../interface';
 import { getSignature, getNormalizedHeaderName, convertToAwsLongDate } from '../../../../lib';
 import { getHeaderValue } from '../get-header-value';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
@@ -11,7 +11,7 @@ import { checkSignatureConfig } from '../check-signature-config';
 
 export type AuthenticateHeaders = (
   config: AuthenticateConfig,
-  request: ValidRequest,
+  request: EscherRequest,
   keyDB: Function,
   mandatorySignedHeaders: string[],
   currentDate: Date,
@@ -56,7 +56,7 @@ export const authenticateHeaders: AuthenticateHeaders = (
   return getAccesskeyId(authHeader);
 };
 
-function getRequestDate(config: AuthenticateConfig, request: ValidRequest): Date {
+function getRequestDate(config: AuthenticateConfig, request: EscherRequest): Date {
   const dateHeaderName = getNormalizedHeaderName(config.dateHeaderName);
   const dateHeaderValue = getHeaderValue(request, dateHeaderName) as string;
   return dateHeaderName === 'date' ? new Date(dateHeaderValue) : parseLongDate(dateHeaderValue);

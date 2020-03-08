@@ -1,12 +1,12 @@
 import { SignRequestStrategy, createSignRequest } from './sign-request';
 import { v4 } from 'uuid';
-import { createEscherConfig, createValidRequest, createRequestHeader } from '../../factory';
+import { createEscherConfig, createEscherRequest, createEscherRequestHeader } from '../../factory';
 import { dissoc } from 'ramda';
 
 describe('SignRequest', () => {
   it('should calls validate request with request and body', () => {
     const validateRequest = jasmine.createSpy('validateRequest');
-    const request = createValidRequest();
+    const request = createEscherRequest();
     const body = v4();
 
     createSignRequest(createStrategy({ validateRequest }))(createEscherConfig(), request, body, []);
@@ -18,17 +18,17 @@ describe('SignRequest', () => {
     const validateEscherConfig = jasmine.createSpy('validateEscherConfig');
     const config = createEscherConfig();
 
-    createSignRequest(createStrategy({ validateEscherConfig }))(config, createValidRequest(), v4(), []);
+    createSignRequest(createStrategy({ validateEscherConfig }))(config, createEscherRequest(), v4(), []);
 
     expect(validateEscherConfig).toHaveBeenCalledWith(config);
   });
 
   it('should calls get date header with config and date from get date', () => {
-    const getDateHeader = jasmine.createSpy('getDateHeader').and.returnValue(createRequestHeader());
+    const getDateHeader = jasmine.createSpy('getDateHeader').and.returnValue(createEscherRequestHeader());
     const date = new Date();
     const config = createEscherConfig();
 
-    createSignRequest(createStrategy({ getDateHeader, getDate: () => date }))(config, createValidRequest(), v4(), []);
+    createSignRequest(createStrategy({ getDateHeader, getDate: () => date }))(config, createEscherRequest(), v4(), []);
 
     expect(getDateHeader).toHaveBeenCalledWith(config, date);
   });
@@ -38,20 +38,20 @@ describe('SignRequest', () => {
     const config = createEscherConfig();
     const additionalHeaders = [v4()];
 
-    createSignRequest(createStrategy({ getHeadersToSign }))(config, createValidRequest(), v4(), additionalHeaders);
+    createSignRequest(createStrategy({ getHeadersToSign }))(config, createEscherRequest(), v4(), additionalHeaders);
 
     expect(getHeadersToSign).toHaveBeenCalledWith(config, additionalHeaders);
   });
 
   it('should calls get authorization header with config, date, request, body and headers to sign', () => {
-    const getAuthorizationHeader = jasmine.createSpy('getAuthorizationHeader').and.returnValue(createRequestHeader());
+    const getAuthorizationHeader = jasmine.createSpy('getAuthorizationHeader').and.returnValue(createEscherRequestHeader());
     const config = createEscherConfig();
     const date = new Date();
-    const request = createValidRequest();
+    const request = createEscherRequest();
     const body = v4();
     const headersToSign = [v4()];
     const additionalHeaders = [v4()];
-    const dateHeader = createRequestHeader();
+    const dateHeader = createEscherRequestHeader();
 
     createSignRequest(
       createStrategy({
@@ -72,7 +72,7 @@ describe('SignRequest', () => {
   });
 
   it('should calls get authorization header with config, date, request, body and headers to sign', () => {
-    const request = createValidRequest();
+    const request = createEscherRequest();
 
     const result = createSignRequest(createStrategy())(createEscherConfig(), request, v4(), []);
 
@@ -80,11 +80,11 @@ describe('SignRequest', () => {
   });
 
   it('should add auth header to request', () => {
-    const authorizationHeader = createRequestHeader({ name: 'Authorization' });
+    const authorizationHeader = createEscherRequestHeader({ name: 'Authorization' });
 
     const result = createSignRequest(createStrategy({ getAuthorizationHeader: () => authorizationHeader }))(
       createEscherConfig(),
-      createValidRequest(),
+      createEscherRequest(),
       v4(),
       [],
     );
@@ -93,11 +93,11 @@ describe('SignRequest', () => {
   });
 
   it('should add date header to request', () => {
-    const dateHeader = createRequestHeader({ name: 'Date' });
+    const dateHeader = createEscherRequestHeader({ name: 'Date' });
 
     const result = createSignRequest(createStrategy({ getDateHeader: () => dateHeader }))(
       createEscherConfig(),
-      createValidRequest(),
+      createEscherRequest(),
       v4(),
       [],
     );
@@ -106,20 +106,20 @@ describe('SignRequest', () => {
   });
 
   it('should keep original headers of request', () => {
-    const headers = [createRequestHeader()];
+    const headers = [createEscherRequestHeader()];
     const {
       headers: [header],
-    } = createSignRequest(createStrategy())(createEscherConfig(), createValidRequest({ headers }), v4(), []);
+    } = createSignRequest(createStrategy())(createEscherConfig(), createEscherRequest({ headers }), v4(), []);
 
     expect(header).toEqual(headers[0]);
   });
 
   it('should not add existed header to request', () => {
-    const dateHeader = createRequestHeader({ name: 'Date', value: '[X]' });
-    const originalHeader = createRequestHeader({ name: 'Date', value: '[Y]' });
+    const dateHeader = createEscherRequestHeader({ name: 'Date', value: '[X]' });
+    const originalHeader = createEscherRequestHeader({ name: 'Date', value: '[Y]' });
     const result = createSignRequest(createStrategy({ getDateHeader: () => dateHeader }))(
       createEscherConfig(),
-      createValidRequest({ headers: [originalHeader] }),
+      createEscherRequest({ headers: [originalHeader] }),
       v4(),
       [],
     );
