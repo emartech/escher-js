@@ -1,5 +1,5 @@
 import { ValidateRequest, EscherRequestHeader, SignRequest } from '../../interface';
-import { GetAuthorizationHeader, GetDateHeader, GetDate, GetHeadersToSign, ValidateEscherConfig } from './lib';
+import { GetAuthorizationHeader, GetDateHeader, GetDate, GetHeadersToSign, ValidateSignRequestConfg } from './lib';
 import { head, toLower, pipe, any } from 'ramda';
 
 export type SignRequestStrategy = {
@@ -8,7 +8,7 @@ export type SignRequestStrategy = {
   getHeadersToSign: GetHeadersToSign;
   getDateHeader: GetDateHeader;
   getDate: GetDate;
-  validateEscherConfig: ValidateEscherConfig;
+  validateSignRequestConfg: ValidateSignRequestConfg;
 };
 
 export const createSignRequest = (strategy: SignRequestStrategy): SignRequest => (
@@ -19,7 +19,7 @@ export const createSignRequest = (strategy: SignRequestStrategy): SignRequest =>
 ) => {
   const date = strategy.getDate();
   strategy.validateRequest(requestToSign, body);
-  strategy.validateEscherConfig(config);
+  strategy.validateSignRequestConfg(config);
   const dateHeader = strategy.getDateHeader(config, date);
   const authorizationHeader = strategy.getAuthorizationHeader(
     config,

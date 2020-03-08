@@ -8,7 +8,7 @@ export type Authenticate = (
 export type PresignUrl = (config: EscherConfig, url: string, expiration: number, date: Date) => string;
 
 export type SignRequest = (
-  config: EscherConfig,
+  config: SignRequestConfg,
   requestToSign: EscherRequest,
   body: EscherRequestBody,
   additionalHeadersToSign: string[],
@@ -17,6 +17,25 @@ export type SignRequest = (
 export type ValidateMandatorySignedHeaders = (headers?: string[]) => void;
 
 export type ValidateRequest = (request: EscherRequest, body?: any) => void;
+
+export type AuthenticateConfig = {
+  algoPrefix: string;
+  vendorKey: string;
+  clockSkew: number;
+  credentialScope: string;
+  authHeaderName: string;
+  dateHeaderName: string;
+};
+
+export type SignRequestConfg = {
+  hashAlgo: 'SHA256' | 'SHA512';
+  algoPrefix: string;
+  authHeaderName: string;
+  accessKeyId: string;
+  credentialScope: string;
+  apiSecret: string;
+  dateHeaderName: string;
+};
 
 export type EscherConfig = {
   accessKeyId: string;
@@ -30,18 +49,7 @@ export type EscherConfig = {
   apiSecret?: string;
 };
 
-export type EscherRequestHeaderValue = string | number;
-
-export type EscherRequestHeaderName = string;
-
-export type EscherRequestHeader = [EscherRequestHeaderName, EscherRequestHeaderValue];
-
-type EscherRequestBase = {
-  headers: EscherRequestHeader[];
-  url: string;
-};
-
-export type EscherRequestBody = string | Buffer;
+export type EscherRequest = RequestWithoutBody | EscherRequestWithBody;
 
 type RequestWithoutBody = {
   method: 'OPTIONS' | 'GET' | 'HEAD' | 'DELETE' | 'TRACE' | 'CONNECT';
@@ -52,20 +60,22 @@ type EscherRequestWithBody = {
   body: EscherRequestBody;
 } & EscherRequestBase;
 
-export type EscherRequest = RequestWithoutBody | EscherRequestWithBody;
+type EscherRequestBase = {
+  headers: EscherRequestHeader[];
+  url: string;
+};
+
+export type EscherRequestBody = string | Buffer;
+
+export type EscherRequestHeader = [EscherRequestHeaderName, EscherRequestHeaderValue];
+
+export type EscherRequestHeaderName = string;
+
+export type EscherRequestHeaderValue = string | number;
 
 export type SignatureConfig = {
   hashAlgo: 'SHA256' | 'SHA512';
   algoPrefix: string;
   apiSecret: string;
   credentialScope: string;
-};
-
-export type AuthenticateConfig = {
-  algoPrefix: string;
-  vendorKey: string;
-  clockSkew: number;
-  credentialScope: string;
-  authHeaderName: string;
-  dateHeaderName: string;
 };

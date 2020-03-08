@@ -1,4 +1,4 @@
-import { validateEscherConfig } from './validate-escher-config';
+import { validateSignRequestConfg } from './validate-sign-request-config';
 import { v4 } from 'uuid';
 
 describe('Validate Escher Config', () => {
@@ -20,7 +20,7 @@ describe('Validate Escher Config', () => {
     },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
-      expect(() => validateEscherConfig(testCase.escherConfig as any)).toThrow(testCase.expectedError);
+      expect(() => validateSignRequestConfg(testCase.escherConfig as any)).toThrow(testCase.expectedError);
     });
   });
 
@@ -31,7 +31,7 @@ describe('Validate Escher Config', () => {
     },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
-      validateEscherConfig(testCase.escherConfig as any);
+      validateSignRequestConfg(testCase.escherConfig as any);
     });
   });
 });

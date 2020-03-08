@@ -1,5 +1,5 @@
 import { createSignRequest } from './sign-request';
-import { getDate, getAuthorizationHeader, getDateHeader, getHeadersToSign, validateEscherConfig } from './lib';
+import { getDate, getAuthorizationHeader, getDateHeader, getHeadersToSign, validateSignRequestConfg } from './lib';
 import { validateRequest } from '../validate-request';
 export const signRequest = createSignRequest({
   validateRequest,
@@ -7,5 +7,5 @@ export const signRequest = createSignRequest({
   getDateHeader,
   getDate,
   getHeadersToSign,
-  validateEscherConfig,
+  validateSignRequestConfg: validateSignRequestConfg,
 });

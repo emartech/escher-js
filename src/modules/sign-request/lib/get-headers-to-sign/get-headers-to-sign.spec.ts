@@ -1,10 +1,10 @@
 import { getHeadersToSign } from './get-headers-to-sign';
-import { createEscherConfig } from '../../../../factory';
+import { createSignRequestConfg } from '../../../../factory';
 import { v4 } from 'uuid';
 
 describe('Get Headers To Sign', () => {
   it('should return "host"', () => {
-    const result = getHeadersToSign(createEscherConfig());
+    const result = getHeadersToSign(createSignRequestConfg());
 
     expect(result).toContain('host');
   });
@@ -12,7 +12,7 @@ describe('Get Headers To Sign', () => {
   it('should return date header from config', () => {
     const dateHeaderName = 'date-header-name';
 
-    const result = getHeadersToSign(createEscherConfig({ dateHeaderName }));
+    const result = getHeadersToSign(createSignRequestConfg({ dateHeaderName }));
 
     expect(result).toContain('date-header-name');
   });
@@ -21,7 +21,7 @@ describe('Get Headers To Sign', () => {
     it('should return lowercase date header from config', () => {
       const dateHeaderName = 'Date-Header-Name';
 
-      const result = getHeadersToSign(createEscherConfig({ dateHeaderName }));
+      const result = getHeadersToSign(createSignRequestConfg({ dateHeaderName }));
 
       expect(result).toContain('date-header-name');
     });
@@ -30,7 +30,7 @@ describe('Get Headers To Sign', () => {
   it('should return with additional headers', () => {
     const additionalHeaders = [v4(), v4()];
 
-    const [, , ...rest] = getHeadersToSign(createEscherConfig(), additionalHeaders);
+    const [, , ...rest] = getHeadersToSign(createSignRequestConfg(), additionalHeaders);
 
     expect(rest).toEqual(additionalHeaders);
   });

@@ -1,10 +1,10 @@
-import { createEscherConfig } from '../../../../factory';
+import { createSignRequestConfg } from '../../../../factory';
 import { getDateHeader } from './get-date-header';
 
 describe('Get Date Header', () => {
   it(`should return normalized header name`, () => {
     const dateHeaderName = '    Date-Header-Name     ';
-    const config = createEscherConfig({ dateHeaderName });
+    const config = createSignRequestConfg({ dateHeaderName });
 
     const [headerName] = getDateHeader(config, new Date());
 
@@ -26,7 +26,7 @@ describe('Get Date Header', () => {
     },
   ].forEach(testCase => {
     it(`should ${testCase.should}`, () => {
-      const config = createEscherConfig({ dateHeaderName: testCase.dateHeaderName });
+      const config = createSignRequestConfg({ dateHeaderName: testCase.dateHeaderName });
 
       const result = getDateHeader(config, testCase.date);
 

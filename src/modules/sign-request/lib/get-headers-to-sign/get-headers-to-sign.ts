@@ -1,7 +1,7 @@
-import { EscherConfig } from '../../../../interface';
+import { SignRequestConfg } from '../../../../interface';
 import { toLower, defaultTo } from 'ramda';
 
-export type GetHeadersToSign = (config: EscherConfig, additionalHeadersToSign?: string[]) => string[];
+export type GetHeadersToSign = (config: SignRequestConfg, additionalHeadersToSign?: string[]) => string[];
 
 export const getHeadersToSign: GetHeadersToSign = (config, additionalHeadersToSign) => [
   'host',

@@ -6,6 +6,7 @@ import {
   EscherRequestHeaderName,
   SignatureConfig,
   AuthenticateConfig,
+  SignRequestConfg,
 } from './interface';
 import { v4 } from 'uuid';
 import { pipe, toPairs, map, fromPairs } from 'ramda';
@@ -64,3 +65,21 @@ export const createAuthenticateConfig = ({
 
 export const createParsedUrlQuery = ({ query = {}, config = createAuthenticateConfig() } = {}): ParsedUrlQuery =>
   (pipe as any)(toPairs, map(([key, value]: any) => [`X-${config.vendorKey}-${key}`, value]), fromPairs)(query);
+
+export const createSignRequestConfg = ({
+  hashAlgo = 'SHA256',
+  algoPrefix = v4(),
+  authHeaderName = v4(),
+  accessKeyId = v4(),
+  credentialScope = v4(),
+  apiSecret = v4(),
+  dateHeaderName = v4(),
+}: Partial<SignRequestConfg> = {}): SignRequestConfg => ({
+  hashAlgo,
+  algoPrefix,
+  authHeaderName,
+  accessKeyId,
+  credentialScope,
+  apiSecret,
+  dateHeaderName,
+});

@@ -1,4 +1,4 @@
-import { EscherRequestHeader, EscherConfig, EscherRequest, EscherRequestBody } from '../../../../interface';
+import { EscherRequest, EscherRequestBody, SignRequestConfg, EscherRequestHeader } from '../../../../interface';
 import {
   getAuthorizationAlgo,
   getCredential,
@@ -8,7 +8,7 @@ import {
 } from '../../../../lib';
 
 export type GetAuthorizationHeader = (
-  config: EscherConfig,
+  config: SignRequestConfg,
   date: Date,
   request: EscherRequest,
   body: EscherRequestBody,
@@ -22,7 +22,7 @@ export const getAuthorizationHeader: GetAuthorizationHeader = (config, date, req
 };
 
 function getHeaderValue(
-  config: EscherConfig,
+  config: SignRequestConfg,
   date: Date,
   request: EscherRequest,
   body: EscherRequestBody,

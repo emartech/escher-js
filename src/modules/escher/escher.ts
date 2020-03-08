@@ -32,7 +32,7 @@ export class Escher {
     if (this._useDeprecated) {
       return DeprecatedEscher.create(this._config).signRequest(requestOptions, body, headersToSign);
     }
-    return signRequest(this._config, requestOptions, body, headersToSign);
+    return signRequest(this._config as any, requestOptions, body, headersToSign);
   }
 
   authenticate(request: EscherRequest, keyDB: Function, mandatorySignedHeaders: string[]): any {
