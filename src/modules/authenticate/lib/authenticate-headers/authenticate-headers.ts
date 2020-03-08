@@ -4,8 +4,10 @@ import { getHeaderValue } from '../get-header-value';
 import { isEqualFixedTime } from '../is-equal-fixed-time';
 import { checkMandatorySignHeaders } from '../check-mandatory-sign-headers';
 import { checkRequestDate } from '../check-request-date';
-import { split, last, init, defaultTo } from 'ramda';
+import { split, last, init, defaultTo, trim, head } from 'ramda';
 import { parseLongDate } from '../parse-long-date';
+import { getSignatureConfigFromHeader } from '../get-signature-config-from-header';
+import { checkSignatureConfig } from '../check-signature-config';
 
 export type AuthenticateHeaders = (
   config: AuthenticateConfig,
@@ -22,48 +24,36 @@ export const authenticateHeaders: AuthenticateHeaders = (
   mandatorySignedHeaders,
   currentDate,
 ) => {
+  const authHeader = getHeaderValue(request, config.authHeaderName) as string;
+  const signature = getSignatureFromHeader(authHeader);
+  const signedHeaders = getSignedHeadersFromHeader(authHeader);
   const requestDate = getRequestDate(config, request);
-  const parsedAuthParts: any = parseAuthHeader(
-    config,
-    getHeaderValue(request, config.authHeaderName),
-    requestDate,
-    keyDB,
-  );
   const expires = 0;
-
-  checkMandatorySignHeaders(parsedAuthParts.signedHeaders, [
+  const signatureConfig = getSignatureConfigFromHeader(config, authHeader, keyDB);
+  checkMandatorySignHeaders(signedHeaders, [
     ...mandatorySignedHeaders,
     'host',
     getNormalizedHeaderName(config.dateHeaderName),
   ]);
   checkRequestDate(
     config,
-    getCredentials(getHeaderValue(request, config.authHeaderName) as any),
+    getCredentialsFromHeader(authHeader),
     convertToAwsLongDate(requestDate),
     expires,
     currentDate,
   );
-
-  if (!isEqualFixedTime(parsedAuthParts.config.credentialScope, config.credentialScope)) {
-    throw new Error('Invalid Credential Scope');
-  }
-
-  if (!['SHA256', 'SHA512'].includes(parsedAuthParts.config.hashAlgo)) {
-    throw new Error('Invalid hash algorithm, only SHA256 and SHA512 are allowed');
-  }
-
-  const generatedAuthParts = getSignature(
-    parsedAuthParts.config,
+  checkSignatureConfig(config, signatureConfig);
+  const generatedSignature = getSignature(
+    signatureConfig,
     requestDate,
     request,
     defaultTo('', request.body),
-    parsedAuthParts.signedHeaders,
+    signedHeaders,
   );
-  if (!isEqualFixedTime(parsedAuthParts.signature, generatedAuthParts)) {
+  if (!isEqualFixedTime(signature, generatedSignature)) {
     throw new Error('The signatures do not match');
   }
-
-  return parsedAuthParts.config.accessKeyId;
+  return getAccesskeyId(authHeader);
 };
 
 function getRequestDate(config: AuthenticateConfig, request: ValidRequest): Date {
@@ -72,52 +62,22 @@ function getRequestDate(config: AuthenticateConfig, request: ValidRequest): Date
   return dateHeaderName === 'date' ? new Date(dateHeaderValue) : parseLongDate(dateHeaderValue);
 }
 
-function getCredentials(header: string): string {
+function getCredentialsFromHeader(header: string): string {
   const [, credentialsPair] = split(' ', header);
   return init(last(split('=', credentialsPair))!);
 }
 
-function parseAuthHeader(config: any, authHeader: any, requestDate: any, keyDB: any): any {
-  const algoRegExp = config.algoPrefix + '-HMAC-([A-Za-z0-9\\,]+)';
-  const credentialRegExpDefinition = '([A-Za-z0-9\\-_]+)/([0-9]{8})/([A-Za-z0-9\\-_ /]+)';
-  const signedHeadersRegExpDefinition = '([A-Za-z\\-;]+)';
-  const signatureRegExpDefinition = '([0-9a-f]+)';
-  // eslint-disable-next-line security/detect-non-literal-regexp
-  const regex = new RegExp(
-    '^' +
-      algoRegExp +
-      ' Credential=' +
-      credentialRegExpDefinition +
-      ', SignedHeaders=' +
-      signedHeadersRegExpDefinition +
-      ', Signature=' +
-      signatureRegExpDefinition +
-      '$',
-  );
-  const matches = authHeader.match(regex);
+function getSignatureFromHeader(header: string): string {
+  const signaturePair = trim(last(split(',', header))!);
+  return last(split('=', signaturePair))!;
+}
 
-  if (!matches) {
-    throw new Error('Invalid auth header format');
-  }
+function getSignedHeadersFromHeader(header: string): string[] {
+  const [, signedHeadersPair] = split(',', header);
+  return split(';', last(split('=', trim(signedHeadersPair)))!);
+}
 
-  const parsedConfig = {
-    vendorKey: config.vendorKey,
-    algoPrefix: config.algoPrefix,
-    date: requestDate,
-    hashAlgo: matches[1],
-    accessKeyId: matches[2],
-    apiSecret: keyDB(matches[2]),
-    credentialScope: matches[4],
-  };
-
-  if (typeof parsedConfig.apiSecret !== 'string') {
-    throw new Error('Invalid Escher key');
-  }
-
-  return {
-    shortDate: matches[3],
-    config: parsedConfig,
-    signedHeaders: matches[5].split(';'),
-    signature: matches[6],
-  };
+function getAccesskeyId(header: string): string {
+  const credentials = getCredentialsFromHeader(header);
+  return head(split('/', credentials))!;
 }

@@ -56,6 +56,20 @@ describe('Get Signature Config From Header', () => {
     expect(result.credentialScope).toEqual(credentialScope);
   });
 
+  it('should returns credential scope with whitespaces', () => {
+    const credentialScope = 'us-e ast-1/ho  st/aws 4_request';
+    const config = createAuthenticateConfig();
+    const result = getSignatureConfigFromHeader(
+      config,
+      createHeader({
+        algorithm: createAlgorithmHeader(config, 'SHA256'),
+        credentials: `${v4()}/11111111/${credentialScope}`,
+      }),
+      () => v4(),
+    );
+    expect(result.credentialScope).toEqual(credentialScope);
+  });
+
   it('should returns hash algorithm', () => {
     const hashAlgo = 'SHA512';
     const config = createAuthenticateConfig();

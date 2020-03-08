@@ -1,5 +1,5 @@
 import { AuthenticateConfig, SignatureConfig } from '../../../../interface';
-import { split, last, init, forEach, isNil, isEmpty, values, is, head } from 'ramda';
+import { split, last, forEach, isNil, isEmpty, values, is, head, join } from 'ramda';
 import { getApiSecret } from '../get-api-secret';
 import { getCredentialScope } from '../get-credential-scope';
 import { getHashAlgorithm } from '../get-hash-algorithm';
@@ -23,10 +23,10 @@ export const getSignatureConfigFromHeader: GetSignatureConfigFromHeader = (confi
 };
 
 function getCredentials(header: string): string {
-  const [, credentialsPair] = split(' ', header);
-  return init(last(split('=', credentialsPair))!);
+  const [algorithmAndCredentials] = split(',', header);
+  const [, ...credentialsPair] = split(' ', algorithmAndCredentials);
+  return last(split('=', join(' ', credentialsPair)))!;
 }
-
 function getAlorithm(header: string): string {
   return head(split(' ', header))!;
 }
