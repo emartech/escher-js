@@ -34,7 +34,7 @@
     "prettier": "prettier --write src/**/*.js spec/**/*.js src/**/*.ts",
     "code-style": "tslint 'src/**/*.ts'",
     "build": "npm run clear-dist && tsc",
-    "clear-dist": "rm -rf dist/*"
+    "clear-dist": "rimraf dist/*"
   },
   "keywords": [
     "escher",
@@ -60,6 +60,7 @@
     "prettier": "^1.17.1",
     "ramda": "^0.26.1",
     "recursive-readdir": "^2.2.2",
+    "rimraf": "^3.0.2",
     "sinon": "^7.3.2",
     "tape": "^4.10.1",
     "ts-node": "^8.5.4",
