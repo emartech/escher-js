@@ -1,4 +1,4 @@
-import { EscherConfig, EscherRequest, PresignUrl } from '../../interface';
+import { PresignUrlConfig, EscherRequest, PresignUrl } from '../../interface';
 import {
   getUrlWithParsedQuery,
   convertToAwsLongDate,
@@ -37,7 +37,7 @@ export const presignUrl: PresignUrl = (config, url, expiration, date) => {
   );
 };
 
-function getVendorKeyPrefixedQuery({ vendorKey }: EscherConfig, query: ParsedUrlQuery): ParsedUrlQuery {
+function getVendorKeyPrefixedQuery({ vendorKey }: PresignUrlConfig, query: ParsedUrlQuery): ParsedUrlQuery {
   return (pipe as any)(toPairs, map(([key, value]) => [`X-${vendorKey}-${key}`, value]), fromPairs)(query);
 }
 

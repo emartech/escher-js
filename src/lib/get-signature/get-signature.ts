@@ -1,4 +1,10 @@
-import { EscherRequest, EscherRequestBody, EscherRequestHeader, EscherRequestHeaderValue, EscherConfig, SignatureConfig } from '../../interface';
+import {
+  EscherRequest,
+  EscherRequestBody,
+  EscherRequestHeader,
+  EscherRequestHeaderValue,
+  SignatureConfig,
+} from '../../interface';
 import {
   reduce,
   split,
@@ -24,7 +30,7 @@ import { getNormalizedHeaderName } from '../get-normalized-header-name';
 import { canonicalizeQuery } from '../canonicalize-query/canonicalize-query';
 
 export function getSignature(
-  config: SignatureConfig | EscherConfig,
+  config: SignatureConfig,
   date: Date,
   request: EscherRequest,
   body: EscherRequestBody,

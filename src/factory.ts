@@ -7,6 +7,7 @@ import {
   SignatureConfig,
   AuthenticateConfig,
   SignRequestConfg,
+  PresignUrlConfig,
 } from './interface';
 import { v4 } from 'uuid';
 import { pipe, toPairs, map, fromPairs } from 'ramda';
@@ -82,4 +83,20 @@ export const createSignRequestConfg = ({
   credentialScope,
   apiSecret,
   dateHeaderName,
+});
+
+export const createPresignUrlConfig = ({
+  hashAlgo = 'SHA256',
+  algoPrefix = v4(),
+  accessKeyId = v4(),
+  credentialScope = v4(),
+  apiSecret = v4(),
+  vendorKey = v4(),
+}: Partial<PresignUrlConfig> = {}): PresignUrlConfig => ({
+  hashAlgo,
+  algoPrefix,
+  accessKeyId,
+  credentialScope,
+  apiSecret,
+  vendorKey,
 });

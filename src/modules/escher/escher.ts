@@ -25,7 +25,7 @@ export class Escher {
     if (this._useDeprecated) {
       return DeprecatedEscher.create(this._config).preSignUrl(url, expiration);
     }
-    return presignUrl(this._config, url, expiration, new Date());
+    return presignUrl(this._config as any, url, expiration, new Date());
   }
 
   signRequest(requestOptions: EscherRequest, body: EscherRequestBody, headersToSign: string[]): any {

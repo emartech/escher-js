@@ -5,7 +5,7 @@ export type Authenticate = (
   mandatorySignedHeaders: string[] | undefined,
 ) => string;
 
-export type PresignUrl = (config: EscherConfig, url: string, expiration: number, date: Date) => string;
+export type PresignUrl = (config: PresignUrlConfig, url: string, expiration: number, date: Date) => string;
 
 export type SignRequest = (
   config: SignRequestConfg,
@@ -35,6 +35,15 @@ export type SignRequestConfg = {
   credentialScope: string;
   apiSecret: string;
   dateHeaderName: string;
+};
+
+export type PresignUrlConfig = {
+  hashAlgo: HashAlgo;
+  algoPrefix: string;
+  accessKeyId: string;
+  credentialScope: string;
+  apiSecret: string;
+  vendorKey: string;
 };
 
 export type EscherConfig = {
