@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { createAuthenticateConfig } from '../../../../factory';
 import { getSignatureConfigFromHeader } from './get-signature-config-from-header';
-import { AuthenticateConfig } from '../../../../interface';
+import { AuthenticateConfig, HashAlgo } from '../../../../interface';
 
 describe('Get Signature Config From Header', () => {
   it('should returns algo prefix from passwd authetenticate config', () => {
@@ -106,6 +106,6 @@ function createHeader({
   return `${algorithm} Credential=${credentials}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
 }
 
-function createAlgorithmHeader(config: AuthenticateConfig, algorithm: 'SHA256' | 'SHA512'): string {
+function createAlgorithmHeader(config: AuthenticateConfig, algorithm: HashAlgo): string {
   return `${config.algoPrefix}-HMAC-${algorithm}`;
 }

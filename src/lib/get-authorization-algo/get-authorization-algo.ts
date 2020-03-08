@@ -1,4 +1,6 @@
-export type AuthorizationAlgoConfig = { hashAlgo: 'SHA256' | 'SHA512'; algoPrefix: string };
+import { HashAlgo } from '../../interface';
+
+export type AuthorizationAlgoConfig = { hashAlgo: HashAlgo; algoPrefix: string };
 
 export type GetAuthorizationAlgo = (config: AuthorizationAlgoConfig) => string;
 

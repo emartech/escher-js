@@ -28,7 +28,7 @@ export type AuthenticateConfig = {
 };
 
 export type SignRequestConfg = {
-  hashAlgo: 'SHA256' | 'SHA512';
+  hashAlgo: HashAlgo;
   algoPrefix: string;
   authHeaderName: string;
   accessKeyId: string;
@@ -41,7 +41,7 @@ export type EscherConfig = {
   accessKeyId: string;
   algoPrefix: string;
   vendorKey: string;
-  hashAlgo: 'SHA256' | 'SHA512';
+  hashAlgo: HashAlgo;
   credentialScope: string;
   authHeaderName: string;
   dateHeaderName: string;
@@ -74,8 +74,10 @@ export type EscherRequestHeaderName = string;
 export type EscherRequestHeaderValue = string | number;
 
 export type SignatureConfig = {
-  hashAlgo: 'SHA256' | 'SHA512';
+  hashAlgo: HashAlgo;
   algoPrefix: string;
   apiSecret: string;
   credentialScope: string;
 };
+
+export type HashAlgo = 'SHA256' | 'SHA512';
