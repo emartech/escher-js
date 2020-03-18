@@ -1,6 +1,6 @@
 'use strict';
 
-const Utils = require('../lib/utils');
+const Utils = require('../dist/src/deprecated/utils');
 const tape = require('tape');
 
 module.exports = { runUtilTests };
@@ -13,7 +13,7 @@ function runUtilTests() {
       const formattedDateString = Utils.toHeaderDateFormat(new Date(originalDateString));
       t.equal(formattedDateString, originalDateString);
       t.end();
-    }
+    },
   );
 
   tape('Utils #normalizeHeaders should accept headers with integer value', t => {

@@ -15,6 +15,6 @@ getTestCases('escher-test-cases').then(testCases =>
     runSignerTests,
     runCanonicalizerTests,
     runDateHandlingTests,
-    runUtilTests
-  ].forEach(runTests => runTests(testCases))
+    runUtilTests,
+  ].forEach(runTests => runTests(testCases)),
 );

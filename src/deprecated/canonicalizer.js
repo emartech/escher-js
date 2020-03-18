@@ -61,7 +61,7 @@ class Canonicalizer {
       this._canonicalizeHeaders(headers).join('\n'),
       '',
       Object.keys(headers).join(';'),
-      Utils.hash(this._hashAlgo, body)
+      Utils.hash(this._hashAlgo, body),
     ];
     return lines.join('\n');
   }

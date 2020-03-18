@@ -1,7 +1,7 @@
 'use strict';
 
 const tape = require('tape');
-const Canonicalizer = require('../lib/canonicalizer');
+const Canonicalizer = require('../dist/src/deprecated/canonicalizer');
 
 module.exports = { runCanonicalizerTests };
 
@@ -15,7 +15,7 @@ function runCanonicalizeRequestTape({ test, group, file }) {
       const canonicalizedRequest = new Canonicalizer('SHA256').canonicalizeRequest(
         test.request,
         test.request.body,
-        test.headersToSign
+        test.headersToSign,
       );
       t.equal(canonicalizedRequest, test.expected.canonicalizedRequest);
       t.end();
