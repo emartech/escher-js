@@ -1,6 +1,6 @@
 'use strict';
 
-const Signer = require('../lib/signer');
+const Signer = require('../dist/src/deprecated/signer');
 const tape = require('tape');
 
 module.exports = { runSignerTests };
@@ -15,7 +15,7 @@ function runGetStringToSignTape({ test, group, file }) {
       const stringToSign = new Signer(test.config, new Date(test.config.date)).getStringToSign(
         test.request,
         test.request.body,
-        test.headersToSign
+        test.headersToSign,
       );
       t.equal(stringToSign, test.expected.stringToSign);
       t.end();

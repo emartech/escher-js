@@ -19,16 +19,22 @@
       "url": "https://github.com/emartech/escher-js/blob/master/LICENSE"
     }
   ],
-  "main": "lib/escher",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">= 8.9.0"
   },
   "scripts": {
-    "test": "npm run code-style && npm run lint && npm run test:tape",
-    "test:tape": "tape spec/tape-tests.spec.js | faucet",
-    "prettier": "prettier --write lib/**/*.js spec/**/*.js",
-    "lint": "eslint lib/**/*.js spec/**/*.js",
-    "code-style": "prettier --check lib/**/*.js spec/**/*.js"
+    "all-in": "npm run code-style && npm t",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:e2e": "npm run build && tape spec/tape-tests.spec.js | faucet",
+    "test:unit": "JASMINE_CONFIG_PATH=./jasmine.unit.json jasmine",
+    "test:unit:watch": "TS_NODE_TRANSPILE_ONLY=1 onchange 'src/**/*.js' 'src/**/*.ts' -i -d 500 -- npm run test:unit",
+    "test:e2e:watch": "TS_NODE_TRANSPILE_ONLY=1 onchange 'spec/**/*.js' 'src/**/*.js' 'src/**/*.ts' -i -d 500 -- npm run test:e2e",
+    "prettier": "prettier --write src/**/*.js spec/**/*.js src/**/*.ts",
+    "code-style": "tslint 'src/**/*.ts'",
+    "build": "npm run clear-dist && tsc",
+    "clear-dist": "rimraf dist/*"
   },
   "keywords": [
     "escher",
@@ -44,19 +50,28 @@
     "api"
   ],
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-emarsys": "^5.1.0",
-    "eslint-plugin-security": "^1.4.0",
+    "@types/jasmine": "3.5.8",
+    "@types/node": "12.12.14",
+    "@types/ramda": "0.26.43",
+    "@types/uuid": "7.0.0",
     "faucet": "0.0.1",
-    "prettier": "^1.17.1",
-    "ramda": "^0.26.1",
-    "recursive-readdir": "^2.2.2",
-    "sinon": "^7.3.2",
-    "tape": "^4.10.1"
+    "jasmine": "3.5.0",
+    "onchange": "6.1.0",
+    "prettier": "1.19.1",
+    "recursive-readdir": "2.2.2",
+    "rimraf": "3.0.2",
+    "sinon": "9.0.0",
+    "tape": "4.13.2",
+    "ts-node": "8.6.2",
+    "tslint": "6.0.0",
+    "tslint-plugin-prettier": "2.1.0",
+    "uuid": "7.0.2",
+    "typescript": "3.8.3"
   },
   "dependencies": {
-    "dateformat": "3.0.2",
-    "is-number": "3.0.0",
-    "is-string": "1.0.4"
+    "dateformat": "3.0.3",
+    "is-number": "7.0.0",
+    "is-string": "1.0.5",
+    "ramda": "0.27.0"
   }
 }

@@ -22,8 +22,8 @@ class AuthHelper {
       signedHeaders: new Canonicalizer().getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign),
       signature: signer.calculateSignature(
         signer.getStringToSign(requestOptions, requestBody, headersToSign),
-        signer.calculateSigningKey()
-      )
+        signer.calculateSigningKey(),
+      ),
     };
   }
 
@@ -49,7 +49,7 @@ class AuthHelper {
       host: parsedUrl.host,
       method: 'GET',
       url: parsedUrl.path,
-      headers: [['Host', parsedUrl.host]]
+      headers: [['Host', parsedUrl.host]],
     };
 
     const headersToSign = ['host'];
@@ -59,8 +59,8 @@ class AuthHelper {
       Date: Utils.toLongDate(this._currentDate),
       Expires: expires,
       SignedHeaders: Utils.formatSignedHeaders(
-        new Canonicalizer().getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign)
-      )
+        new Canonicalizer().getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign),
+      ),
     };
 
     Object.keys(params).forEach(key => {
@@ -71,7 +71,7 @@ class AuthHelper {
     const signer = new Signer(this._config, this._currentDate);
     const signature = signer.calculateSignature(
       signer.getStringToSign(requestOptions, 'UNSIGNED-PAYLOAD', headersToSign),
-      signer.calculateSigningKey()
+      signer.calculateSigningKey(),
     );
     return Utils.appendQueryParamToUrl(requestUrl, this._getParamKey('Signature'), signature);
   }
@@ -103,7 +103,7 @@ class AuthHelper {
         signedHeadersRegExpDefinition +
         ', Signature=' +
         signatureRegExpDefinition +
-        '$'
+        '$',
     );
     const matches = authHeader.match(regex);
 
@@ -118,7 +118,7 @@ class AuthHelper {
       hashAlgo: matches[1],
       accessKeyId: matches[2],
       apiSecret: keyDB(matches[2]),
-      credentialScope: matches[4]
+      credentialScope: matches[4],
     };
 
     if (typeof parsedConfig.apiSecret !== 'string') {
@@ -129,7 +129,7 @@ class AuthHelper {
       shortDate: matches[3],
       config: parsedConfig,
       signedHeaders: matches[5].split(';'),
-      signature: matches[6]
+      signature: matches[6],
     };
   }
 
@@ -144,7 +144,7 @@ class AuthHelper {
       hashAlgo: this._getQueryPart(query, 'Algorithm').match(new RegExp(this._algoRegExp()))[1],
       accessKeyId: credentialParts[1],
       apiSecret: keyDB(credentialParts[1]),
-      credentialScope: credentialParts[3]
+      credentialScope: credentialParts[3],
     };
 
     if (typeof parsedConfig.apiSecret !== 'string') {
@@ -156,7 +156,7 @@ class AuthHelper {
       config: parsedConfig,
       signedHeaders: this._getQueryPart(query, 'SignedHeaders').split(';'),
       signature: this._getQueryPart(query, 'Signature'),
-      expires: this._getQueryPart(query, 'Expires')
+      expires: this._getQueryPart(query, 'Expires'),
     };
   }
 }

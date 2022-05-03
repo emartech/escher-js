@@ -7,7 +7,7 @@ const Utils = require('./utils');
 const allowedHashAlgos = ['SHA256', 'SHA512'];
 const allowedRequestMethods = ['OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'PATCH', 'CONNECT'];
 
-class Escher {
+class DeprecatedEscher {
   constructor(configToMerge) {
     const config = Utils.mergeOptions(
       {
@@ -17,9 +17,9 @@ class Escher {
         credentialScope: 'escher_request',
         authHeaderName: 'X-Escher-Auth',
         dateHeaderName: 'X-Escher-Date',
-        clockSkew: 300
+        clockSkew: 300,
       },
-      configToMerge
+      configToMerge,
     );
 
     // validate the configuration
@@ -55,7 +55,7 @@ class Escher {
     Utils.addDefaultHeaders(defaultHeaders, requestOptions);
     requestOptions.headers.push([
       this._config.authHeaderName.toLowerCase(),
-      new AuthHelper(this._config, currentDate).generateHeader(requestOptions, body, headersToSign)
+      new AuthHelper(this._config, currentDate).generateHeader(requestOptions, body, headersToSign),
     ]);
     return requestOptions;
   }
@@ -78,7 +78,7 @@ class Escher {
       requestBody = 'UNSIGNED-PAYLOAD';
       expires = parseInt(uri.query[this._queryParamKey('Expires')]);
       const canonicalizedQueryString = new Canonicalizer().canonicalizeQuery(
-        Utils.filterKeysFrom(uri.query, [this._queryParamKey('Signature')])
+        Utils.filterKeysFrom(uri.query, [this._queryParamKey('Signature')]),
       );
       request.url = uri.pathname + (canonicalizedQueryString ? '?' + canonicalizedQueryString : '');
     } else {
@@ -89,7 +89,7 @@ class Escher {
       parsedAuthParts = new AuthHelper(this._config, currentDate).parseAuthHeader(
         Utils.getHeader(request, this._config.authHeaderName),
         requestDate,
-        keyDB
+        keyDB,
       );
       requestBody = request.body || '';
       expires = 0;
@@ -133,7 +133,7 @@ class Escher {
     const generatedAuthParts = new AuthHelper(parsedAuthParts.config, requestDate).buildAuthParts(
       request,
       requestBody,
-      parsedAuthParts.signedHeaders
+      parsedAuthParts.signedHeaders,
     );
     if (!Utils.fixedTimeComparison(parsedAuthParts.signature, generatedAuthParts.signature)) {
       throw new Error('The signatures do not match');
@@ -186,8 +186,8 @@ class Escher {
   }
 
   static create(configToMerge) {
-    return new Escher(configToMerge);
+    return new DeprecatedEscher(configToMerge);
   }
 }
 
-module.exports = Escher;
+module.exports = DeprecatedEscher;
