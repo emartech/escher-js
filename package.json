@@ -1,5 +1,5 @@
 {
-  "name": "escher-auth",
+  "name": "@emartech/escher",
   "description": "Library for HTTP request signing (JavaScript implementation)",
   "version": "3.2.4",
   "homepage": "https://github.com/emartech/escher-js",
@@ -19,16 +19,17 @@
       "url": "https://github.com/emartech/escher-js/blob/master/LICENSE"
     }
   ],
-  "main": "lib/escher",
+  "main": "dist/escher",
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">= 14"
   },
   "scripts": {
+    "build": "rm -rf dist && tsc --project ./tsconfig.json",
     "test": "npm run code-style && npm run lint && npm run test:tape",
-    "test:tape": "tape spec/tape-tests.spec.js | faucet",
-    "prettier": "prettier --write lib/**/*.js spec/**/*.js",
-    "lint": "eslint lib/**/*.js spec/**/*.js",
-    "code-style": "prettier --check lib/**/*.js spec/**/*.js"
+    "test:tape": "tape spec/tape-tests.spec.js --require ts-node/register | faucet",
+    "prettier": "prettier --write src/**/*.js spec/**/*.js",
+    "lint": "eslint src/**/*.js spec/**/*.js",
+    "code-style": "prettier --check src/**/*.js spec/**/*.js"
   },
   "keywords": [
     "escher",
@@ -44,6 +45,10 @@
     "api"
   ],
   "devDependencies": {
+    "@types/dateformat": "^5.0.0",
+    "@types/is-number": "^7.0.3",
+    "@types/is-string": "^1.0.0",
+    "@types/node": "^18.7.16",
     "eslint": "^5.16.0",
     "eslint-config-emarsys": "^5.1.0",
     "eslint-plugin-security": "^1.4.0",
@@ -52,11 +57,13 @@
     "ramda": "^0.26.1",
     "recursive-readdir": "^2.2.2",
     "sinon": "^7.3.2",
-    "tape": "^4.10.1"
+    "tape": "^4.10.1",
+    "ts-node": "10.9.1",
+    "typescript": "4.8.2"
   },
   "dependencies": {
-    "dateformat": "3.0.2",
-    "is-number": "3.0.0",
-    "is-string": "1.0.4"
+    "dateformat": "4.6.3",
+    "is-number": "7.0.0",
+    "is-string": "1.0.7"
   }
 }

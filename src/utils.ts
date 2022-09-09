@@ -1,15 +1,14 @@
-'use strict';
-
-const crypto = require('crypto');
-const url = require('url');
-const formatDate = require('dateformat');
-const isNumber = require('is-number');
-const isString = require('is-string');
+import { createHmac, createHash, timingSafeEqual } from 'crypto';
+import { parse } from 'url';
+import formatDate from 'dateformat';
+import isNumber from 'is-number';
+import isString from 'is-string';
+import { RequestOptions } from './config';
 
 const longDateRegExp = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
 
-class Utils {
-  static mergeOptions(optionsBase, optionsToMerge) {
+export class Utils {
+  static mergeOptions(optionsBase: any, optionsToMerge: any) {
     const resultOptions = optionsBase;
     if (optionsToMerge) {
       Object.keys(optionsToMerge).forEach(key => {
@@ -20,8 +19,8 @@ class Utils {
     return resultOptions;
   }
 
-  static filterKeysFrom(hash, keysToFilter) {
-    const result = {};
+  static filterKeysFrom(hash: Record<string, string>, keysToFilter: string[]) {
+    const result: Record<string, string> = {};
     Object.keys(hash).forEach(key => {
       if (!keysToFilter.includes(key)) {
         result[key] = hash[key];
@@ -31,7 +30,7 @@ class Utils {
     return result;
   }
 
-  static parseLongDate(longDate) {
+  static parseLongDate(longDate: string) {
     const m = longDate.match(longDateRegExp);
     if (!m) {
       throw new Error('Invalid date header, expected format is: 20151104T092022Z');
@@ -43,7 +42,7 @@ class Utils {
   /**
    * Converts a date or a parsable date string to the AWS long date format
    */
-  static toLongDate(date) {
+  static toLongDate(date: Date) {
     return date
       .toISOString()
       .replace(/-/g, '')
@@ -54,23 +53,22 @@ class Utils {
   /**
    * Converts a date or a parsable date string to the AWS short date format
    */
-  static toShortDate(date) {
+  static toShortDate(date: Date) {
     return Utils.toLongDate(date).substring(0, 8);
   }
 
-  static hash(hashAlgo, string) {
-    return crypto
-      .createHash(hashAlgo)
+  static hash(hashAlgo: string, string: string) {
+    return createHash(hashAlgo)
       .update(string, 'utf8')
       .digest('hex');
   }
 
-  static hmac(hashAlgo, key, data, isHex) {
-    const hmac = crypto.createHmac(hashAlgo, key).update(data, 'utf8');
+  static hmac(hashAlgo: string, key: string, data: any, isHex: boolean) {
+    const hmac = createHmac(hashAlgo, key).update(data, 'utf8');
     return isHex ? hmac.digest('hex') : hmac.digest();
   }
 
-  static normalizeWhiteSpacesInHeaderValue(value) {
+  static normalizeWhiteSpacesInHeaderValue(value: string) {
     return value
       .trim()
       .split('"')
@@ -81,8 +79,8 @@ class Utils {
       .join('"');
   }
 
-  static sortMap(headers) {
-    const results = {};
+  static sortMap(headers: Record<string, string>) {
+    const results: Record<string, string> = {};
     Object.keys(headers)
       .sort()
       .forEach(key => {
@@ -92,10 +90,10 @@ class Utils {
     return results;
   }
 
-  static normalizeHeaders(headers) {
-    const results = {};
+  static normalizeHeaders(headers: Record<string, string> | string[][]) {
+    const results: Record<string, string> = {};
 
-    const addKeyToResult = (key, value) => {
+    const addKeyToResult = (key: string, value: string) => {
       if (!Utils.isValidHeaderValue(value)) {
         throw new Error('Header value should be string or number [' + key + ']');
       }
@@ -118,21 +116,21 @@ class Utils {
     return Utils.sortMap(results);
   }
 
-  static isValidHeaderValue(value) {
+  static isValidHeaderValue(value: any) {
     return isNumber(value) || isString(value);
   }
 
-  static parseUrl(urlToParse, parseQueryString, slashesDenoteHost) {
-    const parsedUrl = url.parse(urlToParse, parseQueryString, slashesDenoteHost);
+  static parseUrl(urlToParse: string, parseQueryString: boolean, slashesDenoteHost?: boolean) {
+    const parsedUrl = parse(urlToParse, parseQueryString, slashesDenoteHost);
     parsedUrl.query = parsedUrl.query || {};
     return parsedUrl;
   }
 
-  static toHeaderDateFormat(date) {
+  static toHeaderDateFormat(date: Date) {
     return formatDate(date, 'GMT:ddd, dd mmm yyyy HH:MM:ss Z', true);
   }
 
-  static getHeader(request, headerName) {
+  static getHeader(request: any, headerName: string) {
     headerName = headerName.toLowerCase();
     if (request.headers instanceof Array) {
       for (let i = 0, j = request.headers.length; i < j; i++) {
@@ -149,7 +147,7 @@ class Utils {
     throw new Error('The ' + headerName + ' header is missing');
   }
 
-  static addDefaultHeaders(defaultHeaders, requestOptions) {
+  static addDefaultHeaders(defaultHeaders: Record<string, string>, requestOptions: RequestOptions) {
     Object.keys(defaultHeaders).forEach(defaultHeaderKey => {
       let found = false;
       Object.keys(Utils.normalizeHeaders(requestOptions.headers)).forEach(headerKey => {
@@ -164,25 +162,23 @@ class Utils {
     });
   }
 
-  static fixedTimeComparison(a, b) {
+  static fixedTimeComparison(a: any, b: any) {
     try {
-      return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+      return timingSafeEqual(Buffer.from(a), Buffer.from(b));
     } catch (err) {
       return false;
     }
   }
 
-  static appendQueryParamToUrl(url, key, value) {
+  static appendQueryParamToUrl(url: string, key: string, value: any) {
     const separator = url.includes('?') ? '&' : '?';
     return url + separator + encodeURIComponent(key) + '=' + encodeURIComponent(value);
   }
 
-  static formatSignedHeaders(signedHeaders) {
+  static formatSignedHeaders(signedHeaders: string[]) {
     return signedHeaders
       .map(signedHeader => signedHeader.toLowerCase())
       .sort()
       .join(';');
   }
 }
-
-module.exports = Utils;

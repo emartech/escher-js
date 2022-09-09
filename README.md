@@ -9,6 +9,6 @@ More details are available at our [Escher documentation site](http://escherauth.
 
 ## Development
 
-The [Test Cases](https://github.com/EscherAuth/test-cases) are included as git submodule.
+The [Test Cases](https://github.com/EscherAuth/test-cases) are included as a git submodule.
 
-Don't forget to use the `git pull --recurse-submodules` and the `git clone --recurse-submodules` to pull and clone the remote repository.
+Don't forget to use the `git submodule init` and the `git submodule update` to pull and clone the testcases.

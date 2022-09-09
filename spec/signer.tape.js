@@ -1,6 +1,6 @@
 'use strict';
 
-const Signer = require('../lib/signer');
+const { Signer } = require('../src/signer');
 const tape = require('tape');
 
 module.exports = { runSignerTests };

@@ -1,25 +1,27 @@
-'use strict';
-
-const Signer = require('./signer');
-const Canonicalizer = require('./canonicalizer');
-const Utils = require('./utils');
+import { Signer } from './signer';
+import { Canonicalizer } from './canonicalizer';
+import { Utils } from './utils';
+import { BaseConfig, KeyDB, ParsedConfig, PartsConfig, RequestOptions } from './config';
 
 const credentialRegExpDefinition = '([A-Za-z0-9\\-_]+)/([0-9]{8})/([A-Za-z0-9\\-_ /]+)';
 const signedHeadersRegExpDefinition = '([A-Za-z\\-;]+)';
 const signatureRegExpDefinition = '([0-9a-f]+)';
 
-class AuthHelper {
-  constructor(config, currentDate) {
+export class AuthHelper {
+  private readonly _config: BaseConfig;
+  private readonly _currentDate: Date;
+
+  constructor(config: BaseConfig, currentDate: Date) {
     this._config = config;
     this._currentDate = currentDate;
   }
 
-  buildAuthParts(requestOptions, requestBody, headersToSign) {
+  buildAuthParts(requestOptions: RequestOptions, requestBody: any, headersToSign: string[]) {
     const signer = new Signer(this._config, this._currentDate);
 
     return {
       shortDate: Utils.toShortDate(this._currentDate),
-      signedHeaders: new Canonicalizer().getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign),
+      signedHeaders: new Canonicalizer(this._config.hashAlgo).getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign),
       signature: signer.calculateSignature(
         signer.getStringToSign(requestOptions, requestBody, headersToSign),
         signer.calculateSigningKey()
@@ -27,7 +29,7 @@ class AuthHelper {
     };
   }
 
-  _buildHeader(authParts) {
+  _buildHeader(authParts: any) {
     return (
       [this._config.algoPrefix, 'HMAC', this._config.hashAlgo].join('-') +
       ' Credential=' +
@@ -39,11 +41,11 @@ class AuthHelper {
     );
   }
 
-  generateHeader(requestOptions, body, headersToSign) {
+  generateHeader(requestOptions: RequestOptions, body: any, headersToSign: string[]) {
     return this._buildHeader(this.buildAuthParts(requestOptions, body, headersToSign));
   }
 
-  generatePreSignedUrl(requestUrl, expires) {
+  generatePreSignedUrl(requestUrl: string, expires: number) {
     const parsedUrl = Utils.parseUrl(requestUrl, true); // TODO apply fixed parse here too (?)
     const requestOptions = {
       host: parsedUrl.host,
@@ -53,13 +55,13 @@ class AuthHelper {
     };
 
     const headersToSign = ['host'];
-    const params = {
+    const params: Record<string, string | number> = {
       Algorithm: [this._config.algoPrefix, 'HMAC', this._config.hashAlgo].join('-'),
       Credentials: this._generateFullCredentials(),
       Date: Utils.toLongDate(this._currentDate),
       Expires: expires,
       SignedHeaders: Utils.formatSignedHeaders(
-        new Canonicalizer().getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign)
+        new Canonicalizer(this._config.hashAlgo).getCanonicalizedSignedHeaders(requestOptions.headers as any, headersToSign)
       )
     };
 
@@ -76,7 +78,7 @@ class AuthHelper {
     return Utils.appendQueryParamToUrl(requestUrl, this._getParamKey('Signature'), signature);
   }
 
-  _getParamKey(paramName) {
+  _getParamKey(paramName: string) {
     return ['X', this._config.vendorKey, paramName].join('-');
   }
 
@@ -88,11 +90,11 @@ class AuthHelper {
     return this._config.algoPrefix + '-HMAC-([A-Za-z0-9\\,]+)';
   }
 
-  _getQueryPart(query, key) {
+  _getQueryPart(query: Record<string, string>, key: string): string {
     return query['X-' + this._config.vendorKey + '-' + key] || '';
   }
 
-  parseAuthHeader(authHeader, requestDate, keyDB) {
+  parseAuthHeader(authHeader: string, requestDate: Date, keyDB: KeyDB): PartsConfig {
     // eslint-disable-next-line security/detect-non-literal-regexp
     const regex = new RegExp(
       '^' +
@@ -111,7 +113,7 @@ class AuthHelper {
       throw new Error('Invalid auth header format');
     }
 
-    const parsedConfig = {
+    const parsedConfig: ParsedConfig = {
       vendorKey: this._config.vendorKey,
       algoPrefix: this._config.algoPrefix,
       date: requestDate,
@@ -133,15 +135,15 @@ class AuthHelper {
     };
   }
 
-  parseFromQuery(query, requestDate, keyDB) {
+  parseFromQuery(query: Record<string, string>, requestDate: any, keyDB: any): PartsConfig {
     // eslint-disable-next-line security/detect-non-literal-regexp
-    const credentialParts = this._getQueryPart(query, 'Credentials').match(new RegExp(credentialRegExpDefinition));
-    const parsedConfig = {
+    const credentialParts = this._getQueryPart(query, 'Credentials').match(new RegExp(credentialRegExpDefinition)) as RegExpMatchArray;
+    const parsedConfig: ParsedConfig = {
       vendorKey: this._config.vendorKey,
       algoPrefix: this._config.algoPrefix,
       date: requestDate,
       // eslint-disable-next-line security/detect-non-literal-regexp
-      hashAlgo: this._getQueryPart(query, 'Algorithm').match(new RegExp(this._algoRegExp()))[1],
+      hashAlgo: (this._getQueryPart(query, 'Algorithm').match(new RegExp(this._algoRegExp())) as RegExpMatchArray)[1],
       accessKeyId: credentialParts[1],
       apiSecret: keyDB(credentialParts[1]),
       credentialScope: credentialParts[3]
@@ -160,5 +162,3 @@ class AuthHelper {
     };
   }
 }
-
-module.exports = AuthHelper;

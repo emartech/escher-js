@@ -2,8 +2,8 @@
 
 const querystring = require('querystring');
 const tape = require('tape');
-const Escher = require('../lib/escher');
-const Utils = require('../lib/utils');
+const { Escher } = require('../src/escher');
+const { Utils } = require('../src/utils');
 const { timeDecorator } = require('./decorators');
 const { clone } = require('ramda');
 

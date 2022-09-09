@@ -1,14 +1,16 @@
-'use strict';
-
-const AuthHelper = require('./authhelper');
-const Canonicalizer = require('./canonicalizer');
-const Utils = require('./utils');
+import { AuthHelper } from './authhelper';
+import { Canonicalizer } from './canonicalizer';
+import { Utils } from './utils';
+import { Config, KeyDB } from './config';
+import { RequestOptions } from './config';
 
 const allowedHashAlgos = ['SHA256', 'SHA512'];
 const allowedRequestMethods = ['OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'PATCH', 'CONNECT'];
 
-class Escher {
-  constructor(configToMerge) {
+export class Escher {
+  private _config: Config;
+
+  constructor(configToMerge: Config) {
     const config = Utils.mergeOptions(
       {
         algoPrefix: 'ESR',
@@ -38,12 +40,12 @@ class Escher {
     this._config = config;
   }
 
-  preSignUrl(url, expires) {
+  preSignUrl(url: string, expires: number) {
     const currentDate = new Date();
     return new AuthHelper(this._config, currentDate).generatePreSignedUrl(url, expires);
   }
 
-  signRequest(requestOptions, body, headersToSign) {
+  signRequest(requestOptions: RequestOptions, body: any, headersToSign: string[]) {
     const currentDate = new Date();
     this.validateRequest(requestOptions, body);
     headersToSign = ['host', this._config.dateHeaderName.toLowerCase()].concat(headersToSign || []);
@@ -60,25 +62,26 @@ class Escher {
     return requestOptions;
   }
 
-  authenticate(request, keyDB, mandatorySignedHeaders) {
+  authenticate(request: RequestOptions, keyDB: KeyDB, mandatorySignedHeaders: string[] = []) {
     const currentDate = new Date();
     this.validateRequest(request);
     this.validateMandatorySignedHeaders(mandatorySignedHeaders);
     const uri = Utils.parseUrl(request.url, true);
+    const query = uri.query as Record<string, string>
     const isPresignedUrl =
-      Object.prototype.hasOwnProperty.call(uri.query, this._queryParamKey('Signature')) && request.method === 'GET';
+      Object.prototype.hasOwnProperty.call(query, this._queryParamKey('Signature')) && request.method === 'GET';
 
     let requestDate;
-    let parsedAuthParts;
+    let parsedAuthParts: any;
     let requestBody;
     let expires;
     if (isPresignedUrl) {
-      requestDate = Utils.parseLongDate(uri.query[this._queryParamKey('Date')]);
-      parsedAuthParts = new AuthHelper(this._config, currentDate).parseFromQuery(uri.query, requestDate, keyDB);
+      requestDate = Utils.parseLongDate(query[this._queryParamKey('Date')]);
+      parsedAuthParts = new AuthHelper(this._config, currentDate).parseFromQuery(query, requestDate, keyDB);
       requestBody = 'UNSIGNED-PAYLOAD';
-      expires = parseInt(uri.query[this._queryParamKey('Expires')]);
-      const canonicalizedQueryString = new Canonicalizer().canonicalizeQuery(
-        Utils.filterKeysFrom(uri.query, [this._queryParamKey('Signature')])
+      expires = parseInt(query[this._queryParamKey('Expires')]);
+      const canonicalizedQueryString = new Canonicalizer(this._config.hashAlgo).canonicalizeQuery(
+        Utils.filterKeysFrom(query, [this._queryParamKey('Signature')])
       );
       request.url = uri.pathname + (canonicalizedQueryString ? '?' + canonicalizedQueryString : '');
     } else {
@@ -142,18 +145,18 @@ class Escher {
     return parsedAuthParts.config.accessKeyId;
   }
 
-  _isDateWithinRange(requestTime, currentTime, expires) {
+  _isDateWithinRange(requestTime: number, currentTime: number, expires: number) {
     return (
       requestTime - this._config.clockSkew * 1000 <= currentTime &&
       currentTime < requestTime + expires * 1000 + this._config.clockSkew * 1000
     );
   }
 
-  _queryParamKey(param) {
+  _queryParamKey(param: string) {
     return 'X-' + this._config.vendorKey + '-' + param;
   }
 
-  validateRequest(request, body) {
+  validateRequest(request: RequestOptions, body?: any) {
     if (typeof request.method !== 'string' || !allowedRequestMethods.includes(request.method)) {
       throw new Error('The request method is invalid');
     }
@@ -171,7 +174,7 @@ class Escher {
     }
   }
 
-  validateMandatorySignedHeaders(mandatorySignedHeaders) {
+  validateMandatorySignedHeaders(mandatorySignedHeaders: string[]) {
     if (typeof mandatorySignedHeaders === 'undefined') {
       return;
     }
@@ -185,9 +188,7 @@ class Escher {
     });
   }
 
-  static create(configToMerge) {
+  static create(configToMerge: Config) {
     return new Escher(configToMerge);
   }
 }
-
-module.exports = Escher;
