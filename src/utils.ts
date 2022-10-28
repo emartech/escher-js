@@ -11,7 +11,7 @@ export class Utils {
   static mergeOptions(optionsBase: any, optionsToMerge: any) {
     const resultOptions = optionsBase;
     if (optionsToMerge) {
-      Object.keys(optionsToMerge).forEach(key => {
+      Object.keys(optionsToMerge).forEach((key) => {
         resultOptions[key] = optionsToMerge[key];
       });
     }
@@ -21,7 +21,7 @@ export class Utils {
 
   static filterKeysFrom(hash: Record<string, string>, keysToFilter: string[]) {
     const result: Record<string, string> = {};
-    Object.keys(hash).forEach(key => {
+    Object.keys(hash).forEach((key) => {
       if (!keysToFilter.includes(key)) {
         result[key] = hash[key];
       }
@@ -43,11 +43,7 @@ export class Utils {
    * Converts a date or a parsable date string to the AWS long date format
    */
   static toLongDate(date: Date) {
-    return date
-      .toISOString()
-      .replace(/-/g, '')
-      .replace(/:/g, '')
-      .replace(/\..*Z/, 'Z');
+    return date.toISOString().replace(/-/g, '').replace(/:/g, '').replace(/\..*Z/, 'Z');
   }
 
   /**
@@ -58,9 +54,7 @@ export class Utils {
   }
 
   static hash(hashAlgo: string, string: string) {
-    return createHash(hashAlgo)
-      .update(string, 'utf8')
-      .digest('hex');
+    return createHash(hashAlgo).update(string, 'utf8').digest('hex');
   }
 
   static hmac(hashAlgo: string, key: string, data: any, isHex: boolean) {
@@ -83,7 +77,7 @@ export class Utils {
     const results: Record<string, string> = {};
     Object.keys(headers)
       .sort()
-      .forEach(key => {
+      .forEach((key) => {
         results[key] = headers[key];
       });
 
@@ -108,9 +102,9 @@ export class Utils {
     };
 
     if (Array.isArray(headers)) {
-      headers.forEach(header => addKeyToResult(header[0], header[1]));
+      headers.forEach((header) => addKeyToResult(header[0], header[1]));
     } else {
-      Object.keys(headers).forEach(key => addKeyToResult(key, headers[key]));
+      Object.keys(headers).forEach((key) => addKeyToResult(key, headers[key]));
     }
 
     return Utils.sortMap(results);
@@ -148,9 +142,9 @@ export class Utils {
   }
 
   static addDefaultHeaders(defaultHeaders: Record<string, string>, requestOptions: RequestOptions) {
-    Object.keys(defaultHeaders).forEach(defaultHeaderKey => {
+    Object.keys(defaultHeaders).forEach((defaultHeaderKey) => {
       let found = false;
-      Object.keys(Utils.normalizeHeaders(requestOptions.headers)).forEach(headerKey => {
+      Object.keys(Utils.normalizeHeaders(requestOptions.headers)).forEach((headerKey) => {
         if (headerKey.toLowerCase() === defaultHeaderKey.toLowerCase()) {
           found = true;
         }
@@ -177,7 +171,7 @@ export class Utils {
 
   static formatSignedHeaders(signedHeaders: string[]) {
     return signedHeaders
-      .map(signedHeader => signedHeader.toLowerCase())
+      .map((signedHeader) => signedHeader.toLowerCase())
       .sort()
       .join(';');
   }

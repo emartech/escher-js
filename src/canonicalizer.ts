@@ -9,27 +9,24 @@ export class Canonicalizer {
   }
 
   _canonicalizeHeaders(headers: Record<string, string>) {
-    return Object.keys(headers).map(key => key + ':' + headers[key]);
+    return Object.keys(headers).map((key) => key + ':' + headers[key]);
   }
 
   canonicalizeQuery(query: Record<string, string | string[]>) {
     const encodeComponent = (component: string) =>
-      encodeURIComponent(component)
-        .replace(/'/g, '%27')
-        .replace(/\(/g, '%28')
-        .replace(/\)/g, '%29');
+      encodeURIComponent(component).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29');
 
     const join = (key: string, value: string) => encodeComponent(key) + '=' + encodeComponent(value);
 
     return Object.keys(query)
-      .map(key => {
+      .map((key) => {
         const value = query[key];
         if (typeof value === 'string') {
           return join(key, value);
         }
         return value
           .sort()
-          .map(oneValue => join(key, oneValue))
+          .map((oneValue) => join(key, oneValue))
           .join('&');
       })
       .sort()
@@ -38,9 +35,9 @@ export class Canonicalizer {
 
   _filterHeaders(headers: Record<string, string>, headersToSign: string[]) {
     const filteredHeaders: Record<string, string> = {};
-    const normalizedSignedHeaders = headersToSign.map(header => header.toLowerCase());
+    const normalizedSignedHeaders = headersToSign.map((header) => header.toLowerCase());
 
-    Object.keys(headers).forEach(headerName => {
+    Object.keys(headers).forEach((headerName) => {
       if (normalizedSignedHeaders.includes(headerName)) {
         filteredHeaders[headerName] = headers[headerName];
       }

@@ -1,5 +1,3 @@
-'use strict';
-
 const { Escher } = require('../src/escher');
 const { Utils } = require('../src/utils');
 const tape = require('tape');
@@ -74,7 +72,10 @@ function runReverseSignRequestTape({ test, group }) {
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
         const key = new Escher(test.config).authenticate(
           test.expected.request,
-          createKeyDb([[test.config.accessKeyId, test.config.apiSecret], ['some_other_apikey', 'some_other_secret']])
+          createKeyDb([
+            [test.config.accessKeyId, test.config.apiSecret],
+            ['some_other_apikey', 'some_other_secret']
+          ])
         );
         t.equal(key, test.config.accessKeyId);
         t.end();
@@ -88,13 +89,13 @@ function createTitle(title, group, method, file) {
 }
 
 function runEscherCreateTape() {
-  tape('should return an instance of Escher after new keyword', t => {
+  tape('should return an instance of Escher after new keyword', (t) => {
     const escher = new Escher();
     t.equal(escher instanceof Escher, true);
     t.end();
   });
 
-  tape('should return an instance of Escher with create method', t => {
+  tape('should return an instance of Escher with create method', (t) => {
     const escher = Escher.create();
     t.equal(escher instanceof Escher, true);
     t.end();
@@ -102,7 +103,7 @@ function runEscherCreateTape() {
 }
 
 function createKeyDb(keyDb) {
-  return key => {
+  return (key) => {
     for (let i = 0; i < keyDb.length; i++) {
       if (keyDb[i][0] === key) {
         return keyDb[i][1];

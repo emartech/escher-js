@@ -45,4 +45,5 @@ export interface RequestOptions {
   body?: string | Buffer;
 }
 
+// eslint-disable-next-line no-unused-vars
 export type KeyDB = (key: string) => string;

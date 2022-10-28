@@ -1,5 +1,3 @@
-'use strict';
-
 const tape = require('tape');
 const { Canonicalizer } = require('../src/canonicalizer');
 
@@ -11,7 +9,7 @@ function runCanonicalizerTests(testCases) {
 
 function runCanonicalizeRequestTape({ test, group, file }) {
   if (test.expected.canonicalizedRequest) {
-    tape(`[${group}] ${file} | Canonicalizer #canonicalizeRequest`, t => {
+    tape(`[${group}] ${file} | Canonicalizer #canonicalizeRequest`, (t) => {
       const canonicalizedRequest = new Canonicalizer('SHA256').canonicalizeRequest(
         test.request,
         test.request.body,

@@ -21,7 +21,10 @@ export class AuthHelper {
 
     return {
       shortDate: Utils.toShortDate(this._currentDate),
-      signedHeaders: new Canonicalizer(this._config.hashAlgo).getCanonicalizedSignedHeaders(requestOptions.headers, headersToSign),
+      signedHeaders: new Canonicalizer(this._config.hashAlgo).getCanonicalizedSignedHeaders(
+        requestOptions.headers,
+        headersToSign
+      ),
       signature: signer.calculateSignature(
         signer.getStringToSign(requestOptions, requestBody, headersToSign),
         signer.calculateSigningKey()
@@ -61,11 +64,14 @@ export class AuthHelper {
       Date: Utils.toLongDate(this._currentDate),
       Expires: expires,
       SignedHeaders: Utils.formatSignedHeaders(
-        new Canonicalizer(this._config.hashAlgo).getCanonicalizedSignedHeaders(requestOptions.headers as any, headersToSign)
+        new Canonicalizer(this._config.hashAlgo).getCanonicalizedSignedHeaders(
+          requestOptions.headers as any,
+          headersToSign
+        )
       )
     };
 
-    Object.keys(params).forEach(key => {
+    Object.keys(params).forEach((key) => {
       requestUrl = Utils.appendQueryParamToUrl(requestUrl, this._getParamKey(key), params[key]);
     });
 
@@ -136,13 +142,13 @@ export class AuthHelper {
   }
 
   parseFromQuery(query: Record<string, string>, requestDate: any, keyDB: any): PartsConfig {
-    // eslint-disable-next-line security/detect-non-literal-regexp
-    const credentialParts = this._getQueryPart(query, 'Credentials').match(new RegExp(credentialRegExpDefinition)) as RegExpMatchArray;
+    const credentialParts = this._getQueryPart(query, 'Credentials').match(
+      new RegExp(credentialRegExpDefinition)
+    ) as RegExpMatchArray;
     const parsedConfig: ParsedConfig = {
       vendorKey: this._config.vendorKey,
       algoPrefix: this._config.algoPrefix,
       date: requestDate,
-      // eslint-disable-next-line security/detect-non-literal-regexp
       hashAlgo: (this._getQueryPart(query, 'Algorithm').match(new RegExp(this._algoRegExp())) as RegExpMatchArray)[1],
       accessKeyId: credentialParts[1],
       apiSecret: keyDB(credentialParts[1]),

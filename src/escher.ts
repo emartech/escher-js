@@ -7,10 +7,19 @@ import { RequestOptions } from './config';
 const allowedHashAlgos = ['SHA256', 'SHA512'];
 const allowedRequestMethods = ['OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'PATCH', 'CONNECT'];
 
+export interface EscherConfig {
+  credentialScope: string;
+  apiSecret: string;
+  accessKeyId: string;
+  vendorKey?: string;
+  algoPrefix?: string;
+  hashAlgo?: string;
+}
+
 export class Escher {
   private _config: Config;
 
-  constructor(configToMerge: Config) {
+  constructor(configToMerge: EscherConfig) {
     const config = Utils.mergeOptions(
       {
         algoPrefix: 'ESR',
@@ -67,7 +76,7 @@ export class Escher {
     this.validateRequest(request);
     this.validateMandatorySignedHeaders(mandatorySignedHeaders);
     const uri = Utils.parseUrl(request.url, true);
-    const query = uri.query as Record<string, string>
+    const query = uri.query as Record<string, string>;
     const isPresignedUrl =
       Object.prototype.hasOwnProperty.call(query, this._queryParamKey('Signature')) && request.method === 'GET';
 
@@ -109,7 +118,7 @@ export class Escher {
     if (!isPresignedUrl) {
       mandatorySignedHeaders.push(this._config.dateHeaderName.toLowerCase());
     }
-    mandatorySignedHeaders.forEach(mandatoryHeader => {
+    mandatorySignedHeaders.forEach((mandatoryHeader) => {
       if (!parsedAuthParts.signedHeaders.includes(mandatoryHeader.toLowerCase())) {
         throw new Error('The ' + mandatoryHeader + ' header is not signed');
       }
@@ -181,7 +190,7 @@ export class Escher {
     if (!Array.isArray(mandatorySignedHeaders)) {
       throw new Error('The mandatorySignedHeaders parameter must be undefined or array of strings');
     }
-    mandatorySignedHeaders.forEach(mandatorySignedHeader => {
+    mandatorySignedHeaders.forEach((mandatorySignedHeader) => {
       if (typeof mandatorySignedHeader !== 'string') {
         throw new Error('The mandatorySignedHeaders parameter must be undefined or array of strings');
       }

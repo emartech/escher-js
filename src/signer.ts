@@ -30,7 +30,7 @@ export class Signer {
 
     let signingKey = this._config.algoPrefix + this._config.apiSecret;
     const authKeyParts = [Utils.toShortDate(this._currentDate)].concat(this._config.credentialScope.split(/\//g));
-    authKeyParts.forEach(data => {
+    authKeyParts.forEach((data) => {
       signingKey = Utils.hmac(this._config.hashAlgo, signingKey, data, false) as string;
     });
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const querystring = require('querystring');
 const tape = require('tape');
 const { Escher } = require('../src/escher');
