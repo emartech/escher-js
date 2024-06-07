@@ -6,12 +6,7 @@ const { readFileSync } = require('fs');
 module.exports = { getTestCases };
 
 async function getTestCases(folder) {
-  return pipe(
-    filter(filterCases),
-    map(splitParts),
-    map(createTest),
-    groupBy(prop('method'))
-  )(await readdir(folder));
+  return pipe(filter(filterCases), map(splitParts), map(createTest), groupBy(prop('method')))(await readdir(folder));
 }
 
 function filterCases(path) {

@@ -74,7 +74,10 @@ function runReverseSignRequestTape({ test, group }) {
       timeDecorator({ timestamp: new Date(test.config.date).getTime() }, ({ args: [t] }) => {
         const key = new Escher(test.config).authenticate(
           test.expected.request,
-          createKeyDb([[test.config.accessKeyId, test.config.apiSecret], ['some_other_apikey', 'some_other_secret']])
+          createKeyDb([
+            [test.config.accessKeyId, test.config.apiSecret],
+            ['some_other_apikey', 'some_other_secret']
+          ])
         );
         t.equal(key, test.config.accessKeyId);
         t.end();
