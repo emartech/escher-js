@@ -55,8 +55,6 @@
     "tape": "^4.17.0"
   },
   "dependencies": {
-    "dateformat": "4.6.3",
-    "is-number": "7.0.0",
-    "is-string": "1.0.7"
+    "dateformat": "4.6.3"
   }
 }
