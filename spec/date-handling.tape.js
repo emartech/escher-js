@@ -60,7 +60,7 @@ function runDateHandlingTests() {
 
       const signedUrl = escher.preSignUrl(urlToSign, 60);
       const query = querystring.parse(Utils.parseUrl(signedUrl).query);
-      const date = query['X-ESCHER-Date'];
+      const date = query['X-Escher-Date'];
 
       t.equal(date, '19780210T010203Z');
       t.end();
@@ -74,11 +74,11 @@ function runDateHandlingTests() {
 
       const firstSignedUrl = escher.preSignUrl(urlToSign, 60);
       const firstQuery = querystring.parse(Utils.parseUrl(firstSignedUrl).query);
-      const firstDate = firstQuery['X-ESCHER-Date'];
+      const firstDate = firstQuery['X-Escher-Date'];
       clock.tick(1000);
       const secondSignedUrl = escher.preSignUrl(urlToSign, 60);
       const secondQuery = querystring.parse(Utils.parseUrl(secondSignedUrl).query);
-      const secondDate = secondQuery['X-ESCHER-Date'];
+      const secondDate = secondQuery['X-Escher-Date'];
 
       t.equal(firstDate, '19780210T010203Z');
       t.equal(secondDate, '19780210T010204Z');

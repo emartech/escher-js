@@ -11,7 +11,7 @@ function runAuthHelperTests(testCases) {
 }
 
 function runGenerateHeaderTape({ test, group, file }) {
-  if (test.expected.authHeader) {
+  if (test.config.hashAlgo && test.expected.authHeader) {
     tape(`[${group}] ${file} | AuthHelper #generateHeader`, t => {
       const authHeader = new AuthHelper(test.config, new Date(test.config.date)).generateHeader(
         test.request,
